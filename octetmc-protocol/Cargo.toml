@@ -1,0 +1,36 @@
+[package]
+name         = "octetmc-protocol"
+version      = "0.1.0"
+authors      = ["Totobird <https://github.com/Totobird-Creations>"]
+description  = "Async Minecraft server protocol library"
+license      = "LGPL-3.0-only"
+
+readme       = "README.md"
+repository   = "https://github.com/Totobird-Creations/octetmc"
+
+keywords     = [ "octetmc", "minecraft", "event", "bevy", "ecs" ]
+categories   = [ "games" ]
+
+edition      = "2024"
+rust-version = "1.89"
+
+
+[features]
+
+mc-1_21_5 = [
+    "__mc-1_21_5-or_later",
+    "__mc-1_21_5-or_earlier",
+]
+__mc-1_21_5-or_later   = [  ]
+__mc-1_21_5-or_earlier = [  ]
+
+
+[lints.rust]
+unused_parens = "allow"
+
+
+[dependencies.semver]
+version = "1.0"
+
+[dependencies.futures]
+version = "0.3"

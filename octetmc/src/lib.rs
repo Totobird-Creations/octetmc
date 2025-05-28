@@ -9,7 +9,8 @@
 )]
 
 
-use bevy_app::plugin_group;
+use bevy_app::{ plugin_group, Plugin, App };
+use bevy_defer::AsyncPlugin;
 
 
 pub mod conn;
@@ -24,9 +25,19 @@ pub mod world;
 pub(crate) mod macros;
 
 
+#[derive(Default)]
+pub struct DefaultAsyncPlugin;
+impl Plugin for DefaultAsyncPlugin {
+    fn build(&self, app : &mut App) {
+        app.add_plugins(AsyncPlugin::default_settings());
+    }
+}
+
 plugin_group! {
     #[derive(Debug)]
     pub struct OctetDefaultPlugins {
+        bevy_app:::ScheduleRunnerPlugin,
+        :DefaultAsyncPlugin,
         conn:::OctetConnPlugin
     }
 }
