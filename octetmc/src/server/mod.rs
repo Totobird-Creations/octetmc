@@ -5,7 +5,6 @@ use crate::macros::deref_single;
 use std::io::Cursor;
 use std::borrow::Cow;
 use bevy_ecs::resource::Resource;
-use voxidian_protocol::value::Text;
 use image::{ GenericImageView, PixelWithColorType, Pixel, EncodableLayout, ImageFormat, imageops };
 use base64::Engine as B64Engine;
 use base64::engine::general_purpose as b64gp;
@@ -23,7 +22,7 @@ deref_single!{
     /// The server's 'message of the day' text.
     ///
     /// The 'message of the day' is displayed in the server list on the client end.
-    pub struct ServerMotd(Text);
+    pub struct ServerMotd(TextComponent);
 }
 
 
