@@ -1,0 +1,33 @@
+[package]
+name         = "octetmc"
+version      = "0.1.0"
+authors      = ["Totobird <https://github.com/Totobird-Creations>"]
+description  = "Event-driven Minecraft server library running on Bevy ECS"
+license      = "LGPL-3.0-only"
+
+readme       = "README.md"
+repository   = "https://github.com/Totobird-Creations/octetmc"
+
+keywords     = [ "octetmc", "minecraft", "event", "bevy", "ecs" ]
+categories   = [ "games" ]
+
+edition      = "2024"
+rust-version = "1.89"
+
+
+[lints.rust]
+unused_parens = "allow"
+
+
+[dependencies.bevy_ecs]
+version = "0.16"
+[dependencies.bevy_app]
+version = "0.16"
+
+[dependencies.voxidian-protocol]
+path = "../voxidian-protocol"
+
+[dependencies.image]
+version = "0.25"
+[dependencies.base64]
+version = "0.22"
