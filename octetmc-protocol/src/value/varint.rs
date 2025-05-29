@@ -1,6 +1,7 @@
 use crate::packet::BufHead;
 use crate::packet::decode::{ DecodeBuf, PacketPartDecode, IncompleteData };
 use core::ops::{ Deref, DerefMut };
+use std::borrow::Cow;
 
 
 pub struct VarInt<V>(V)
@@ -92,6 +93,13 @@ var_int_type_remap_impl!( u64 => i64 );
 pub enum VarIntDecodeError {
     IncompleteData,
     TooLong
+}
+
+impl From<VarIntDecodeError> for Cow<'static, str> {
+    fn from(value : VarIntDecodeError) -> Self { match (value) {
+        VarIntDecodeError::IncompleteData => IncompleteData.into(),
+        VarIntDecodeError::TooLong        => Self::Borrowed("varint too long")
+    } }
 }
 
 impl From<IncompleteData> for VarIntDecodeError {

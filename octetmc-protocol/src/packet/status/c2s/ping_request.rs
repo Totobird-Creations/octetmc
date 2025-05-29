@@ -12,7 +12,7 @@ impl PacketDecode for PingRequestC2SStatusPacket {
     type Bound = BoundC2S;
     type State = StateStatus;
 
-    const PREFIX : u8 = 0x00;
+    const PREFIX : u8 = 0x01;
     type Output<'l> = PingRequestC2SStatusPacket;
     type Error<'l>  = IncompleteData;
 

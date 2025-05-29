@@ -1,4 +1,5 @@
 use super::{ PacketBound, PacketState, PacketBoundState, BufHead };
+use std::borrow::Cow;
 
 
 mod num;
@@ -7,6 +8,45 @@ pub mod string;
 
 
 pub const MAX_PACKET_LENGTH : usize = 2usize.pow(21) - 1;
+
+
+pub trait PacketDecodeGroup
+where
+    (Self::Bound, Self::State,) : PacketBoundState
+{
+    type Bound : PacketBound;
+    type State : PacketState;
+
+    type Output<'l>;
+    type Error<'l>  : From<IncompleteData> + Into<Cow<'static, str>>;
+
+    fn decode_prefixed<'l>(buf : DecodeBuf<'l>, head : &mut BufHead)
+        -> Result<Self::Output<'l>, UnknownPrefix<Self::Error<'l>>>;
+
+}
+
+impl<P> PacketDecodeGroup for P
+where
+    P                                                         : PacketDecode,
+    (<P as PacketDecode>::Bound, <P as PacketDecode>::State,) : PacketBoundState
+{
+    type Bound = <P as PacketDecode>::Bound;
+    type State = <P as PacketDecode>::State;
+
+    type Output<'l> = <P as PacketDecode>::Output<'l>;
+    type Error<'l > = <P as PacketDecode>::Error<'l>;
+
+    fn decode_prefixed<'l>(buf : DecodeBuf<'l>, head : &mut BufHead)
+        -> Result<Self::Output<'l>, UnknownPrefix<Self::Error<'l>>>
+    {
+        let prefix = buf.read(head).map_err(|e| UnknownPrefix::Error(Self::Error::from(e)))?;
+        if (prefix != <P as PacketDecode>::PREFIX) {
+            return Err(UnknownPrefix::UnknownPrefix(prefix));
+        }
+        <P as PacketDecode>::decode(buf, head).map_err(UnknownPrefix::Error)
+    }
+
+}
 
 
 pub trait PacketDecode : Sized
@@ -18,28 +58,19 @@ where
 
     const PREFIX : u8;
     type Output<'l>;
-    type Error<'l>  : From<IncompleteData>;
+    type Error<'l>  : From<IncompleteData> + Into<Cow<'static, str>>;
 
-    /// Does **not** include the packet ID prefix.
+    /// Does **not** include the packet ID.
     fn decode<'l>(buf : DecodeBuf<'l>, head : &mut BufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>>;
 
-    fn decode_prefixed<'l>(buf : DecodeBuf<'l>, head : &mut BufHead)
-        -> Result<Self::Output<'l>, UnknownPrefix<Self::Error<'l>>>
-    {
-        let prefix = buf.read(head).map_err(|e| UnknownPrefix::Error(Self::Error::from(e)))?;
-        if (prefix != Self::PREFIX) {
-            return Err(UnknownPrefix::UnknownPrefix(prefix));
-        }
-        Self::decode(buf, head).map_err(UnknownPrefix::Error)
-    }
 }
 
 
 pub trait PacketPartDecode : Sized {
 
     type Output<'l>;
-    type Error<'l>  : From<IncompleteData>;
+    type Error<'l>  : From<IncompleteData> + Into<Cow<'static, str>>;
 
     fn decode<'l>(buf : DecodeBuf<'l>, head : &mut BufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>>;
@@ -62,7 +93,7 @@ pub trait PacketPartDecode : Sized {
 // }
 
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct DecodeBuf<'l> {
     buf : &'l [u8]
 }
@@ -109,11 +140,17 @@ impl<'l> DecodeBuf<'l> {
 }
 
 impl<'l> From<&'l [u8]> for DecodeBuf<'l> {
-    fn from(buf : &'l [u8]) -> Self { Self { buf } }
+    fn from(buf : &'l [u8]) -> Self {
+        Self { buf }
+    }
 }
 
 
 pub struct IncompleteData;
+
+impl From<IncompleteData> for Cow<'static, str> {
+    fn from(_ : IncompleteData) -> Self { Self::Borrowed("incomplete data") }
+}
 
 
 pub enum UnknownPrefix<E> {
