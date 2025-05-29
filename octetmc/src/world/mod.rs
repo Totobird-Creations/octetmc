@@ -1,7 +1,7 @@
 //! World information and imports.
 
 
-use crate::macros::deref_single;
+use crate::util::macros::deref_single;
 use core::num::NonZeroU8;
 
 

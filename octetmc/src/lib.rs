@@ -5,7 +5,8 @@
 
 #![feature(
     // Language
-    decl_macro
+    decl_macro,
+    never_type
 )]
 
 
@@ -22,9 +23,10 @@ pub mod player;
 pub mod world;
 
 
-pub(crate) mod macros;
+pub mod util;
 
 
+/// A wrapper for [`AsyncPlugin`] which provides a [`Default`] implementation.
 #[derive(Default)]
 pub struct DefaultAsyncPlugin;
 impl Plugin for DefaultAsyncPlugin {
@@ -37,6 +39,9 @@ plugin_group! {
     #[derive(Debug)]
     pub struct OctetDefaultPlugins {
         bevy_app:::ScheduleRunnerPlugin,
+        bevy_time:::TimePlugin,
+        bevy_diagnostic:::DiagnosticsPlugin,
+        bevy_diagnostic:::FrameCountPlugin,
         :DefaultAsyncPlugin,
         conn:::OctetConnPlugin
     }

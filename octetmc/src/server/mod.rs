@@ -1,7 +1,8 @@
 //! Server information.
 
 
-use crate::macros::deref_single;
+use crate::util::macros::deref_single;
+use octetmc_protocol::value::text::Text;
 use std::io::Cursor;
 use std::borrow::Cow;
 use bevy_ecs::resource::Resource;
@@ -22,7 +23,7 @@ deref_single!{
     /// The server's 'message of the day' text.
     ///
     /// The 'message of the day' is displayed in the server list on the client end.
-    pub struct ServerMotd(TextComponent);
+    pub struct ServerMotd(Text<'static>);
 }
 
 

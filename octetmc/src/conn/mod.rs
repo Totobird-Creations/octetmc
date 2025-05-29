@@ -3,11 +3,23 @@
 
 use core::net::{ SocketAddr, SocketAddrV4, Ipv4Addr };
 use std::borrow::Cow;
+use std::io;
 use smol::net::TcpListener;
-use bevy_app::{ App, Plugin };
+use bevy_app::{ App, Plugin, Startup };
+use bevy_ecs::component::Component;
+use bevy_ecs::system::{ Commands, ResMut };
+use bevy_ecs::resource::Resource;
+use bevy_defer::{ AsyncWorld, Task, AsyncCommandsExtension };
+
+
+mod comms;
+use comms::ConnPeerComms;
+
+mod handshake;
 
 
 /// Enables the connection listener and client manager on install.
+#[derive(Clone)]
 pub struct OctetConnPlugin {
 
     /// Addresses to listen on.
@@ -27,6 +39,7 @@ pub struct OctetConnPlugin {
     /// Setting this to `false` allows any player to join with any username,
     ///  potentially letting them steal other player's data.
     pub mojauth_enabled    : bool
+
 }
 
 impl OctetConnPlugin {
@@ -45,7 +58,69 @@ impl Default for OctetConnPlugin {
 }
 
 impl Plugin for OctetConnPlugin {
-    fn build(&self, _app : &mut App) {
-        todo!()
+    fn build(&self, app : &mut App) {
+        app
+            .insert_resource(StartListenerConnPlugin(Some(self.clone())))
+            .add_systems(Startup, start_listener);
     }
+}
+
+
+#[derive(Resource)]
+struct StartListenerConnPlugin(Option<OctetConnPlugin>);
+
+/// A connected peer.
+#[expect(dead_code)] // TODO: the task value is currently unused. this will change.
+#[derive(Component)]
+pub struct ConnPeer(Task<ConnPeerResult>);
+
+
+fn start_listener(
+    mut config : ResMut<StartListenerConnPlugin>,
+    mut cmds   : Commands
+) {
+    // Scuffed Resource-take because Bevy provides no way to use [`bevy_ecs::system::In`] here, nor a "`ResTake`" type.
+    let config = config.0.take().unwrap();
+    cmds.remove_resource::<StartListenerConnPlugin>();
+    cmds.spawn_task(async move || {
+        let Err(err) = run_listener(config).await;
+        panic!("{err:?}"); // TODO: Handle error
+    });
+}
+
+async fn run_listener(config : OctetConnPlugin) -> io::Result<!> {
+    let listener = TcpListener::bind(config.listen_addrs.as_ref()).await?;
+    loop {
+        let (stream, addr,) = listener.accept().await?;
+        AsyncWorld.spawn_bundle((ConnPeer(AsyncWorld.spawn_task(run_peer(ConnPeerComms::new(stream, addr)))),));
+    }
+}
+
+
+/// A [`Result`] with a [`ConnPeerError`] error.
+pub type ConnPeerResult<T = ()> = Result<T, ConnPeerError>;
+
+/// An error raised by a connected peer.
+pub enum ConnPeerError {
+    /// Declaring intention or logging in took too long, or a keepalive was not responded to in time.
+    TimedOut,
+    /// The client's protocol version does not match the server's.
+    BadProtocol {
+        /// The protocol version that was sent by the client.
+        client : u32,
+        /// The expected protocol version.
+        server : u32
+    },
+    /// Some other IO error occured.
+    Io(io::Error)
+}
+impl From<io::Error> for ConnPeerError {
+    fn from(value : io::Error) -> Self { Self::Io(value) }
+}
+
+
+async fn run_peer(mut comms : ConnPeerComms) -> ConnPeerResult {
+    let intention = handshake::wait_for_intention(&mut comms).await?;
+    println!("{:?}", intention);
+    todo!();
 }

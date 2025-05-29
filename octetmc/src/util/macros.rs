@@ -1,4 +1,4 @@
-pub macro deref_single(
+pub(crate) macro deref_single(
     $( #[ $( $attr:tt )+ ] )*
     $vis:vis struct $ident:ident ( $inner:ty $(,)? ) ;
     $( Default { $( $default:tt )* } )?
