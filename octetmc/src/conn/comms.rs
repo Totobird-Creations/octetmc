@@ -2,7 +2,7 @@ use super::{ ConnPeerResult, ConnPeerError };
 use crate::util::future::timeout;
 use octetmc_protocol::value::varint::{ VarInt, VarIntDecodeError };
 use octetmc_protocol::packet::{ BoundC2S, PacketBoundState, BufHead };
-use octetmc_protocol::packet::decode::{ PacketDecode, PacketPartDecode, DecodeBuf, UnknownPrefix, MAX_PACKET_LENGTH };
+use octetmc_protocol::packet::decode::{ PacketDecodeGroup, PacketPartDecode, DecodeBuf, UnknownPrefix, MAX_PACKET_LENGTH };
 use core::net::SocketAddr;
 use core::time::Duration;
 use core::mem::{ self, MaybeUninit, ManuallyDrop };
@@ -22,25 +22,44 @@ pub(super) struct ConnPeerComms {
     stream             : TcpStream,
     addr               : SocketAddr,
     read_queue         : VecDeque<u8>,
-    compress_threshold : Option<usize>
+    compress_threshold : Option<usize>,
+    state              : ConnPeerState
 }
 
+pub(super) enum ConnPeerState {
+    Handshake,
+    Status,
+    Login,
+    Config,
+    Play
+}
+
+
 impl ConnPeerComms {
+
+    #[inline]
     pub(super) fn new(stream : TcpStream, addr : SocketAddr) -> Self {
         Self { stream, addr,
             read_queue         : VecDeque::new(),
-            compress_threshold : None
+            compress_threshold : None,
+            state              : ConnPeerState::Handshake
         }
     }
+
+    #[inline]
+    pub(super) fn set_state(&mut self, state : ConnPeerState) {
+        self.state = state;
+    }
+
 }
 
 impl ConnPeerComms {
 
     pub(super) async fn read_packet<P>(&mut self) -> ConnPeerResult<ReadPacketContainer<P>>
     where
-        P                                      : PacketDecode<Bound = BoundC2S>,
-        (BoundC2S, <P as PacketDecode>::State) : PacketBoundState,
-        for<'l> <P as PacketDecode>::Error<'l> : Into<Cow<'static, str>>
+        P                                           : PacketDecodeGroup<Bound = BoundC2S>,
+        (BoundC2S, <P as PacketDecodeGroup>::State) : PacketBoundState,
+        for<'l> <P as PacketDecodeGroup>::Error<'l> : Into<Cow<'static, str>>
     {
         let (total_len, _,) = self.read_packet_len().await?;
         self.wait_for_bytes(total_len).await?; // <NOTE 1>
@@ -77,12 +96,12 @@ impl ConnPeerComms {
             let (a, b,) = self.read_queue.as_slices();
             let consuming = compressed_packet_len.min(a.len());
             // SAFETY: `consuming` is clamped down to `a.len()` on the line above.
-            if let Err(_) = z.write_all(unsafe { a.get_unchecked(0..consuming) }) {
+            if (z.write_all(unsafe { a.get_unchecked(0..consuming) }).is_err()) {
                 return Err(ConnPeerError::BadPacket(Cow::Borrowed("failed to decompress")));
             }
             let consuming = compressed_packet_len - consuming;
             // SAFETY: `consuming` can never be `b.len()` or higher, as `self.read_queue` has enough bytes for the whole packet (see <NOTE 1>).
-            if let Err(_) = z.write_all(unsafe { b.get_unchecked(0..consuming) }) {
+            if (z.write_all(unsafe { b.get_unchecked(0..consuming) }).is_err()) {
                 return Err(ConnPeerError::BadPacket(Cow::Borrowed("failed to decompress")));
             }
 
@@ -109,14 +128,17 @@ impl ConnPeerComms {
             let b = unsafe { b.get_unchecked(0..consuming) };
             unsafe { ptr::copy_nonoverlapping(b.as_ptr(), buf[a.len()..].as_mut_ptr() as _, b.len()); }
 
+            self.read_queue.drain(0..decompressed_packet_len);
             // SAFETY: All bytes in `buf` were written.
             unsafe { buf.assume_init() }
         });
 
-        let packet = P::decode_prefixed(DecodeBuf::from(unsafe { mem::transmute::<&[u8], &[u8]>(&*buf) }), &mut BufHead::new()).map_err(|e| match (e) {
+        let mut head = BufHead::default();
+        let packet = P::decode_prefixed(DecodeBuf::from(unsafe { mem::transmute::<&[u8], &[u8]>(&*buf) }), &mut head).map_err(|e| match (e) {
             UnknownPrefix::UnknownPrefix(p) => ConnPeerError::UnknownPacketPrefix(p),
             UnknownPrefix::Error(e)         => ConnPeerError::BadPacket(e.into()),
         })?;
+        if (head.consumed() < buf.len()) { return Err(ConnPeerError::NoPacketEnd); }
         Ok(ReadPacketContainer {
             raw    : ManuallyDrop::new(buf),
             packet : ManuallyDrop::new(packet)
@@ -125,9 +147,9 @@ impl ConnPeerComms {
 
     pub(super) async fn read_packet_timeout<P>(&mut self, dur : Duration) -> ConnPeerResult<ReadPacketContainer<P>>
     where
-        P                                      : PacketDecode<Bound = BoundC2S>,
-        (BoundC2S, <P as PacketDecode>::State) : PacketBoundState,
-        for<'l> <P as PacketDecode>::Error<'l> : Into<Cow<'static, str>>
+        P                                           : PacketDecodeGroup<Bound = BoundC2S>,
+        (BoundC2S, <P as PacketDecodeGroup>::State) : PacketBoundState,
+        for<'l> <P as PacketDecodeGroup>::Error<'l> : Into<Cow<'static, str>>
     { match (timeout(dur, self.read_packet::<P>()).await) {
         Ok(Ok(out))  => Ok(out),
         Ok(Err(err)) => Err(err),
@@ -140,19 +162,12 @@ impl ConnPeerComms {
         let mut buf   = [0u8; VarInt::<u32>::MAX_BYTES];
         let mut index = 0;
         loop {
-            if (index >= VarInt::<u32>::MAX_BYTES) {
-                return Err(ConnPeerError::InvalidPacketLength);
-            }
             match (self.read_queue.pop_front()) {
-                None => {
-                    let mut buf1  = [0u8; 64];
-                    let     count = self.stream.read(&mut buf1).await?;
-                    self.read_queue.extend(buf1[0..count].into_iter());
-                },
+                None => { self.read_more_bytes().await?; },
                 Some(b) => {
                     buf[index] = b;
                     index += 1;
-                    match (VarInt::<u32>::decode(DecodeBuf::from(&buf[0..index]), &mut BufHead::new())) {
+                    match (VarInt::<u32>::decode(DecodeBuf::from(&buf[0..index]), &mut BufHead::default())) {
                         Err(VarIntDecodeError::IncompleteData) => { },
                         Err(VarIntDecodeError::TooLong) => {
                             return Err(ConnPeerError::InvalidPacketLength);
@@ -164,6 +179,9 @@ impl ConnPeerComms {
                             } else { Ok((value, index,)) }
                         }
                     }
+                    if (index >= VarInt::<u32>::MAX_BYTES) {
+                        return Err(ConnPeerError::InvalidPacketLength);
+                    }
                 }
             }
         }
@@ -171,11 +189,20 @@ impl ConnPeerComms {
 
     async fn wait_for_bytes(&mut self, n : usize) -> ConnPeerResult {
         while (self.read_queue.len() < n) {
-            let mut buf   = [0u8; 64];
-            let     count = self.stream.read(&mut buf).await?;
-            self.read_queue.extend(buf[0..count].into_iter());
+            self.read_more_bytes().await?;
         }
         Ok(())
+    }
+
+    async fn read_more_bytes(&mut self) -> ConnPeerResult {
+        let mut buf   = [0u8; 64];
+        match (self.stream.read(&mut buf).await?) {
+            0     => Err(ConnPeerError::PeerClosed),
+            count => {
+                self.read_queue.extend(buf[0..count].iter());
+                Ok(())
+            }
+        }
     }
 
 }
@@ -198,6 +225,7 @@ impl Write for PacketDecompress {
         }
     }
 
+    #[inline(always)]
     fn flush(&mut self) -> io::Result<()> { Ok(()) }
 
 }
@@ -205,8 +233,8 @@ impl Write for PacketDecompress {
 
 pub struct ReadPacketContainer<P>
 where
-    P                                      : PacketDecode<Bound = BoundC2S>,
-    (BoundC2S, <P as PacketDecode>::State) : PacketBoundState
+    P                                           : PacketDecodeGroup<Bound = BoundC2S>,
+    (BoundC2S, <P as PacketDecodeGroup>::State) : PacketBoundState
 {
     raw     : ManuallyDrop<Pin<Box<[u8]>>>,
     packet  : ManuallyDrop<P::Output<'static>>
@@ -214,18 +242,19 @@ where
 
 impl<P> Deref for ReadPacketContainer<P>
 where
-    P                                      : PacketDecode<Bound = BoundC2S>,
-    (BoundC2S, <P as PacketDecode>::State) : PacketBoundState
+    P                                           : PacketDecodeGroup<Bound = BoundC2S>,
+    (BoundC2S, <P as PacketDecodeGroup>::State) : PacketBoundState
 {
     type Target = P::Output<'static>;
+    #[inline]
     fn deref(&self) -> &Self::Target { &self.packet }
 }
 
 // Forces `self.raw` to live until after `self.packet` is dropped.
 impl<P> Drop for ReadPacketContainer<P>
 where
-    P                                      : PacketDecode<Bound = BoundC2S>,
-    (BoundC2S, <P as PacketDecode>::State) : PacketBoundState
+    P                                           : PacketDecodeGroup<Bound = BoundC2S>,
+    (BoundC2S, <P as PacketDecodeGroup>::State) : PacketBoundState
 {
     fn drop(&mut self) {
         // SAFETY: `self.packet` still hasn't been dropped.

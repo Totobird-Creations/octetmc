@@ -61,13 +61,13 @@ pub enum IntentionDecodeError {
     UnknownIntention
 }
 
-impl Into<Cow<'static, str>> for IntentionDecodeError {
-    fn into(self) -> Cow<'static, str> { Cow::Borrowed(match (self) {
-        Self::IncompleteData    => "incomplete packet",
-        Self::VarIntTooLong     => "varint too long",
-        Self::StringInvalidUtf8 => "invalid utf8",
-        Self::UnknownIntention  => "unknown intention",
-    }) }
+impl From<IntentionDecodeError> for Cow<'static, str> {
+    fn from(value : IntentionDecodeError) -> Self { match (value) {
+        IntentionDecodeError::IncompleteData    => IncompleteData.into(),
+        IntentionDecodeError::VarIntTooLong     => VarIntDecodeError::TooLong.into(),
+        IntentionDecodeError::StringInvalidUtf8 => StringDecodeError::InvalidUtf8.into(),
+        IntentionDecodeError::UnknownIntention  => Self::Borrowed("unknown intention")
+    } }
 }
 
 impl From<IncompleteData> for IntentionDecodeError {

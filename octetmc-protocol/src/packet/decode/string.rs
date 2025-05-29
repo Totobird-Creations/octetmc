@@ -1,6 +1,7 @@
 use super::{ PacketPartDecode, DecodeBuf, BufHead, IncompleteData };
 use crate::value::varint::{ VarInt, VarIntDecodeError };
 use std::str;
+use std::borrow::Cow;
 
 
 impl PacketPartDecode for &str {
@@ -20,6 +21,14 @@ pub enum StringDecodeError {
     IncompleteData,
     VarIntTooLong,
     InvalidUtf8
+}
+
+impl From<StringDecodeError> for Cow<'static, str> {
+    fn from(value : StringDecodeError) -> Self { match (value) {
+        StringDecodeError::IncompleteData => IncompleteData.into(),
+        StringDecodeError::VarIntTooLong  => VarIntDecodeError::TooLong.into(),
+        StringDecodeError::InvalidUtf8    => Self::Borrowed("invalid utf8")
+    } }
 }
 
 impl From<IncompleteData> for StringDecodeError {

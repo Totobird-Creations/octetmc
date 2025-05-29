@@ -128,6 +128,12 @@ pub enum ConnPeerError {
     UnknownPacketPrefix(u8),
     /// A received packet could not be decoded.
     BadPacket(Cow<'static, str>),
+    /// A received packet was longer than the decoder expected.
+    NoPacketEnd,
+    /// The client closed the connection.
+    PeerClosed,
+    /// Whatever operation was requested has completed.
+    OperationCompleted,
     /// Some other IO error occured.
     Io(io::Error)
 }
