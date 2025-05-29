@@ -52,3 +52,8 @@ unsafe impl PacketBoundState for (BoundC2S, StateConfig,) { }
 unsafe impl PacketBoundState for (BoundS2C, StateConfig,) { }
 unsafe impl PacketBoundState for (BoundC2S, StatePlay,) { }
 unsafe impl PacketBoundState for (BoundS2C, StatePlay,) { }
+
+
+pub struct BufHead {
+    head : usize
+}
