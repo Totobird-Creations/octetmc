@@ -4,19 +4,21 @@ use std::str;
 
 
 // /// Does **not** include the packet ID prefix.
-pub trait PacketDecode : Sized + 'static
+pub trait PacketDecode : Sized
 where
     (Self::Bound, Self::State,) : PacketBoundState
 {
     type Bound : PacketBound;
     type State : PacketState;
 
-    fn decode(buf : &mut DecodeBuf<'_>) -> Result<Self, DecodeError>;
+    type Output<'l>;
+    fn decode<'l, 'k>(buf : DecodeBuf<'l, 'k>) -> Result<Self::Output<'l>, DecodeError>;
 }
 
 
 pub trait PacketPartDecode : Sized {
-    fn decode(buf : &mut DecodeBuf<'_>) -> Result<Self, DecodeError>;
+    type Output<'l>;
+    fn decode<'l, 'k>(buf : DecodeBuf<'l, 'k>) -> Result<Self::Output<'l>, DecodeError>;
 }
 
 impl<P> PacketPartDecode for P
@@ -24,14 +26,16 @@ where
     P                     : PacketDecode,
     (P::Bound, P::State,) : PacketBoundState
 {
-    fn decode(buf : &mut DecodeBuf<'_>) -> Result<Self, DecodeError> {
+    type Output<'l> = <P as PacketDecode>::Output<'l>;
+    fn decode<'l, 'k>(buf : DecodeBuf<'l, 'k>) -> Result<Self::Output<'l>, DecodeError> {
         <P as PacketDecode>::decode(buf)
     }
 }
 
 macro_rules! impl_packet_part_decode_for_num { ( $ty:ty $(,)? ) => {
     impl PacketPartDecode for $ty {
-        fn decode(buf : &mut DecodeBuf<'_>) -> Result<Self, DecodeError> {
+        type Output<'l> = $ty;
+        fn decode<'l, 'k>(mut buf : DecodeBuf<'l, 'k>) -> Result<Self::Output<'l>, DecodeError> {
             Ok(<$ty>::from_be_bytes(buf.read_n_const()?))
         }
     }
@@ -49,17 +53,18 @@ impl_packet_part_decode_for_num!(i128);
 impl_packet_part_decode_for_num!(f32);
 impl_packet_part_decode_for_num!(f64);
 
-impl PacketPartDecode for String {
-    fn decode(buf : &mut DecodeBuf<'_>) -> Result<Self, DecodeError> {
+impl PacketPartDecode for &str {
+    type Output<'l> = &'l str;
+    fn decode<'l, 'k>(mut buf : DecodeBuf<'l, 'k>) -> Result<Self::Output<'l>, DecodeError> {
         let len = *buf.read_decode::<VarInt<u32>>()? as usize;
-        Ok(str::from_utf8(buf.read_n(len)?)?.to_string())
+        Ok(str::from_utf8(buf.read_n(len)?)?)
     }
 }
 
 
-pub struct DecodeBuf<'l> {
+pub struct DecodeBuf<'l, 'k> {
     buf  : &'l [u8],
-    head : usize
+    head : &'k mut usize
 }
 
 impl DecodeBuf<'_> {

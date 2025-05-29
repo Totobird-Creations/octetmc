@@ -12,9 +12,11 @@ pub struct IntentionC2SHandshakePacket<'l> {
 }
 
 
-impl PacketDecode for IntentionC2SHandshakePacket<'static> {
+impl PacketDecode for IntentionC2SHandshakePacket<'_> {
     type Bound = BoundC2S;
     type State = StateHandshake;
+
+    type Output<'l> = IntentionC2SHandshakePacket<'l>;
     fn decode(buf : &mut DecodeBuf<'_>) -> Result<Self, DecodeError> {
         Ok(Self {
             protocol  : *buf.read_decode::<VarInt::<u32>>()?,
