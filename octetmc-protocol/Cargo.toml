@@ -31,6 +31,3 @@ unused_parens = "allow"
 
 [dependencies.semver]
 version = "1.0"
-
-[dependencies.futures]
-version = "0.3"

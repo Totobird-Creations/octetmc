@@ -5,6 +5,7 @@ use crate::packet::decode::string::StringDecodeError;
 use std::borrow::Cow;
 
 
+#[derive(Debug, Clone)]
 pub struct IntentionC2SHandshakePacket<'l> {
     pub protocol  : u32,
     pub address   : Cow<'l, str>,
@@ -34,6 +35,7 @@ impl PacketDecode for IntentionC2SHandshakePacket<'_> {
 }
 
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Intention {
     Status   = 1,
     Login    = 2,
