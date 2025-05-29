@@ -19,12 +19,21 @@ rust-version = "1.89"
 unused_parens = "allow"
 
 
+[dependencies.octetmc-protocol]
+path = "../octetmc-protocol"
+
 [dependencies.smol]
 version = "2.0"
+[dependencies.pin-project]
+version = "1.1"
 
 [dependencies.bevy_ecs]
 version = "0.16"
 [dependencies.bevy_app]
+version = "0.16"
+[dependencies.bevy_time]
+version = "0.16"
+[dependencies.bevy_diagnostic]
 version = "0.16"
 [dependencies.bevy_defer]
 version = "0.14"

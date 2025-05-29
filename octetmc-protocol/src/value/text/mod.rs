@@ -3,6 +3,12 @@ use std::borrow::Cow;
 
 
 #[derive(Clone, Debug)]
+pub struct Text<'l> {
+    pub components : Cow<'l, [TextComponent<'l>]>
+}
+
+
+#[derive(Clone, Debug)]
 pub struct TextComponent<'l> {
     pub content  : TextContent<'l>,
     pub style    : TextStyle<'l>,
@@ -98,6 +104,6 @@ pub enum TextHoverEvent<'l> {
     #[default]
     None,
     ShowTextTooltip {
-        text : Cow<'l, [TextComponent<'l>]>
+        text : Text<'l>
     }
 }
