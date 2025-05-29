@@ -6,6 +6,9 @@ mod num;
 pub mod string;
 
 
+pub const MAX_PACKET_LENGTH : usize = 2usize.pow(21) - 1;
+
+
 pub trait PacketDecode : Sized
 where
     (Self::Bound, Self::State,) : PacketBoundState
@@ -103,6 +106,10 @@ impl<'l> DecodeBuf<'l> {
         <T as PacketPartDecode>::decode(self, head)
     }
 
+}
+
+impl<'l> From<&'l [u8]> for DecodeBuf<'l> {
+    fn from(buf : &'l [u8]) -> Self { Self { buf } }
 }
 
 
