@@ -57,3 +57,13 @@ unsafe impl PacketBoundState for (BoundS2C, StatePlay,) { }
 pub struct BufHead {
     head : usize
 }
+
+impl BufHead {
+
+    #[inline(always)]
+    pub fn new() -> Self { Self { head : 0 } }
+
+    #[inline(always)]
+    pub fn consumed(&self) -> usize { self.head }
+
+}

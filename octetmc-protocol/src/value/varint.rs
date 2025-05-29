@@ -7,6 +7,13 @@ pub struct VarInt<V>(V)
 where
     V : VarIntType;
 
+impl<V> VarInt<V>
+where
+    V : VarIntType
+{
+    pub const MAX_BYTES : usize = V::MAX_BYTES;
+}
+
 impl<V> Deref for VarInt<V>
 where
     V : VarIntType
@@ -34,12 +41,13 @@ where
 }
 
 
-const SEGMENT_BITS : u8 = 0x7F;
-const CONTINUE_BIT : u8 = 0x80;
+pub const SEGMENT_BITS : u8 = 0x7F;
+pub const CONTINUE_BIT : u8 = 0x80;
 
 
 macro_rules! var_int_type_impl { ( $ty:ty $(,)? ) => {
     impl VarIntType for $ty {
+        const MAX_BYTES : usize = core::mem::size_of::<$ty>() + 1;
         fn decode(buf : DecodeBuf<'_>, head : &mut BufHead)
             -> Result<Self, VarIntDecodeError>
         {
@@ -59,6 +67,7 @@ macro_rules! var_int_type_impl { ( $ty:ty $(,)? ) => {
 } }
 macro_rules! var_int_type_remap_impl { ( $ty:ty => $from:ty $(,)? ) => {
     impl VarIntType for $ty {
+        const MAX_BYTES : usize = <$from as VarIntType>::MAX_BYTES;
         fn decode(buf : DecodeBuf<'_>, head : &mut BufHead)
             -> Result<Self, VarIntDecodeError>
         {
@@ -69,6 +78,7 @@ macro_rules! var_int_type_remap_impl { ( $ty:ty => $from:ty $(,)? ) => {
 
 
 pub trait VarIntType : Sized {
+    const MAX_BYTES : usize;
     fn decode(buf : DecodeBuf<'_>, head : &mut BufHead) -> Result<Self, VarIntDecodeError>;
 }
 

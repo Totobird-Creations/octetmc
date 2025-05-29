@@ -16,6 +16,9 @@ mod comms;
 use comms::ConnPeerComms;
 
 mod handshake;
+use handshake::Intention;
+
+mod status;
 
 
 /// Enables the connection listener and client manager on install.
@@ -92,7 +95,12 @@ async fn run_listener(config : OctetConnPlugin) -> io::Result<!> {
     let listener = TcpListener::bind(config.listen_addrs.as_ref()).await?;
     loop {
         let (stream, addr,) = listener.accept().await?;
-        AsyncWorld.spawn_bundle((ConnPeer(AsyncWorld.spawn_task(run_peer(ConnPeerComms::new(stream, addr)))),));
+        AsyncWorld.spawn_bundle((ConnPeer(AsyncWorld.spawn_task(async move {
+            if let Err(err) = run_peer(ConnPeerComms::new(stream, addr)).await {
+                println!("{err:?}"); // TODO: Proper error handler;
+            }
+            Ok(())
+        })),));
     }
 }
 
@@ -101,16 +109,25 @@ async fn run_listener(config : OctetConnPlugin) -> io::Result<!> {
 pub type ConnPeerResult<T = ()> = Result<T, ConnPeerError>;
 
 /// An error raised by a connected peer.
+#[derive(Debug)]
 pub enum ConnPeerError {
     /// Declaring intention or logging in took too long, or a keepalive was not responded to in time.
     TimedOut,
     /// The client's protocol version does not match the server's.
-    BadProtocol {
+    ProtocolMismatch {
         /// The protocol version that was sent by the client.
         client : u32,
         /// The expected protocol version.
         server : u32
     },
+    /// An invalid packet length was received.
+    InvalidPacketLength,
+    /// A received packet is too long.
+    PacketTooLong,
+    /// A received packet has an unknown or unexpected ID.
+    UnknownPacketPrefix(u8),
+    /// A received packet could not be decoded.
+    BadPacket(Cow<'static, str>),
     /// Some other IO error occured.
     Io(io::Error)
 }
@@ -120,7 +137,8 @@ impl From<io::Error> for ConnPeerError {
 
 
 async fn run_peer(mut comms : ConnPeerComms) -> ConnPeerResult {
-    let intention = handshake::wait_for_intention(&mut comms).await?;
-    println!("{:?}", intention);
-    todo!();
+    match (handshake::wait_for_intention(&mut comms).await?) {
+        Intention::Status => status::handle_requests(&mut comms).await,
+        Intention::Login  => todo!(),
+    }
 }

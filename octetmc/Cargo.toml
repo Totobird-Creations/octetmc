@@ -42,3 +42,6 @@ version = "0.14"
 version = "0.25"
 [dependencies.base64]
 version = "0.22"
+
+[dependencies.flate2]
+version = "1.1"
