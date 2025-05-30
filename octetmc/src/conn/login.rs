@@ -1,11 +1,12 @@
 use super::{ ConnPeerState, ConnPeerComms, ConnPeerResult, ConnPeerError };
 use octetmc_protocol::packet::login::c2s::hello::HelloC2SLoginPacket;
+use octetmc_protocol::packet::login::s2c::hello::HelloS2CLoginPacket;
 use octetmc_protocol::packet::login::s2c::login_compression::LoginCompressionS2CLoginPacket;
-use rand::TryRngCore;
 use core::time::Duration;
+use std::borrow::Cow;
 use rand::{ self, rngs::ThreadRng, RngCore };
-use rsa::rand_core;
-use rsa::{ RsaPrivateKey, RsaPublicKey };
+use openssl::pkey::{ PKey, Private as PrivateKey, Public as PublicKey };
+use openssl::rsa::{ Rsa, Padding as RsaPadding };
 
 
 const LOGIN_TIMEOUT : Duration = Duration::from_millis(250);
@@ -27,37 +28,29 @@ pub(super) async fn handle_login_process(
         comms.set_compress_threshold(threshold);
     }
 
-    let mut rng = rand::rng();
-    let (private_key, public_key,) = generate_key_pair(&mut rng, 2048);
-    let verify_token               = generate_verify_token(&mut rng);
+    let (private_key, public_key,) = generate_key_pair(2048);
+    let verify_token               = generate_verify_token::<4>(&mut rand::rng());
+    comms.send_packet(&HelloS2CLoginPacket {
+        server_id       : SERVER_ID,
+        public_key      : &public_key.public_key_to_der().unwrap(),
+        verify_token    : &verify_token,
+        mojauth_enabled,
+    }).await?;
 
     todo!()
 }
 
 
-fn generate_key_pair(rng : &mut ThreadRng, bit_count : usize) -> (RsaPrivateKey, RsaPublicKey,) {
-    let private_key = RsaPrivateKey::new(&mut GenKeyPairRng(rng), bit_count).unwrap();
-    let public_key  = RsaPublicKey::from(&private_key);
-    (private_key, public_key,)
-}
-struct GenKeyPairRng<'l>(&'l mut ThreadRng);
-impl rand_core::CryptoRng for GenKeyPairRng<'_> {}
-impl rand_core::RngCore for GenKeyPairRng<'_> {
-
-    fn next_u32(&mut self) -> u32 { self.0.next_u32() }
-
-    fn next_u64(&mut self) -> u64 { self.0.next_u64() }
-
-    fn fill_bytes(&mut self, dest : &mut [u8]) { self.0.fill_bytes(dest); }
-
-    fn try_fill_bytes(&mut self, dest : &mut [u8]) -> Result<(), rand_core::Error> {
-        self.0.try_fill_bytes(dest).map_err(|_| unreachable!())
-    }
-
+#[inline(always)]
+fn generate_key_pair(bits : u32) -> (PKey<PrivateKey>, PKey<PublicKey>,) {
+    let private = PKey::from_rsa(Rsa::generate(bits).unwrap()).unwrap();
+    let public  = PKey::from_rsa(Rsa::public_key_from_der(&private.public_key_to_der().unwrap()).unwrap()).unwrap();
+    (private, public,)
 }
 
-fn generate_verify_token(rng : &mut ThreadRng) -> [u8; 4] {
-    let mut buf = [0u8; 4];
+#[inline(always)]
+fn generate_verify_token<const N : usize>(rng : &mut ThreadRng) -> [u8; N] {
+    let mut buf = [0u8; N];
     rng.fill_bytes(&mut buf);
     buf
 }
