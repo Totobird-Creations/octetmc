@@ -1,5 +1,4 @@
-use super::{ ConnPeerComms, ConnPeerResult, ConnPeerError };
-use super::comms::{ ConnPeerState };
+use super::{ ConnPeerState, ConnPeerComms, ConnPeerResult };
 use crate::server::{ ServerBrand, ServerMotd, ServerFavicon };
 use crate::player::{ PlayerCount, MaxPlayerCount };
 use crate::util::dirty::Dirtyable;
@@ -15,6 +14,8 @@ use std::sync::LazyLock;
 use bevy_defer::{ AsyncWorld, AsyncAccess };
 use smol::lock::Mutex;
 
+
+const REQUEST_TIMEOUT : Duration = Duration::from_millis(250);
 
 const DEFAULT_MOTD    : Text     = Text { components : Cow::Borrowed(&[
     TextComponent {
@@ -41,8 +42,6 @@ const DEFAULT_MOTD    : Text     = Text { components : Cow::Borrowed(&[
 ]) };
 
 const DEFAULT_FAVICON : &str     = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAA8UExURUdwTP748/////////////////////////+/Af8BAVMTaQgADDsPSSQFL/jSvtajp/9NTf/GTIV+iXJXgEo/9IwAAAAHdFJOUwD80BaaZz7Q6pnNAAAC0klEQVRYw91X2XKDMAysANscvoD//9dKvm1IGtOXTtWG6TTserWSbPj6+uMxYvwGPoEQMD3HD8LF8FQE4s15aiEeamCIXzGMEOxRAiD06kI/S2IScHqC45EEFGDWNUl44kAUsEqUwB+UQK9rltBdiFGkDCQVAsb+DNL6cj2h28acgaTf7hxSBtJ9JObwOANHcfbWYaoywIDOHIZYg4CXnb2EFhzJQEfQWchkQRTQa0K0IOHJBPbIghRdJmQLIlyprk7gQpwlXimpcCLfuMgmdudhhquLCRUEV6y+9YNQwOlTjwNumEVZJtq7Lx5WcKl0c0u5WQ8Cqj5BBeeaxPtL7SJueFAQIqDqE6SHI8JdbKp2EZPWNUE1LHSkaVXHhi6WSYOpCXTd61gHGZaOP6ooA50ZDcFe1QFPRVCbg+UoCJDfNgRzaSNVxWwxgoIiBRKwtAR7URYkM2orojERHbAXghld4InAJOQWmTKAk4ClrAIyzvMO6QxFB2S1Pkbe1MggSwRT6flMEiInLy0IFHlLQrxZlqWcDQTsnmFK9xwVw3ak79BhTGCxZeuRq0iAlQh3jS3DkfIL+MU0zU85kA1iGoNPYJIPuKUG/Eh4SwT1bDGfg9Pg7+Q0D+ZADnmY9F967PJ4W28AMQfnA7AxrIUBAHR1ukYGQT8JqLd5LOQeGGg5R86n+Jjn02JOlMfb9qTKEpwRSOElcwz/F8GD/BsBztwgwYugdVm4Z2Reiw7L3wjwW8w8ZwqI6mMekOF3Alwh9DzfcDgntbFLib87poaGAd3YKRnElmDXQ7enFHVfw+D6Qi9NGHjx5Eo26J8JLLw86fmV4UqA68PLg55D68OFgDqVv3/FgP01gdU/vX64lxS93xNYDR+8vtDAQKIoCBwcPnhMcW9akSMSWKPTUH5KQf3nG0n74fgUHmYvN7Lv5oF1Pq+PHGdwoGHCC+O/ef389/ENv2s5bHHprKEAAAAASUVORK5CYII=";
-
-const REQUEST_TIMEOUT : Duration = Duration::from_millis(250);
 
 
 static CACHE_LATEST_GAME_VERSION_STRING : LazyLock<String>      = LazyLock::new(|| LATEST_GAME_VERSION.to_string());
@@ -116,5 +115,5 @@ pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResul
 async fn handle_ping_request(comms : &mut ConnPeerComms, timestamp : u64) -> ConnPeerResult {
     comms.send_packet(&PingResponseS2CStatusPacket { timestamp }).await?;
 
-    Err(ConnPeerError::OperationCompleted)
+    Ok(())
 }

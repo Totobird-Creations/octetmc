@@ -4,7 +4,7 @@ use super::{ PacketPartEncode, EncodeBuf };
 macro_rules! impl_packet_part_encode_for_num { ( $ty:ty $(,)? ) => {
     impl PacketPartEncode for $ty {
         fn encode(&self, buf : &mut EncodeBuf) {
-            buf.write_n_const(self.to_be_bytes());
+            buf.write_n(&self.to_be_bytes());
         }
     }
 } }

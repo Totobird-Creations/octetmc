@@ -20,6 +20,8 @@ use handshake::Intention;
 
 mod status;
 
+mod login;
+
 
 /// Enables the connection listener and client manager on install.
 #[derive(Clone)]
@@ -105,14 +107,37 @@ async fn run_listener(config : OctetConnPlugin) -> io::Result<!> {
 }
 
 
+/// The state of a client's connection.
+pub enum ConnPeerState {
+
+    /// Clients declare their intention.
+    Handshake,
+
+    /// Clients request server list information.
+    Status,
+
+    /// Clients attempt to authenticate and join the game.
+    Login,
+
+    /// The server configures registries and settings on the client.
+    Config,
+
+    /// The client has properly connected to the server and is in the game.
+    Play
+
+}
+
+
 /// A [`Result`] with a [`ConnPeerError`] error.
 pub type ConnPeerResult<T = ()> = Result<T, ConnPeerError>;
 
 /// An error raised by a connected peer.
 #[derive(Debug)]
 pub enum ConnPeerError {
+
     /// Declaring intention or logging in took too long, or a keepalive was not responded to in time.
     TimedOut,
+
     /// The client's protocol version does not match the server's.
     ProtocolMismatch {
         /// The protocol version that was sent by the client.
@@ -120,22 +145,28 @@ pub enum ConnPeerError {
         /// The expected protocol version.
         server : u32
     },
+
     /// An invalid packet length was received.
     InvalidPacketLength,
+
     /// A received packet is too long.
     PacketTooLong,
+
     /// A received packet has an unknown or unexpected ID.
     UnknownPacketPrefix(u8),
+
     /// A received packet could not be decoded.
     BadPacket(Cow<'static, str>),
+
     /// A received packet was longer than the decoder expected.
     NoPacketEnd,
+
     /// The client closed the connection.
     PeerClosed,
-    /// Whatever operation was requested has completed.
-    OperationCompleted,
+
     /// Some other IO error occured.
     Io(io::Error)
+
 }
 impl From<io::Error> for ConnPeerError {
     fn from(value : io::Error) -> Self { Self::Io(value) }
@@ -145,6 +176,6 @@ impl From<io::Error> for ConnPeerError {
 async fn run_peer(mut comms : ConnPeerComms) -> ConnPeerResult {
     match (handshake::wait_for_intention(&mut comms).await?) {
         Intention::Status => status::handle_requests(&mut comms).await,
-        Intention::Login  => todo!(),
+        Intention::Login  => login::handle_login_process(&mut comms).await
     }
 }
