@@ -108,11 +108,6 @@ impl EncodeBuf {
         self.buf.extend_from_slice(bytes);
     }
 
-    #[inline]
-    pub fn write_n_const<const N : usize>(&mut self, bytes : [u8; N]) {
-        self.buf.extend_from_slice(&bytes);
-    }
-
     #[inline(always)]
     pub fn encode_write<T>(&mut self, packet : &T)
     where

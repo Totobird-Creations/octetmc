@@ -1,3 +1,4 @@
+use super::ConnPeerState;
 use core::net::SocketAddr;
 use std::collections::VecDeque;
 use smol::net::TcpStream;
@@ -14,14 +15,6 @@ pub(super) struct ConnPeerComms {
     read_queue         : VecDeque<u8>,
     compress_threshold : Option<usize>,
     state              : ConnPeerState
-}
-
-pub(super) enum ConnPeerState {
-    Handshake,
-    Status,
-    Login,
-    Config,
-    Play
 }
 
 
