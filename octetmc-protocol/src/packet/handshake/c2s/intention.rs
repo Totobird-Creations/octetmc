@@ -1,33 +1,32 @@
 use crate::value::varint::{ VarInt, VarIntDecodeError };
-use crate::packet::{ BoundC2S, StateHandshake, BufHead };
-use crate::packet::decode::{ DecodeBuf, PacketDecode, IncompleteData };
-use crate::packet::decode::string::StringDecodeError;
+use crate::packet::{ StateHandshake };
+use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
+use crate::packet::decode::str::StringDecodeError;
 use std::borrow::Cow;
 
 
 #[derive(Debug, Clone)]
 pub struct IntentionC2SHandshakePacket<'l> {
     pub protocol  : u32,
-    pub address   : Cow<'l, str>,
+    pub address   : &'l str,
     pub port      : u16,
     pub intention : Intention
 }
 
 
 impl PacketDecode for IntentionC2SHandshakePacket<'_> {
-    type Bound = BoundC2S;
     type State = StateHandshake;
 
     const PREFIX : u8 = 0x00;
     type Output<'l> = IntentionC2SHandshakePacket<'l>;
     type Error<'l>  = IntentionDecodeError;
 
-    fn decode<'l>(buf : DecodeBuf<'l>, head : &mut BufHead)
+    fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>>
     {
         Ok(Self::Output {
             protocol  : *buf.read_decode::<VarInt::<u32>>(head)?,
-            address   : Cow::Borrowed(buf.read_decode::<&str>(head)?),
+            address   : buf.read_decode::<&str>(head)?,
             port      : buf.read_decode::<u16>(head)?,
             intention : Intention::try_from(buf.read_decode::<VarInt::<u32>>(head)?)?
         })

@@ -1,8 +1,7 @@
 use super::{ ConnPeerResult, ConnPeerError };
 use crate::util::future::timeout;
 use octetmc_protocol::value::varint::{ VarInt, VarIntDecodeError };
-use octetmc_protocol::packet::{ BoundC2S, PacketBoundState, BufHead };
-use octetmc_protocol::packet::decode::{ PacketDecodeGroup, PacketPartDecode, DecodeBuf, UnknownPrefix, MAX_PACKET_LENGTH };
+use octetmc_protocol::packet::decode::{ PacketDecodeGroup, PacketPartDecode, DecodeBufHead, DecodeBuf, UnknownPrefix, MAX_PACKET_LENGTH };
 use core::net::SocketAddr;
 use core::time::Duration;
 use core::mem::{ self, MaybeUninit, ManuallyDrop };
@@ -57,9 +56,7 @@ impl ConnPeerComms {
 
     pub(super) async fn read_packet<P>(&mut self) -> ConnPeerResult<ReadPacketContainer<P>>
     where
-        P                                           : PacketDecodeGroup<Bound = BoundC2S>,
-        (BoundC2S, <P as PacketDecodeGroup>::State) : PacketBoundState,
-        for<'l> <P as PacketDecodeGroup>::Error<'l> : Into<Cow<'static, str>>
+        P : PacketDecodeGroup
     {
         let (total_len, _,) = self.read_packet_len().await?;
         self.wait_for_bytes(total_len).await?; // <NOTE 1>
@@ -133,7 +130,7 @@ impl ConnPeerComms {
             unsafe { buf.assume_init() }
         });
 
-        let mut head = BufHead::default();
+        let mut head = DecodeBufHead::default();
         let packet = P::decode_prefixed(DecodeBuf::from(unsafe { mem::transmute::<&[u8], &[u8]>(&*buf) }), &mut head).map_err(|e| match (e) {
             UnknownPrefix::UnknownPrefix(p) => ConnPeerError::UnknownPacketPrefix(p),
             UnknownPrefix::Error(e)         => ConnPeerError::BadPacket(e.into()),
@@ -147,9 +144,7 @@ impl ConnPeerComms {
 
     pub(super) async fn read_packet_timeout<P>(&mut self, dur : Duration) -> ConnPeerResult<ReadPacketContainer<P>>
     where
-        P                                           : PacketDecodeGroup<Bound = BoundC2S>,
-        (BoundC2S, <P as PacketDecodeGroup>::State) : PacketBoundState,
-        for<'l> <P as PacketDecodeGroup>::Error<'l> : Into<Cow<'static, str>>
+        P : PacketDecodeGroup
     { match (timeout(dur, self.read_packet::<P>()).await) {
         Ok(Ok(out))  => Ok(out),
         Ok(Err(err)) => Err(err),
@@ -167,7 +162,7 @@ impl ConnPeerComms {
                 Some(b) => {
                     buf[index] = b;
                     index += 1;
-                    match (VarInt::<u32>::decode(DecodeBuf::from(&buf[0..index]), &mut BufHead::default())) {
+                    match (VarInt::<u32>::decode(DecodeBuf::from(&buf[0..index]), &mut DecodeBufHead::default())) {
                         Err(VarIntDecodeError::IncompleteData) => { },
                         Err(VarIntDecodeError::TooLong) => {
                             return Err(ConnPeerError::InvalidPacketLength);
@@ -233,8 +228,7 @@ impl Write for PacketDecompress {
 
 pub struct ReadPacketContainer<P>
 where
-    P                                           : PacketDecodeGroup<Bound = BoundC2S>,
-    (BoundC2S, <P as PacketDecodeGroup>::State) : PacketBoundState
+    P : PacketDecodeGroup
 {
     raw     : ManuallyDrop<Pin<Box<[u8]>>>,
     packet  : ManuallyDrop<P::Output<'static>>
@@ -242,8 +236,7 @@ where
 
 impl<P> Deref for ReadPacketContainer<P>
 where
-    P                                           : PacketDecodeGroup<Bound = BoundC2S>,
-    (BoundC2S, <P as PacketDecodeGroup>::State) : PacketBoundState
+    P : PacketDecodeGroup
 {
     type Target = P::Output<'static>;
     #[inline]
@@ -253,8 +246,7 @@ where
 // Forces `self.raw` to live until after `self.packet` is dropped.
 impl<P> Drop for ReadPacketContainer<P>
 where
-    P                                           : PacketDecodeGroup<Bound = BoundC2S>,
-    (BoundC2S, <P as PacketDecodeGroup>::State) : PacketBoundState
+    P : PacketDecodeGroup
 {
     fn drop(&mut self) {
         // SAFETY: `self.packet` still hasn't been dropped.

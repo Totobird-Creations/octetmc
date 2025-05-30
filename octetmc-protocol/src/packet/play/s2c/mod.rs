@@ -1,11 +1,9 @@
-use crate::packet::{ BoundS2C, StatePlay, packet_group };
-use crate::packet::decode::IncompleteData;
+use crate::packet::StatePlay;
+use crate::packet::encode::packet_encode_group;
 
 
-packet_group!{
-    type Bound     = BoundS2C;
-    type State     = StatePlay;
-    type Error<'l> = IncompleteData;
+packet_encode_group!{
+    type State = StatePlay;
     pub enum S2CPlayPackets {
     }
 }

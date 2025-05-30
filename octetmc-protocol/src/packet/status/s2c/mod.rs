@@ -1,11 +1,13 @@
-use crate::packet::{ BoundS2C, StateStatus, packet_group };
-use crate::packet::decode::IncompleteData;
+use crate::packet::StateStatus;
+use crate::packet::encode::packet_encode_group;
 
 
-packet_group!{
-    type Bound     = BoundS2C;
-    type State     = StateStatus;
-    type Error<'l> = IncompleteData;
-    pub enum S2CStatusPackets {
+mod status_response;
+
+
+packet_encode_group!{
+    type State = StateStatus;
+    pub enum S2CLoginPackets<'l> {
+        StatusResponse(status_response::StatusResponseS2CStatusPacket<'l>)
     }
 }

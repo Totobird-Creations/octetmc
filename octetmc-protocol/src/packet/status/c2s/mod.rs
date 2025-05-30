@@ -1,5 +1,5 @@
-use crate::packet::{ BoundC2S, StateStatus, packet_group };
-use crate::packet::decode::IncompleteData;
+use crate::packet::StateStatus;
+use crate::packet::decode::{ IncompleteData, packet_decode_group };
 use std::borrow::Cow;
 
 
@@ -8,8 +8,7 @@ pub mod status_request;
 pub mod ping_request;
 
 
-packet_group!{
-    type Bound     = BoundC2S;
+packet_decode_group!{
     type State     = StateStatus;
     type Error<'l> = C2SStatusPacketParseError;
     pub enum C2SStatusPackets {

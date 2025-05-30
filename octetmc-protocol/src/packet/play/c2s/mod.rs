@@ -1,9 +1,8 @@
-use crate::packet::{ BoundC2S, StatePlay, packet_group };
-use crate::packet::decode::IncompleteData;
+use crate::packet::StatePlay;
+use crate::packet::decode::{ IncompleteData, packet_decode_group };
 
 
-packet_group!{
-    type Bound     = BoundC2S;
+packet_decode_group!{
     type State     = StatePlay;
     type Error<'l> = IncompleteData;
     pub enum C2SPlayPackets {
