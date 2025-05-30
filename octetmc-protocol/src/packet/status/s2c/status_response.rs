@@ -17,16 +17,24 @@ pub const FAVICON_PREFIX : &str = "data:image/png;base64,";
 
 #[derive(Debug, Clone, Ser)]
 pub struct StatusResponseS2CStatusPacket<'a, 'b, 'c, 'd, 'e> {
+
     pub version             : StatusVersion<'a>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub players             : Option<StatusPlayers<'b>>,
+
+    #[serde(rename = "description")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub motd                : Option<&'c Text<'d>>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub favicon             : Option<Cow<'e, str>>,
+
     pub enforce_secure_chat : bool,
+
     #[serde(skip_serializing_if = "is_false")]
     pub block_chat_reports  : bool
+
 }
 
 #[derive(Debug, Clone, Ser)]

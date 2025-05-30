@@ -6,10 +6,15 @@ use serde::{
 };
 
 
-#[derive(Clone, Debug, Ser)]
+#[derive(Clone, Debug)]
 pub struct Text<'l> {
-    #[serde(flatten)]
     pub components : Cow<'l, [TextComponent<'l>]>
+}
+impl Ser for Text<'_> {
+    fn serialize<S>(&self, serer : S) -> Result<<S as Serer>::Ok, <S as Serer>::Error>
+    where
+        S : Serer
+    { self.components.serialize(serer) }
 }
 
 
@@ -73,6 +78,18 @@ pub struct TextStyle<'l> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub shadow    : Option<TextARGBColour>
 }
+impl TextStyle<'_> {
+    pub const NONE : Self = Self {
+        colour    : None,
+        font      : None,
+        bold      : None,
+        italic    : None,
+        underline : None,
+        strike    : None,
+        obfuscate : None,
+        shadow    : None
+    };
+}
 
 #[derive(Clone, Copy, Debug, Ser)]
 pub enum TextBasicColour {
@@ -106,9 +123,9 @@ pub enum TextBasicColour {
     Pink,
     #[serde(rename = "yellow")]
     Yellow,
-    #[serde(rename = "right")]
+    #[serde(rename = "white")]
     White,
-    #[serde(serialize_with = "rgb_to_hex")]
+    #[serde(untagged, serialize_with = "rgb_to_hex")]
     Rgb { r : u8, g : u8, b : u8 }
 }
 
@@ -142,6 +159,13 @@ pub struct TextInteract<'l> {
     #[serde(rename = "hover_event")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hover  : Option<TextHoverEvent<'l>>
+}
+impl TextInteract<'_> {
+    pub const NONE : Self = Self {
+        insert : None,
+        click  : None,
+        hover  : None
+    };
 }
 
 #[derive(Clone, Debug, Ser)]

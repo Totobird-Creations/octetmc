@@ -1,6 +1,8 @@
 use super::PacketState;
 
 
+mod num;
+
 mod str;
 
 
@@ -43,16 +45,16 @@ macro_rules! packet_encode_group { (
                 &self,
                 #[allow(unused_variables)]
                 buf : &mut $crate::packet::encode::EncodeBuf
-            ) {
+            ) { match (self) {
                 $(
-                    match (self) {
-                        Self::$varident(v) => {
-                            buf.write(<$varinner as $crate::packet::encode::PacketEncode>::PREFIX);
-                            <$varinner as $crate::packet::encode::PacketEncode>::encode(v, buf);
-                        }
-                    }
+                    Self::$varident(v) => {
+                        buf.write(<$varinner as $crate::packet::encode::PacketEncode>::PREFIX);
+                        <$varinner as $crate::packet::encode::PacketEncode>::encode(v, buf);
+                    },
                 )*
-            }
+                #[allow(unreachable_patterns)]
+                _ => unreachable!()
+            } }
 
         }
 
@@ -85,22 +87,33 @@ pub struct EncodeBuf {
 
 impl EncodeBuf {
 
+    #[inline]
+    pub fn len(&self) -> usize { self.buf.len() }
+
+    #[inline]
     pub fn reserve(&mut self, additional : usize) {
         self.buf.reserve_exact(additional);
     }
 
+    #[inline]
+    pub fn as_bytes(&self) -> &[u8] { &self.buf }
+
+    #[inline]
     pub fn write(&mut self, byte : u8) {
         self.buf.push(byte);
     }
 
+    #[inline]
     pub fn write_n(&mut self, bytes : &[u8]) {
         self.buf.extend_from_slice(bytes);
     }
 
+    #[inline]
     pub fn write_n_const<const N : usize>(&mut self, bytes : [u8; N]) {
         self.buf.extend_from_slice(&bytes);
     }
 
+    #[inline(always)]
     pub fn encode_write<T>(&mut self, packet : &T)
     where
         T : PacketPartEncode + ?Sized

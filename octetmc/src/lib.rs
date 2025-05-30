@@ -43,7 +43,8 @@ plugin_group! {
         bevy_diagnostic:::DiagnosticsPlugin,
         bevy_diagnostic:::FrameCountPlugin,
         :DefaultAsyncPlugin,
-        conn:::OctetConnPlugin
+        conn:::OctetConnPlugin,
+        player:::OctetPlayerPlugin
     }
 }
 
