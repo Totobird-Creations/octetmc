@@ -1,9 +1,8 @@
-use crate::packet::{ BoundC2S, StateLogin, packet_group };
-use crate::packet::decode::IncompleteData;
+use crate::packet::StateLogin;
+use crate::packet::decode::{ IncompleteData, packet_decode_group };
 
 
-packet_group!{
-    type Bound     = BoundC2S;
+packet_decode_group!{
     type State     = StateLogin;
     type Error<'l> = IncompleteData;
     pub enum C2SLoginPackets {

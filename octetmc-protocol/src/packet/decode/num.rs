@@ -1,11 +1,11 @@
-use super::{ PacketPartDecode, DecodeBuf, BufHead, IncompleteData };
+use super::{ PacketPartDecode, DecodeBuf, DecodeBufHead, IncompleteData };
 
 
 macro_rules! impl_packet_part_decode_for_num { ( $ty:ty $(,)? ) => {
     impl PacketPartDecode for $ty {
         type Output<'l> = $ty;
         type Error<'l>  = IncompleteData;
-        fn decode<'l>(buf : DecodeBuf<'l>, head : &mut BufHead) -> Result<Self::Output<'l>, Self::Error<'l>> {
+        fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead) -> Result<Self::Output<'l>, Self::Error<'l>> {
             Ok(<$ty>::from_be_bytes(buf.read_n_const(head)?))
         }
     }

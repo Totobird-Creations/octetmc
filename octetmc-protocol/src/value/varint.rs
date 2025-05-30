@@ -1,5 +1,5 @@
-use crate::packet::BufHead;
-use crate::packet::decode::{ DecodeBuf, PacketPartDecode, IncompleteData };
+use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketPartDecode, IncompleteData };
+use crate::packet::encode::{ EncodeBuf, PacketPartEncode };
 use core::ops::{ Deref, DerefMut };
 use std::borrow::Cow;
 
@@ -36,9 +36,25 @@ where
 {
     type Output<'l> = VarInt<V>;
     type Error<'l> = VarIntDecodeError;
-    fn decode<'l>(buf : DecodeBuf<'l>, head : &mut BufHead) -> Result<Self::Output<'l>, Self::Error<'l>> {
+    fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead) -> Result<Self::Output<'l>, Self::Error<'l>> {
         <V as VarIntType>::decode(buf, head).map(VarInt)
     }
+}
+
+impl<V> PacketPartEncode for VarInt<V>
+where
+    V : VarIntType
+{
+    fn encode(&self, buf : &mut EncodeBuf) {
+        <V as VarIntType>::encode(&self.0, buf)
+    }
+}
+
+impl<V> From<V> for VarInt<V>
+where
+    V : VarIntType
+{
+    fn from(value : V) -> Self { Self(value) }
 }
 
 
@@ -49,7 +65,8 @@ pub const CONTINUE_BIT : u8 = 0x80;
 macro_rules! var_int_type_impl { ( $ty:ty $(,)? ) => {
     impl VarIntType for $ty {
         const MAX_BYTES : usize = core::mem::size_of::<$ty>() + 1;
-        fn decode(buf : DecodeBuf<'_>, head : &mut BufHead)
+
+        fn decode(buf : DecodeBuf<'_>, head : &mut DecodeBufHead)
             -> Result<Self, VarIntDecodeError>
         {
             const MAX_SHIFT : usize = core::mem::size_of::<$ty>() * 8;
@@ -64,23 +81,49 @@ macro_rules! var_int_type_impl { ( $ty:ty $(,)? ) => {
             }
             Ok(value)
         }
+
+        fn encode(&self, buf : &mut EncodeBuf) {
+            const SELF_SEGMENT_BITS : $ty = SEGMENT_BITS as $ty;
+            const SELF_CONTINUE_BIT : $ty = CONTINUE_BIT as $ty;
+            let mut bytes = [0u8; Self::MAX_BYTES];
+            let mut i     = 0;
+            let mut data  = *self;
+            loop {
+                if ((data & (! SELF_SEGMENT_BITS)) == 0) {
+                    bytes[i] = data as u8;
+                    buf.write_n(&bytes[0..(i + 1)]);
+                    return;
+                }
+                bytes[i] = ((data & SELF_SEGMENT_BITS) | SELF_CONTINUE_BIT) as u8;
+                i += 1;
+                data >>= 7;
+            }
+        }
+
     }
 } }
 macro_rules! var_int_type_remap_impl { ( $ty:ty => $from:ty $(,)? ) => {
     impl VarIntType for $ty {
         const MAX_BYTES : usize = <$from as VarIntType>::MAX_BYTES;
-        fn decode(buf : DecodeBuf<'_>, head : &mut BufHead)
+
+        fn decode(buf : DecodeBuf<'_>, head : &mut DecodeBufHead)
             -> Result<Self, VarIntDecodeError>
         {
             <$from as VarIntType>::decode(buf, head).map(|value| value.cast_unsigned())
         }
+
+        fn encode(&self, buf : &mut EncodeBuf) {
+            <$from as VarIntType>::encode(&self.cast_signed(), buf)
+        }
+
     }
 } }
 
 
 pub trait VarIntType : Sized {
     const MAX_BYTES : usize;
-    fn decode(buf : DecodeBuf<'_>, head : &mut BufHead) -> Result<Self, VarIntDecodeError>;
+    fn decode(buf : DecodeBuf<'_>, head : &mut DecodeBufHead) -> Result<Self, VarIntDecodeError>;
+    fn encode(&self, buf : &mut EncodeBuf);
 }
 
 var_int_type_impl!( i32 );

@@ -1,11 +1,11 @@
-use crate::packet::{ BoundC2S, StateHandshake, packet_group };
+use crate::packet::StateHandshake;
+use crate::packet::decode::packet_decode_group;
 
 
 pub mod intention;
 
 
-packet_group!{
-    type Bound     = BoundC2S;
+packet_decode_group!{
     type State     = StateHandshake;
     type Error<'l> = intention::IntentionDecodeError;
     pub enum C2SHandshakePackets<'l> {
