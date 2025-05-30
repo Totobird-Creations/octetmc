@@ -26,17 +26,17 @@ where
 
 macro_rules! packet_encode_group { (
     type State = $state:ty;
-    $vis:vis enum $ident:ident $( < $lt:lifetime $(,)? > )? {
+    $vis:vis enum $ident:ident $( < $( $lt:lifetime ),* $(,)? > )? {
         $( $varident:ident ( $varinner:ty $(,)? ) ),* $(,)?
     }
 ) => {
 
     #[derive(Debug, Clone)]
-    $vis enum $ident $( < $lt , > )? {
+    $vis enum $ident $( < $( $lt , )* > )? {
         $( $varident ( $varinner ) , )*
     }
 
-        impl $( < $lt , > )? $crate::packet::encode::PacketEncodeGroup for $ident $( < $lt , > )? {
+        impl $( < $( $lt , )* > )? $crate::packet::encode::PacketEncodeGroup for $ident $( < $( $lt , )* > )? {
             type State = $state;
 
             fn encode_prefixed(

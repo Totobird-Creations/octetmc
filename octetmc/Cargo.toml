@@ -26,6 +26,8 @@ path = "../octetmc-protocol"
 version = "2.0"
 [dependencies.pin-project]
 version = "1.1"
+[dependencies.futures]
+version = "0.3"
 
 [dependencies.bevy_ecs]
 version = "0.16"
