@@ -53,5 +53,5 @@ version = "0.22"
 version = "1.1"
 [dependencies.rand]
 version = "0.9"
-[dependencies.rsa]
-version = "0.9"
+[dependencies.openssl]
+version = "0.10"
