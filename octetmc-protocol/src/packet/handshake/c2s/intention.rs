@@ -1,3 +1,6 @@
+//! `0x00` `intention`
+
+
 use crate::value::varint::{ VarInt, VarIntDecodeError };
 use crate::packet::{ StateHandshake };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
@@ -5,12 +8,24 @@ use crate::packet::decode::str::StringDecodeError;
 use std::borrow::Cow;
 
 
+/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Handshake
 #[derive(Debug, Clone)]
 pub struct IntentionC2SHandshakePacket<'l> {
+
+    /// The protocol version this server is running.
+    ///
+    /// https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge/Protocol_version_numbers
     pub protocol  : u32,
+
+    /// The hostname that was used to connect.
     pub address   : &'l str,
+
+    /// The port that was used to connect.
     pub port      : u16,
+
+    /// The client's intention.
     pub intention : Intention
+
 }
 
 
@@ -34,11 +49,21 @@ impl PacketDecode for IntentionC2SHandshakePacket<'_> {
 }
 
 
+/// A client's intention.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Intention {
+
+    /// The client will request server list information.
     Status   = 1,
+
+    /// The client will try to join the game.
     Login    = 2,
+
+    /// The client will try to join the game.
+    ///
+    /// Another server transferred the client to this server.
     Transfer = 3,
+
 }
 impl TryFrom<VarInt<u32>> for Intention {
     type Error = UnknownIntention;
@@ -53,11 +78,21 @@ impl TryFrom<VarInt<u32>> for Intention {
 }
 
 
+/// An `IntentionC2SHandshakePacket` failed to decode.
 pub enum IntentionDecodeError {
+
+    /// Not enough bytes were present.
     IncompleteData,
+
+    /// The byte-encoded `VarInt` contained more than `MAX_BYTES` bytes.
     VarIntTooLong,
+
+    /// A string contained invalid UTF-8.
     StringInvalidUtf8,
+
+    /// The client requested an unknown intention.
     UnknownIntention
+
 }
 
 impl From<IntentionDecodeError> for Cow<'static, str> {
@@ -93,4 +128,5 @@ impl From<UnknownIntention> for IntentionDecodeError {
 }
 
 
+/// The client requested an unknown intention.
 pub struct UnknownIntention;

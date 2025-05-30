@@ -2,7 +2,7 @@ use super::ConnPeerComms;
 use crate::conn::{ ConnPeerResult, ConnPeerError };
 use crate::util::future::timeout;
 use octetmc_protocol::value::varint::{ VarInt, VarIntDecodeError };
-use octetmc_protocol::packet::decode::{ PacketDecodeGroup, PacketPartDecode, DecodeBufHead, DecodeBuf, UnknownPrefix, MAX_PACKET_LENGTH };
+use octetmc_protocol::packet::decode::{ PacketPrefixedDecode, PacketPartDecode, DecodeBufHead, DecodeBuf, UnknownPrefix, MAX_PACKET_LENGTH };
 use core::time::Duration;
 use core::mem::{ self, MaybeUninit, ManuallyDrop };
 use core::ptr;
@@ -18,7 +18,7 @@ impl ConnPeerComms {
 
     pub(crate) async fn read_packet<P>(&mut self) -> ConnPeerResult<ReadPacketContainer<P>>
     where
-        P : PacketDecodeGroup
+        P : PacketPrefixedDecode
     {
         let (total_len, _,) = self.read_packet_len().await?;
         self.wait_for_bytes(total_len).await?; // <NOTE 1>
@@ -107,7 +107,7 @@ impl ConnPeerComms {
 
     pub(crate) async fn read_packet_timeout<P>(&mut self, dur : Duration) -> ConnPeerResult<ReadPacketContainer<P>>
     where
-        P : PacketDecodeGroup
+        P : PacketPrefixedDecode
     { match (timeout(dur, self.read_packet::<P>()).await) {
         Ok(Ok(out))  => Ok(out),
         Ok(Err(err)) => Err(err),
@@ -191,7 +191,7 @@ impl Write for PacketDecompress {
 
 pub struct ReadPacketContainer<P>
 where
-    P : PacketDecodeGroup
+    P : PacketPrefixedDecode
 {
     raw     : ManuallyDrop<Pin<Box<[u8]>>>,
     packet  : ManuallyDrop<P::Output<'static>>
@@ -199,7 +199,7 @@ where
 
 impl<P> Deref for ReadPacketContainer<P>
 where
-    P : PacketDecodeGroup
+    P : PacketPrefixedDecode
 {
     type Target = P::Output<'static>;
     #[inline]
@@ -209,7 +209,7 @@ where
 // Forces `self.raw` to live until after `self.packet` is dropped.
 impl<P> Drop for ReadPacketContainer<P>
 where
-    P : PacketDecodeGroup
+    P : PacketPrefixedDecode
 {
     fn drop(&mut self) {
         // SAFETY: `self.packet` still hasn't been dropped.

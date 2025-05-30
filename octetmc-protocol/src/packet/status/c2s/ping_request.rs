@@ -1,10 +1,17 @@
+//! `0x01` `ping_request`
+
+
 use crate::packet::StateStatus;
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
 
 
+/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Ping_Request_(status)
 #[derive(Debug, Clone)]
 pub struct PingRequestC2SStatusPacket {
+
+    /// May be any number, but vanilla clients will use the timestamp in milliseconds.
     pub timestamp : u64
+
 }
 
 

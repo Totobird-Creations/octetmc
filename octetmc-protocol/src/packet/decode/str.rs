@@ -1,3 +1,6 @@
+//! String decoder types.
+
+
 use super::{ PacketPartDecode, DecodeBuf, DecodeBufHead, IncompleteData };
 use crate::value::varint::{ VarInt, VarIntDecodeError };
 use std::str;
@@ -17,10 +20,18 @@ impl PacketPartDecode for &str {
 }
 
 
+/// An `&str` failed to decode.
 pub enum StringDecodeError {
+
+    /// Not enough bytes were present.
     IncompleteData,
+
+    /// The byte-encoded `VarInt` contained more than `MAX_BYTES` bytes.
     VarIntTooLong,
+
+    /// A string contained invalid UTF-8.
     InvalidUtf8
+
 }
 
 impl From<StringDecodeError> for Cow<'static, str> {

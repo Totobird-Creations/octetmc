@@ -22,6 +22,7 @@ unused_parens = "allow"
 [dependencies.octetmc-protocol]
 path = "../octetmc-protocol"
 
+# Async
 [dependencies.smol]
 version = "2.0"
 [dependencies.pin-project]
@@ -29,6 +30,7 @@ version = "1.1"
 [dependencies.futures]
 version = "0.3"
 
+# ECS
 [dependencies.bevy_ecs]
 version = "0.16"
 [dependencies.bevy_app]
@@ -40,10 +42,16 @@ version = "0.16"
 [dependencies.bevy_defer]
 version = "0.14"
 
+# Favicon handling
 [dependencies.image]
 version = "0.25"
 [dependencies.base64]
 version = "0.22"
 
+# Compression & Encryption
 [dependencies.flate2]
 version = "1.1"
+[dependencies.rand]
+version = "0.9"
+[dependencies.rsa]
+version = "0.9"

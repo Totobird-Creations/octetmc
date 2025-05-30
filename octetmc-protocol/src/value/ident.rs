@@ -1,3 +1,6 @@
+//! Resource location identifiers.
+
+
 use std::borrow::Cow;
 use serde::{
     Serialize as Ser,
@@ -5,6 +8,7 @@ use serde::{
 };
 
 
+/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:Identifier
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Ident<'l> {
     nspace : Cow<'l, str>,
