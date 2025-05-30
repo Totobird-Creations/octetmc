@@ -1,7 +1,7 @@
 use super::ConnPeerComms;
 use crate::conn::ConnPeerResult;
 use octetmc_protocol::value::varint::VarInt;
-use octetmc_protocol::packet::encode::{ PacketEncodeGroup, EncodeBuf };
+use octetmc_protocol::packet::encode::{ PacketPrefixedEncode, EncodeBuf };
 use smol::io::AsyncWriteExt;
 
 
@@ -9,9 +9,10 @@ impl ConnPeerComms {
 
     pub(crate) async fn send_packet<P>(&mut self, packet : &P) -> ConnPeerResult
     where
-        P : PacketEncodeGroup
+        P : PacketPrefixedEncode
     {
         let mut packet_data_buf = EncodeBuf::default();
+        packet_data_buf.reserve(P::predict_size(packet));
         P::encode_prefixed(packet, &mut packet_data_buf);
 
         let uncompressed_packet_len = packet_data_buf.len();

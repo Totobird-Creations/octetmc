@@ -7,7 +7,7 @@ use octetmc_protocol::value::text::{ Text, TextComponent, TextContent, TextStyle
 use octetmc_protocol::packet::status::c2s::C2SStatusPackets;
 use octetmc_protocol::packet::status::c2s::ping_request::PingRequestC2SStatusPacket;
 use octetmc_protocol::packet::status::s2c::status_response::{ StatusResponseS2CStatusPacket, StatusVersion, StatusPlayers, FAVICON_PREFIX, MAX_PLAYERS };
-use octetmc_protocol::packet::status::s2c::ping_response::PingResponseS2CStatusPacket;
+use octetmc_protocol::packet::status::s2c::pong_response::PongResponseS2CStatusPacket;
 use core::time::Duration;
 use std::borrow::Cow;
 use std::sync::LazyLock;
@@ -101,19 +101,16 @@ pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResul
             }).await?;
 
             let PingRequestC2SStatusPacket { timestamp } = *comms.read_packet_timeout::<PingRequestC2SStatusPacket>(REQUEST_TIMEOUT).await?;
-            handle_ping_request(comms, timestamp).await
+            comms.send_packet(&PongResponseS2CStatusPacket { timestamp }).await?;
+
+            Ok(())
         },
 
         C2SStatusPackets::PingRequest(PingRequestC2SStatusPacket { timestamp }) => {
-            handle_ping_request(comms, timestamp).await
+            comms.send_packet(&PongResponseS2CStatusPacket { timestamp }).await?;
+
+            Ok(())
         }
 
     }
-}
-
-
-async fn handle_ping_request(comms : &mut ConnPeerComms, timestamp : u64) -> ConnPeerResult {
-    comms.send_packet(&PingResponseS2CStatusPacket { timestamp }).await?;
-
-    Ok(())
 }

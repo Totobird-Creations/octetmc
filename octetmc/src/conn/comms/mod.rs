@@ -34,4 +34,9 @@ impl ConnPeerComms {
         self.state = state;
     }
 
+    #[inline]
+    pub(super) fn set_compress_threshold(&mut self, threshold : u32) {
+        self.compress_threshold = Some(threshold as usize);
+    }
+
 }

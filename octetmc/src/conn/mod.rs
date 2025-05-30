@@ -35,7 +35,7 @@ pub struct OctetConnPlugin {
     /// How large packets need to be before being compressed.
     ///
     /// `None` to disable packet compression.
-    pub compress_threshold : Option<usize>,
+    pub compress_threshold : Option<u32>,
 
     /// Whether the Mojang authentication servers should be contacted to
     ///  confirm player's identities on join.
@@ -98,11 +98,31 @@ async fn run_listener(config : OctetConnPlugin) -> io::Result<!> {
     loop {
         let (stream, addr,) = listener.accept().await?;
         AsyncWorld.spawn_bundle((ConnPeer(AsyncWorld.spawn_task(async move {
-            if let Err(err) = run_peer(ConnPeerComms::new(stream, addr)).await {
+            if let Err(err) = run_peer(
+                ConnPeerComms::new(stream, addr),
+                config.compress_threshold,
+                config.mojauth_enabled
+            ).await {
                 println!("{err:?}"); // TODO: Proper error handler;
             }
             Ok(())
         })),));
+    }
+}
+
+
+async fn run_peer(
+    mut comms              : ConnPeerComms,
+        compress_threshold : Option<u32>,
+        mojauth_enabled    : bool
+) -> ConnPeerResult {
+    match (handshake::wait_for_intention(&mut comms).await?) {
+        Intention::Status => status::handle_requests(&mut comms).await,
+        Intention::Login  => login::handle_login_process(
+            &mut comms,
+            compress_threshold,
+            mojauth_enabled
+        ).await
     }
 }
 
@@ -170,12 +190,4 @@ pub enum ConnPeerError {
 }
 impl From<io::Error> for ConnPeerError {
     fn from(value : io::Error) -> Self { Self::Io(value) }
-}
-
-
-async fn run_peer(mut comms : ConnPeerComms) -> ConnPeerResult {
-    match (handshake::wait_for_intention(&mut comms).await?) {
-        Intention::Status => status::handle_requests(&mut comms).await,
-        Intention::Login  => login::handle_login_process(&mut comms).await
-    }
 }
