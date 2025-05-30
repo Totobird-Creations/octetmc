@@ -1,6 +1,7 @@
 //! Server information.
 
 
+use crate::util::dirty::Dirtyable;
 use crate::util::macros::deref_single;
 use octetmc_protocol::value::text::Text;
 use std::io::Cursor;
@@ -32,7 +33,8 @@ deref_single!{
 /// The favicon is displayed in server list on the client end.
 #[derive(Resource)]
 pub struct ServerFavicon {
-    b64_png : String
+    b64_png : String,
+    dirty   : bool
 }
 
 impl ServerFavicon {
@@ -42,7 +44,7 @@ impl ServerFavicon {
     ///
     /// Misusing this function is not inherently unsafe, but game clients will not render the image properly.
     pub unsafe fn from_b64_png_unchecked(b64_png : String) -> Self {
-        Self { b64_png }
+        Self { b64_png, dirty : false }
     }
 
     /// Set this favicon to some image.
@@ -81,6 +83,13 @@ impl ServerFavicon {
 
 }
 
+impl Dirtyable for ServerFavicon {
+    #[inline]
+    fn is_dirty(self : &Self) -> bool { self.dirty }
+    #[inline]
+    fn dirty_mut(self : &mut Self) -> &mut bool { &mut self.dirty }
+}
+
 impl<I> From<&I> for ServerFavicon
 where
     I                                                     : GenericImageView,
@@ -93,7 +102,7 @@ where
         let     img     = imageops::resize(value, 64, 64, imageops::FilterType::Gaussian);
         let     _       = img.write_to(&mut Cursor::new(&mut bytes), ImageFormat::Png);
         let     b64_png = b64gp::STANDARD.encode(bytes);
-        Self { b64_png }
+        Self { b64_png, dirty : false }
     }
 }
 impl TryFrom<&str> for ServerFavicon {
@@ -105,7 +114,7 @@ impl TryFrom<&str> for ServerFavicon {
         bytes.clear();
         let     _       = img.write_to(&mut Cursor::new(&mut bytes), ImageFormat::Png);
         let     b64_png = b64gp::STANDARD.encode(bytes);
-        Ok(Self { b64_png })
+        Ok(Self { b64_png, dirty : false })
     }
 }
 

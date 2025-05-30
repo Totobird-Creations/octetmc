@@ -1,60 +1,22 @@
-use super::{ ConnPeerResult, ConnPeerError };
+use super::ConnPeerComms;
+use crate::conn::{ ConnPeerResult, ConnPeerError };
 use crate::util::future::timeout;
 use octetmc_protocol::value::varint::{ VarInt, VarIntDecodeError };
 use octetmc_protocol::packet::decode::{ PacketDecodeGroup, PacketPartDecode, DecodeBufHead, DecodeBuf, UnknownPrefix, MAX_PACKET_LENGTH };
-use core::net::SocketAddr;
 use core::time::Duration;
 use core::mem::{ self, MaybeUninit, ManuallyDrop };
 use core::ptr;
 use core::pin::Pin;
 use core::ops::Deref;
-use std::collections::VecDeque;
 use std::io::{ self, Write };
 use std::borrow::Cow;
-use smol::net::TcpStream;
 use smol::io::AsyncReadExt;
 use flate2::write::ZlibDecoder;
 
 
-
-pub(super) struct ConnPeerComms {
-    stream             : TcpStream,
-    addr               : SocketAddr,
-    read_queue         : VecDeque<u8>,
-    compress_threshold : Option<usize>,
-    state              : ConnPeerState
-}
-
-pub(super) enum ConnPeerState {
-    Handshake,
-    Status,
-    Login,
-    Config,
-    Play
-}
-
-
 impl ConnPeerComms {
 
-    #[inline]
-    pub(super) fn new(stream : TcpStream, addr : SocketAddr) -> Self {
-        Self { stream, addr,
-            read_queue         : VecDeque::new(),
-            compress_threshold : None,
-            state              : ConnPeerState::Handshake
-        }
-    }
-
-    #[inline]
-    pub(super) fn set_state(&mut self, state : ConnPeerState) {
-        self.state = state;
-    }
-
-}
-
-impl ConnPeerComms {
-
-    pub(super) async fn read_packet<P>(&mut self) -> ConnPeerResult<ReadPacketContainer<P>>
+    pub(crate) async fn read_packet<P>(&mut self) -> ConnPeerResult<ReadPacketContainer<P>>
     where
         P : PacketDecodeGroup
     {
@@ -142,7 +104,7 @@ impl ConnPeerComms {
         })
     }
 
-    pub(super) async fn read_packet_timeout<P>(&mut self, dur : Duration) -> ConnPeerResult<ReadPacketContainer<P>>
+    pub(crate) async fn read_packet_timeout<P>(&mut self, dur : Duration) -> ConnPeerResult<ReadPacketContainer<P>>
     where
         P : PacketDecodeGroup
     { match (timeout(dur, self.read_packet::<P>()).await) {
@@ -194,7 +156,7 @@ impl ConnPeerComms {
         match (self.stream.read(&mut buf).await?) {
             0     => Err(ConnPeerError::PeerClosed),
             count => {
-                self.read_queue.extend(buf[0..count].iter());
+                self.read_queue.extend(buf[0..count].iter()); // TODO: Decrypt
                 Ok(())
             }
         }

@@ -10,12 +10,20 @@ use serde::{
 use serde_json::to_string as json_to_string;
 
 
+pub const MAX_PLAYERS : u32 = 2u32.pow(31) - 1;
+
+pub const FAVICON_PREFIX : &str = "data:image/png;base64,";
+
+
 #[derive(Debug, Clone, Ser)]
-pub struct StatusResponseS2CStatusPacket<'l> {
-    pub version             : StatusVersion<'l>,
-    pub players             : Option<StatusPlayers<'l>>,
-    pub motd                : Text<'l>,
-    pub favicon             : Cow<'l, str>,
+pub struct StatusResponseS2CStatusPacket<'a, 'b, 'c, 'd, 'e> {
+    pub version             : StatusVersion<'a>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub players             : Option<StatusPlayers<'b>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub motd                : Option<&'c Text<'d>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub favicon             : Option<Cow<'e, str>>,
     pub enforce_secure_chat : bool,
     #[serde(skip_serializing_if = "is_false")]
     pub block_chat_reports  : bool
@@ -43,7 +51,7 @@ pub struct StatusPlayersSampleEntry<'l> {
 }
 
 
-impl PacketEncode for StatusResponseS2CStatusPacket<'_> {
+impl PacketEncode for StatusResponseS2CStatusPacket<'_, '_, '_, '_, '_> {
     type State = StateStatus;
 
     const PREFIX : u8 = 0x00;
