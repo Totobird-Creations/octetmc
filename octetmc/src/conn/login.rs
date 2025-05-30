@@ -4,16 +4,21 @@ use octetmc_protocol::packet::login::c2s::key::KeyC2SLoginPacket;
 use octetmc_protocol::packet::login::s2c::hello::HelloS2CLoginPacket;
 use octetmc_protocol::packet::login::s2c::login_compression::LoginCompressionS2CLoginPacket;
 use core::time::Duration;
+use core::ptr;
 use rand::{ self, rngs::ThreadRng, RngCore };
 use openssl::pkey::{ PKey, Private as PrivateKey, Public as PublicKey };
 use openssl::rsa::{ Padding as RsaPadding, Rsa };
 use openssl::encrypt::Decrypter;
 use openssl::symm::{ Crypter, Cipher, Mode as CrypterMode };
+use openssl::sha::Sha1;
 
 
 const LOGIN_TIMEOUT : Duration = Duration::from_millis(250);
 
 const SERVER_ID     : &str     = "octectmc";
+
+const MOJAUTH_URL_PREFIX   : &str = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=";
+const MOJAUTH_URL_SERVERID : &str = "&serverId=";
 
 
 pub(super) async fn handle_login_process(
@@ -25,19 +30,23 @@ pub(super) async fn handle_login_process(
 
     // Wait for hello.
     let hello = comms.read_packet_timeout::<HelloC2SLoginPacket>(LOGIN_TIMEOUT).await?;
-
-    // Set compression threshold.
-    if let Some(threshold) = compress_threshold {
-        comms.send_packet(&LoginCompressionS2CLoginPacket { threshold }).await?;
-        comms.set_compress_threshold(threshold);
+    if (hello.username.len() > 16) {
+        return Err(ConnPeerError::UsernameTooLong);
     }
+
+    // TODO: Set compression threshold.
+    // if let Some(threshold) = compress_threshold {
+    //     comms.send_packet(&LoginCompressionS2CLoginPacket { threshold }).await?;
+    //     comms.set_compress_threshold(threshold);
+    // }
 
     // Generate and send public key.
     let (private_key, public_key,) = generate_key_pair(2048);
     let verify_token               = generate_verify_token::<4>(&mut rand::rng());
+    let public_key_der             = public_key.public_key_to_der().unwrap();
     comms.send_packet(&HelloS2CLoginPacket {
         server_id       : SERVER_ID,
-        public_key      : &public_key.public_key_to_der().unwrap(),
+        public_key      : &public_key_der,
         verify_token    : &verify_token,
         mojauth_enabled,
     }).await?;
@@ -47,7 +56,7 @@ pub(super) async fn handle_login_process(
 
     // Create new pkey decrypter.
     let mut decrypter = Decrypter::new(&private_key).unwrap();
-    decrypter.set_rsa_padding(RsaPadding::PKCS1).unwrap();
+    let _ = decrypter.set_rsa_padding(RsaPadding::PKCS1);
 
     // Decrypt and compare verify token.
     decrypt!(&decrypter, key.verify_token => decrypted_verify_token);
@@ -61,6 +70,36 @@ pub(super) async fn handle_login_process(
     let encrypter = Crypter::new(cipher, CrypterMode::Encrypt, secret_key, Some(secret_key)).map_err(|_| ConnPeerError::KeyExchangeFailed)?;
     let decrypter = Crypter::new(cipher, CrypterMode::Decrypt, secret_key, Some(secret_key)).map_err(|_| ConnPeerError::KeyExchangeFailed)?;
     comms.set_crypters(encrypter, decrypter);
+
+    // Build the server ID.
+    let mut sha = Sha1::new();
+    sha.update(SERVER_ID.as_bytes());
+    sha.update(secret_key);
+    sha.update(&public_key_der);
+    let mut sha_buf = [0u8; 40];
+    let _ = hex::encode_to_slice(sha.finish(), &mut sha_buf);
+
+    // Build the mojauth URL.
+    let mut url_buf = [0u8; MOJAUTH_URL_PREFIX.len() + 16 + MOJAUTH_URL_SERVERID.len() + 40];
+    let mut url_ptr = 0;
+    // SAFETY: url_buf has enough space for `MOJAUTH_URL_PREFIX`, `hello.username`, `MOJAUTH_URL_SERVERID`, and `sha_buf`.
+    //         None are written to overlap each other.
+    //         hello.username can not be longer than 16 bytes (checked above).
+    {
+        unsafe { ptr::copy_nonoverlapping(MOJAUTH_URL_PREFIX.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), MOJAUTH_URL_PREFIX.len()); }
+        url_ptr += MOJAUTH_URL_PREFIX.len();
+        unsafe { ptr::copy_nonoverlapping(hello.username.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), hello.username.len()); }
+        url_ptr += hello.username.len();
+        unsafe { ptr::copy_nonoverlapping(MOJAUTH_URL_SERVERID.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), MOJAUTH_URL_SERVERID.len()); }
+        url_ptr += MOJAUTH_URL_SERVERID.len();
+        unsafe { ptr::copy_nonoverlapping(sha_buf.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), sha_buf.len()); }
+        url_ptr += sha_buf.len();
+    }
+    let url = unsafe { str::from_utf8_unchecked(url_buf.get_unchecked(0..url_ptr)) };
+
+    println!("{}", comms.addr());
+    println!("{:?}", url);
+    //surf::get(&);
 
     todo!()
 }

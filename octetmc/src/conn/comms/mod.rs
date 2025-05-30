@@ -35,6 +35,9 @@ impl ConnPeerComms {
     }
 
     #[inline]
+    pub(super) fn addr(&self) -> SocketAddr { self.addr }
+
+    #[inline]
     pub(super) fn set_state(&mut self, state : ConnPeerState) {
         self.state = state;
     }

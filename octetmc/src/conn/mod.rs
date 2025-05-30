@@ -181,6 +181,9 @@ pub enum ConnPeerError {
     /// A received packet was longer than the decoder expected.
     NoPacketEnd,
 
+    /// The username that the client sent is too long.
+    UsernameTooLong,
+
     /// Failed to exchange pkey and establish shared secret cipher.
     KeyExchangeFailed,
 

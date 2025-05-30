@@ -30,7 +30,7 @@ pub struct HelloS2CLoginPacket<'l> {
 impl PacketEncode for HelloS2CLoginPacket<'_> {
     type State = StateLogin;
 
-    const PREFIX : u8 = 0x03;
+    const PREFIX : u8 = 0x01;
 
     fn predict_size(&self) -> usize {
         self.server_id.predict_size()
