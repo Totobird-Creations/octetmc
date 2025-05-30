@@ -15,22 +15,25 @@ use base64::engine::general_purpose as b64gp;
 deref_single!{
     /// The server's brand.
     ///
-    /// This is displayed in the top left of the F3 debug menu on the client end.
+    /// This is displayed in the top left of the F3 debug menu,
+    ///  and in server lists if the server version doesnt match the client's.
+    #[derive(Resource)]
     pub struct ServerBrand(Cow<'static, str>);
     Default { Cow::Borrowed(env!("CARGO_PKG_NAME")) }
 }
 
 deref_single!{
-    /// The server's 'message of the day' text.
+    /// The server 'message of the day' text.
     ///
-    /// The 'message of the day' is displayed in the server list on the client end.
+    /// The 'message of the day' is displayed in the server list.
+    #[derive(Resource)]
     pub struct ServerMotd(Text<'static>);
 }
 
 
-/// The server's favicon.
+/// The server favicon.
 ///
-/// The favicon is displayed in server list on the client end.
+/// The favicon is displayed in server list.
 #[derive(Resource)]
 pub struct ServerFavicon {
     b64_png : String,

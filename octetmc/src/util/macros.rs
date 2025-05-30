@@ -1,3 +1,8 @@
+pub(crate) trait DerefSingleNew<T> {
+    fn deref_single_new(value : T) -> Self;
+}
+
+
 pub(crate) macro deref_single(
     $( #[ $( $attr:tt )+ ] )*
     $vis:vis struct $ident:ident ( $inner:ty $(,)? ) ;
@@ -5,10 +10,15 @@ pub(crate) macro deref_single(
 ) {
 
     $( #[ $( $attr )+ ] )*
-    #[derive(bevy_ecs::resource::Resource)]
     $vis struct $ident {
         value : $inner,
         dirty : bool
+    }
+
+    impl $crate::util::macros::DerefSingleNew<$inner> for $ident {
+        fn deref_single_new(value : $inner) -> Self {
+            Self { value, dirty : false }
+        }
     }
 
     impl $crate::util::dirty::Dirtyable for $ident {
@@ -16,7 +26,6 @@ pub(crate) macro deref_single(
         fn is_dirty(self : &Self) -> bool { self.dirty }
         #[inline]
         fn dirty_mut(self : &mut Self) -> &mut bool { &mut self.dirty }
-
     }
 
     impl core::ops::Deref for $ident {

@@ -80,12 +80,11 @@ impl ConnPeerComms {
             let consuming = decompressed_packet_len.min(a.len());
             // SAFETY: `consuming` is clamped down to `a.len()` on the line above.
             let a = unsafe { a.get_unchecked(0..consuming) };
-            // SAFETY:
             unsafe { ptr::copy_nonoverlapping(a.as_ptr(), buf.as_mut_ptr() as _, a.len()); }
             let consuming = decompressed_packet_len - consuming;
             // SAFETY: `consuming` can never be `b.len()` or higher, as `self.read_queue` has enough bytes for the whole packet (see <NOTE 1>).
             let b = unsafe { b.get_unchecked(0..consuming) };
-            unsafe { ptr::copy_nonoverlapping(b.as_ptr(), buf[a.len()..].as_mut_ptr() as _, b.len()); }
+            unsafe { ptr::copy_nonoverlapping(b.as_ptr(), buf.as_mut_ptr().byte_add(a.len()) as _, b.len()); }
 
             self.read_queue.drain(0..decompressed_packet_len);
             // SAFETY: All bytes in `buf` were written.
@@ -93,6 +92,8 @@ impl ConnPeerComms {
         });
 
         let mut head = DecodeBufHead::default();
+        // SAFETY: `PacketDecodeContainer.packet` will not outlive `PacketDecodeContainer.raw`.
+        //         `PacketDecodeContainer.raw` can not move because it is `Pin<Box<_>>`.
         let packet = P::decode_prefixed(DecodeBuf::from(unsafe { mem::transmute::<&[u8], &[u8]>(&*buf) }), &mut head).map_err(|e| match (e) {
             UnknownPrefix::UnknownPrefix(p) => ConnPeerError::UnknownPacketPrefix(p),
             UnknownPrefix::Error(e)         => ConnPeerError::BadPacket(e.into()),
@@ -177,7 +178,7 @@ impl Write for PacketDecompress {
             Err(io::Error::from(io::ErrorKind::Other))
         } else {
             // SAFETY: Checked destination validity in if-condition above.
-            unsafe { ptr::copy_nonoverlapping(buf.as_ptr(), self.buf.get_unchecked_mut(self.head..).as_mut_ptr() as _, buf.len()); }
+            unsafe { ptr::copy_nonoverlapping(buf.as_ptr(), self.buf.as_mut_ptr().byte_add(self.head) as _, buf.len()); }
             Ok(buf.len())
         }
     }
