@@ -181,6 +181,9 @@ pub enum ConnPeerError {
     /// A received packet was longer than the decoder expected.
     NoPacketEnd,
 
+    /// Failed to exchange pkey and establish shared secret cipher.
+    KeyExchangeFailed,
+
     /// The client closed the connection.
     PeerClosed,
 

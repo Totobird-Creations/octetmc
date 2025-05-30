@@ -8,6 +8,8 @@ use crate::packet::decode::str::StringDecodeError;
 
 pub mod hello;
 
+pub mod key;
+
 
 packet_decode_group!{
     type State     = StateLogin;
@@ -15,6 +17,8 @@ packet_decode_group!{
     /// `C2SLogin`-type packets.
     pub enum C2SLoginPackets<'l> {
         /// `HelloC2SLoginPacket`
-        Hello(hello::HelloC2SLoginPacket<'l>)
+        Hello(hello::HelloC2SLoginPacket<'l>),
+        /// `KeyC2SLoginPacket`
+        Key(key::KeyC2SLoginPacket<'l>)
     }
 }
