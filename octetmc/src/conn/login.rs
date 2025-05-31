@@ -107,7 +107,7 @@ pub(super) async fn handle_login_process(
             let neg_sha_in_32 = (-sha_in_i256).to_be_bytes();
             // SAFETY: sha_in_32 bytes has 32 items.
             //         sha_buf has room for 40 items.
-            _ = hex::encode_to_slice(unsafe{ neg_sha_in_32.get_unchecked(0..20) }, unsafe { sha_buf.get_unchecked_mut(0..40) });
+            _ = hex::encode_to_slice(unsafe { neg_sha_in_32.get_unchecked(0..20) }, unsafe { sha_buf.get_unchecked_mut(0..40) });
         }
         // SAFETY: sha_buf has 40 items.
         let sha_buf = unsafe { sha_buf.get_unchecked((sha_buf.iter().position(|&x| x != b'0').unwrap_or(39))..40) };
@@ -165,10 +165,19 @@ pub(super) async fn handle_login_process(
 
     // Send login success and await confirmation.
     comms.send_packet(&LoginSuccessS2CLoginPacket {
-        profile : profile.clone(),
+        profile : PlayerProfile {
+            uuid : profile.uuid,
+            name : Cow::Borrowed(&*profile.name),
+            skin : profile.skin.as_ref().map(|skin| PlayerProfileSkin {
+                sig   : skin.sig.as_ref().map(|sig| Cow::Borrowed(&**sig)),
+                value : Cow::Borrowed(&*skin.value),
+            }),
+        },
     }).await?;
     let _ = comms.read_packet_timeout::<LoginAcknowledgedC2SLoginPacket>(LOGIN_TIMEOUT).await?;
     comms.set_state(ConnPeerState::ConfigPlay(ConfigPlay::Config { active_ticks : 0 }));
+
+    //return Err(ConnPeerError::PeerClosed);
 
     // Add a player to the ECS world.
     let player = AsyncWorld.spawn_bundle((Player {

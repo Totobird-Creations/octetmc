@@ -14,7 +14,7 @@ where
     fn encode(&self, buf : &mut EncodeBuf) {
         if let Some(v) = self {
             buf.write(true);
-            v.encode(buf);
+            buf.encode_write(v);
         } else {
             buf.write(false);
         }

@@ -37,6 +37,7 @@ impl ConnPeerComms {
 
             self.stream.write_all(varint_packet_len).await?;
             self.stream.write_all(packet_data_buf.as_bytes()).await?;
+            self.stream.flush().await?;
 
             Ok(())
         }

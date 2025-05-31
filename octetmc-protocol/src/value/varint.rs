@@ -77,7 +77,7 @@ impl<V> From<V> for VarInt<V>
 where
     V : VarIntType
 {
-    #[inline]
+    #[inline(always)]
     fn from(value : V) -> Self { Self(value) }
 }
 
@@ -106,23 +106,23 @@ macro_rules! var_int_type_impl { ( $ty:ty $(,)? ) => {
                 shift += 7;
                 if (shift > MAX_SHIFT) { return Err(VarIntDecodeError::TooLong); }
             }
-            Ok(value)
+            Ok(<$ty>::from_le(value))
         }
 
         fn encode<'l>(&self, buf : &'l mut Self::Buf) -> &'l mut [u8] {
             const SELF_SEGMENT_BITS : $ty = SEGMENT_BITS as $ty;
             const SELF_CONTINUE_BIT : $ty = CONTINUE_BIT as $ty;
             let mut i     = 0;
-            let mut data  = *self;
+            let mut data  = (*self).to_le();
             loop {
                 if ((data & (! SELF_SEGMENT_BITS)) == 0) {
-                    *unsafe { buf.get_unchecked_mut(i) } = data as u8;
+                    *unsafe { buf.get_unchecked_mut(i) } = (data & 0xFF) as u8;
                     i += 1;
                     return &mut buf[0..i];
                 }
                 buf[i] = ((data & SELF_SEGMENT_BITS) | SELF_CONTINUE_BIT) as u8;
                 i += 1;
-                data >>= 7;
+                data = (data.cast_unsigned() >> 7).cast_signed();
             }
         }
 

@@ -44,7 +44,7 @@ impl Plugin for PlayerKickDupesPlugin {
 }
 
 
-const DEFAULT_DUPE_KICK_MESSAGE : Text<'static> = Text { components : Cow::Borrowed(&[
+const DEFAULT_DUPE_KICK_MESSAGE : Text<'_> = Text { components : Cow::Borrowed(&[
     TextComponent {
         content  : TextContent::Translate {
             key      : Cow::Borrowed("multiplayer.disconnect.duplicate_login"),

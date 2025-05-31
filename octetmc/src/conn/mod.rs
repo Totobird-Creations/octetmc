@@ -1,6 +1,7 @@
 //! Connection listener and client manager.
 
 
+use octetmc_protocol::value::text::Text;
 use core::net::{ SocketAddr, SocketAddrV4, Ipv4Addr };
 use std::borrow::Cow;
 use std::io;
@@ -123,11 +124,14 @@ async fn run_peer(
 ) -> ConnPeerResult {
     match (handshake::wait_for_intention(&mut comms).await?) {
         Intention::Status => status::handle_requests(&mut comms).await,
-        Intention::Login  => login::handle_login_process(
-            &mut comms,
-            compress_threshold,
-            mojauth_enabled
-        ).await
+        Intention::Login  => {
+            login::handle_login_process(
+                &mut comms,
+                compress_threshold,
+                mojauth_enabled
+            ).await?;
+            config_play::handle_config_play(&mut comms).await
+        }
     }
 }
 
@@ -204,6 +208,9 @@ pub enum ConnPeerError {
 
     /// The client closed the connection.
     PeerClosed,
+
+    /// The server kicked the client.
+    Kicked(Text<'static>),
 
     /// Some other IO error occured.
     Io(io::Error)
