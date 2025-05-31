@@ -1,4 +1,4 @@
-use super::ConnPeerComms;
+use super::{ ConnPeerComms, MAX_READ_QUEUE_SIZE };
 use crate::conn::{ ConnPeerResult, ConnPeerError };
 use crate::util::future::timeout;
 use octetmc_protocol::value::varint::{ VarInt, VarIntDecodeError };
@@ -15,13 +15,31 @@ use flate2::write::ZlibDecoder;
 
 impl ConnPeerComms {
 
+    pub(crate) fn try_read_packet<P>(&mut self) -> ConnPeerResult<Option<ReadPacketContainer<P>>>
+    where
+        P : PacketPrefixedDecode
+    {
+        let Some((total_len, _,)) = self.try_read_packet_len()?
+            else { return Ok(None); };
+        if (self.read_queue.len() < total_len) { // <NOTE 1>
+            return Ok(None);
+        }
+        unsafe { self.read_packet_inner(total_len).map(Some) }
+    }
+
     pub(crate) async fn read_packet<P>(&mut self) -> ConnPeerResult<ReadPacketContainer<P>>
     where
         P : PacketPrefixedDecode
     {
-        let (total_len, _,) = self.read_packet_len().await?;
-        self.wait_for_bytes(total_len).await?; // <NOTE 1>
+        let (total_len, _,) = self.wait_for_packet_len().await?;
+        self.wait_for_bytes(total_len).await?; // <NOTE 2>
+        unsafe { self.read_packet_inner(total_len) }
+    }
 
+    unsafe fn read_packet_inner<P>(&mut self, total_len : usize) -> ConnPeerResult<ReadPacketContainer<P>>
+    where
+        P : PacketPrefixedDecode
+    {
         let uncompressed_packet_len;
         let compressed_packet_len;
         let is_compressed;
@@ -29,7 +47,7 @@ impl ConnPeerComms {
         if (self.compress_threshold.is_some()) {
 
             let consumed;
-            (uncompressed_packet_len, consumed,) = self.read_packet_len().await?;
+            (uncompressed_packet_len, consumed,) = self.try_read_packet_len()?.ok_or(ConnPeerError::InvalidPacketLength)?;
             compressed_packet_len  = total_len - consumed;
             is_compressed          = uncompressed_packet_len != 0;
             decompressed_packet_len = if (is_compressed) {
@@ -58,7 +76,7 @@ impl ConnPeerComms {
                 return Err(ConnPeerError::BadPacket(Cow::Borrowed("failed to decompress")));
             }
             let consuming = compressed_packet_len - consuming;
-            // SAFETY: `consuming` can never be `b.len()` or higher, as `self.read_queue` has enough bytes for the whole packet (see <NOTE 1>).
+            // SAFETY: `consuming` can never be `b.len()` or higher, as `self.read_queue` has enough bytes for the whole packet (see <NOTE 1> and <NOTE 2>).
             if (z.write_all(unsafe { b.get_unchecked(0..consuming) }).is_err()) {
                 return Err(ConnPeerError::BadPacket(Cow::Borrowed("failed to decompress")));
             }
@@ -81,7 +99,7 @@ impl ConnPeerComms {
             let a = unsafe { a.get_unchecked(0..consuming) };
             unsafe { ptr::copy_nonoverlapping(a.as_ptr(), buf.as_mut_ptr() as _, a.len()); }
             let consuming = decompressed_packet_len - consuming;
-            // SAFETY: `consuming` can never be `b.len()` or higher, as `self.read_queue` has enough bytes for the whole packet (see <NOTE 1>).
+            // SAFETY: `consuming` can never be `b.len()` or higher, as `self.read_queue` has enough bytes for the whole packet (see <NOTE 1> and <NOTE 2>).
             let b = unsafe { b.get_unchecked(0..consuming) };
             unsafe { ptr::copy_nonoverlapping(b.as_ptr(), buf.as_mut_ptr().byte_add(a.len()) as _, b.len()); }
 
@@ -115,31 +133,72 @@ impl ConnPeerComms {
 
 
     /// Returns (length value, consumed byte count,).
-    async fn read_packet_len(&mut self) -> ConnPeerResult<(usize, usize,)> {
+    #[inline(always)]
+    async fn wait_for_packet_len(&mut self) -> ConnPeerResult<(usize, usize,)> {
+        self.read_packet_len(async |comms| comms.accept_more_bytes().await).await
+    }
+
+    /// Returns (length value, consumed byte count,).
+    async fn read_packet_len<F>(&mut self, mut on_not_enough : F) -> ConnPeerResult<(usize, usize,)>
+    where
+        F : AsyncFnMut(&mut Self) -> ConnPeerResult
+    {
         let mut buf   = [0u8; VarInt::<u32>::MAX_BYTES];
         let mut index = 0;
         loop {
-            match (self.read_queue.pop_front()) {
-                None => { self.accept_more_bytes().await?; },
-                Some(b) => {
-                    buf[index] = b;
-                    index += 1;
-                    match (VarInt::<u32>::decode(DecodeBuf::from(&buf[0..index]), &mut DecodeBufHead::default())) {
-                        Err(VarIntDecodeError::IncompleteData) => { },
-                        Err(VarIntDecodeError::TooLong) => {
-                            return Err(ConnPeerError::InvalidPacketLength);
-                        },
-                        Ok(value) => {
-                            let value = *value as usize;
-                            return if (value > MAX_PACKET_LENGTH) {
-                                Err(ConnPeerError::PacketTooLong)
-                            } else { Ok((value, index,)) }
-                        }
-                    }
-                    if (index >= VarInt::<u32>::MAX_BYTES) {
-                        return Err(ConnPeerError::InvalidPacketLength);
+            match (self.read_queue.get(index)) {
+                None => { on_not_enough(self).await?; },
+                Some(&b) => {
+                    // SAFETY: index can never be greater than `VarInt::<u32>::MAX_BYTES`.
+                    match (unsafe { self.try_decode_varintu32(&mut buf, &mut index, b) }) {
+                        Ok(Some(out)) => { return Ok(out); },
+                        Ok(None)      => { },
+                        Err(err)      => { return Err(err); }
                     }
                 }
+            }
+        }
+    }
+
+    /// Returns (length value, consumed byte count,).
+    fn try_read_packet_len(&mut self) -> ConnPeerResult<Option<(usize, usize,)>> {
+        let mut buf   = [0u8; VarInt::<u32>::MAX_BYTES];
+        let mut index = 0;
+        loop { match (self.read_queue.get(index)) {
+            None => { return Ok(None); },
+            Some(&b) => {
+                // SAFETY: index can never be greater than `VarInt::<u32>::MAX_BYTES`.
+                match (unsafe { self.try_decode_varintu32(&mut buf, &mut index, b) }) {
+                    Ok(Some(out)) => { return Ok(Some(out)); },
+                    Ok(None)      => { },
+                    Err(err)      => { return Err(err); }
+                }
+            }
+        } }
+    }
+
+    unsafe fn try_decode_varintu32(&mut self,
+        buf   : &mut [u8; VarInt::<u32>::MAX_BYTES],
+        index : &mut usize,
+        b     : u8
+    ) -> ConnPeerResult<Option<(usize, usize,)>> {
+        buf[*index] = b;
+        *index += 1;
+        match (VarInt::<u32>::decode(DecodeBuf::from(unsafe { buf.get_unchecked(0..(*index)) }), &mut DecodeBufHead::default())) {
+            Err(VarIntDecodeError::IncompleteData) => {
+                if (*index >= VarInt::<u32>::MAX_BYTES) {
+                    Err(ConnPeerError::InvalidPacketLength)
+                } else { Ok(None) }
+            },
+            Err(VarIntDecodeError::TooLong) => {
+                Err(ConnPeerError::InvalidPacketLength)
+            },
+            Ok(value) => {
+                let _ = self.read_queue.drain(0..(*index));
+                let value = *value as usize;
+                if (value > MAX_PACKET_LENGTH) {
+                    Err(ConnPeerError::PacketTooLong)
+                } else { Ok(Some((value, *index,))) }
             }
         }
     }
@@ -152,10 +211,13 @@ impl ConnPeerComms {
     }
 
     pub(crate) async fn accept_more_bytes(&mut self) -> ConnPeerResult {
-        let mut buf   = [0u8; 64];
+        let mut buf = [0u8; 64];
         match (self.stream.read(&mut buf).await?) {
             0     => Err(ConnPeerError::PeerClosed),
             count => {
+                if ((self.read_queue.len() + count) > MAX_READ_QUEUE_SIZE) {
+                    return Err(ConnPeerError::ReadQueueOverflow);
+                }
                 self.read_queue.extend(buf[0..count].iter()); // TODO: Decrypt
                 Ok(())
             }
