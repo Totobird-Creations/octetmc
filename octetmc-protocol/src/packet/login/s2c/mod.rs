@@ -7,6 +7,8 @@ use crate::packet::encode::packet_encode_group;
 
 pub mod hello;
 
+pub mod login_success;
+
 pub mod login_compression;
 
 
@@ -16,6 +18,8 @@ packet_encode_group!{
     pub enum S2CLoginPackets<'l> {
         /// `HelloS2CLoginPacket`
         Hello(hello::HelloS2CLoginPacket<'l>),
+        /// `LoginSuccessS2CLoginPacket`
+        LoginSuccess(login_success::LoginSuccessS2CLoginPacket<'l>),
         /// `LoginCompressionS2CLoginPacket`
         LoginCompression(login_compression::LoginCompressionS2CLoginPacket)
     }

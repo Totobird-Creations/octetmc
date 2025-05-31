@@ -10,6 +10,8 @@ pub mod hello;
 
 pub mod key;
 
+pub mod login_acknowledged;
+
 
 packet_decode_group!{
     type State     = StateLogin;
@@ -19,6 +21,8 @@ packet_decode_group!{
         /// `HelloC2SLoginPacket`
         Hello(hello::HelloC2SLoginPacket<'l>),
         /// `KeyC2SLoginPacket`
-        Key(key::KeyC2SLoginPacket<'l>)
+        Key(key::KeyC2SLoginPacket<'l>),
+        /// `LoginAcknowledgedC2SLoginPacket`
+        LoginAcknowledged(login_acknowledged::LoginAcknowledgedC2SLoginPacket)
     }
 }

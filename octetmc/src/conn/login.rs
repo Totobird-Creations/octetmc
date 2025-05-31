@@ -1,13 +1,17 @@
-use super::{ ConnPeerState, ConnPeerComms, ConnPeerResult, ConnPeerError };
-use crate::player::{ Player, PlayerProfile, PlayerProfileSkin, PlayerId };
+use super::{ ConnPeerState, ConfigPlay, ConnPeerComms, ConnPeerResult, ConnPeerError };
+use crate::player::{ Player, PlayerId };
 use crate::player::login::PlayerLoginEvent;
 use crate::util::future::timeout;
+use octetmc_protocol::value::profile::{ PlayerProfile, PlayerProfileSkin };
 use octetmc_protocol::packet::login::c2s::hello::HelloC2SLoginPacket;
 use octetmc_protocol::packet::login::c2s::key::KeyC2SLoginPacket;
+use octetmc_protocol::packet::login::c2s::login_acknowledged::LoginAcknowledgedC2SLoginPacket;
 use octetmc_protocol::packet::login::s2c::hello::HelloS2CLoginPacket;
+use octetmc_protocol::packet::login::s2c::login_success::LoginSuccessS2CLoginPacket;
 use octetmc_protocol::packet::login::s2c::login_compression::LoginCompressionS2CLoginPacket;
 use core::time::Duration;
 use core::ptr;
+use std::borrow::Cow;
 use rand::{ self, rngs::ThreadRng, RngCore };
 use openssl::pkey::{ PKey, Private as PrivateKey, Public as PublicKey };
 use openssl::rsa::{ Padding as RsaPadding, Rsa };
@@ -143,10 +147,10 @@ pub(super) async fn handle_login_process(
                 let MojauthProfileProp::Textures { sig : texture_sig, value : texture_value } = &profile.props[0];
                 PlayerProfile {
                     uuid : profile.uuid,
-                    name : profile.name,
+                    name : Cow::Owned(profile.name.clone()),
                     skin : Some(PlayerProfileSkin {
-                        sig   : texture_sig.clone(),
-                        value : texture_value.clone()
+                        sig   : texture_sig.as_ref().map(|v| Cow::Owned(v.clone())),
+                        value : Cow::Owned(texture_value.clone())
                     })
                 }
             },
@@ -155,13 +159,23 @@ pub(super) async fn handle_login_process(
 
     } else { PlayerProfile {
         uuid : Uuid::new_v3(&OFFLINE_UUID_NAMESPACE, hello.get().username.as_bytes()),
-        name : hello.get().username.to_string(),
+        name : Cow::Owned(hello.get().username.to_string()),
         skin : None
     } };
 
-    let player = AsyncWorld.spawn_bundle(Player {
-        profile
-    });
+    // Send login success and await confirmation.
+    comms.send_packet(&LoginSuccessS2CLoginPacket {
+        profile : profile.clone(),
+    }).await?;
+    let _ = comms.read_packet_timeout::<LoginAcknowledgedC2SLoginPacket>(LOGIN_TIMEOUT).await?;
+    comms.set_state(ConnPeerState::ConfigPlay(ConfigPlay::Config { active_ticks : 0 }));
+
+    // Add a player to the ECS world.
+    let player = AsyncWorld.spawn_bundle((Player {
+        profile,
+        // SAFETY: take_conn_sender_unchecked has not been called before.
+        conn_sender : unsafe { comms.take_conn_sender_unchecked() }
+    }));
     _ = AsyncWorld.send_event(PlayerLoginEvent { player : PlayerId::from(player.id()) });
 
     Ok(())

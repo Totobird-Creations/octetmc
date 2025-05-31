@@ -1,12 +1,15 @@
 //! Packet encoding utilities.
 
 
-use super::PacketState;
+use super::{ PacketState, Byte };
 
 
 mod num;
 
 mod str;
+
+mod refs;
+mod option;
 
 
 /// Packet encoder, including packet ID.
@@ -75,7 +78,7 @@ macro_rules! packet_encode_group { (
                     },
                 )*
                 #[allow(unreachable_patterns)]
-                _ => unreachable!()
+                _ => unsafe { core::hint::unreachable_unchecked() }
             } }
 
             fn encode_prefixed(
@@ -90,7 +93,7 @@ macro_rules! packet_encode_group { (
                     },
                 )*
                 #[allow(unreachable_patterns)]
-                _ => unreachable!()
+                _ => unsafe { core::hint::unreachable_unchecked() }
             } }
 
         }
@@ -125,9 +128,6 @@ pub trait PacketEncode {
 /// Packet part encoder.
 pub trait PacketPartEncode {
 
-    /// Encode this packet part.
-    fn encode(&self, buf : &mut EncodeBuf);
-
     /// Predict the number of bytes it will take to encode this value.
     ///
     /// Overestimate to avoid unnecessary reallocations.
@@ -136,6 +136,9 @@ pub trait PacketPartEncode {
     /// This method should take as little time as possible.
     ///  If the size value isn't already directly available from a method such as `len`, don't calculate it.
     fn predict_size(&self) -> usize;
+
+    /// Encode this packet part.
+    fn encode(&self, buf : &mut EncodeBuf);
 
 }
 
@@ -170,8 +173,11 @@ impl EncodeBuf {
 
     /// Write a single byte to this buffer.
     #[inline]
-    pub fn write(&mut self, byte : u8) {
-        self.buf.push(byte);
+    pub fn write<B>(&mut self, byte : B)
+    where
+        B : Byte
+    {
+        self.buf.push(byte.as_be_byte());
     }
 
     /// Write a slice of bytes to this buffer.
@@ -182,11 +188,11 @@ impl EncodeBuf {
 
     /// Encode and write a packet part to this buffer.
     #[inline(always)]
-    pub fn encode_write<T>(&mut self, packet : &T)
+    pub fn encode_write<T>(&mut self, packet : T)
     where
-        T : PacketPartEncode + ?Sized
+        T : PacketPartEncode
     {
-        <T as PacketPartEncode>::encode(packet, self)
+        <T as PacketPartEncode>::encode(&packet, self)
     }
 
 }

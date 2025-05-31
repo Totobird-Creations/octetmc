@@ -1,16 +1,18 @@
 //! Player information and operations.
 
 
+use crate::conn::event::ConnPeerEvent;
 use crate::util::macros::{ CratePrivateNew, deref_single };
+use octetmc_protocol::value::profile::PlayerProfile;
 use core::ops::Deref;
-use bevy_app::{ Plugin, App };
+use bevy_app::{ Plugin, App, Update };
 use bevy_ecs::entity::Entity;
 use bevy_ecs::component::Component;
+use bevy_ecs::system::{ Query, Commands };
+use bevy_ecs::query::{ With, Added };
 use bevy_ecs::resource::Resource;
+use smol::channel;
 
-
-mod profile;
-pub use profile::*;
 
 pub mod login;
 
@@ -18,7 +20,8 @@ pub mod login;
 /// A player connected to the server.
 #[derive(Component)]
 pub struct Player {
-    pub(crate) profile : PlayerProfile
+    pub(crate) profile     : PlayerProfile<'static>,
+    pub(crate) conn_sender : channel::Sender<ConnPeerEvent>
 }
 
 impl Player {
@@ -83,12 +86,24 @@ impl Default for OctetPlayerPlugin {
 impl Plugin for OctetPlayerPlugin {
     fn build(&self, app : &mut App) {
         app .add_event::<login::PlayerLoginEvent>()
-            .add_event::<login::KickPlayer>();
+            .add_event::<login::KickPlayer>()
+            .add_systems(Update, tick_player_conns);
         if (self.track_player_count) {
             app.insert_resource(PlayerCount(0));
         }
         if let Some(max_player_count) = self.max_player_count {
             app.insert_resource(MaxPlayerCount::crate_private_new(max_player_count));
+        }
+    }
+}
+
+fn tick_player_conns(
+    mut cmds      : Commands,
+        q_players : Query<(Entity, &Player,)>
+) {
+    for (entity, player,) in &q_players {
+        if (player.conn_sender.force_send(ConnPeerEvent::Tick).is_err()) {
+            cmds.entity(entity).despawn();
         }
     }
 }
