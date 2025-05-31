@@ -120,7 +120,7 @@ impl ConnPeerComms {
         let mut index = 0;
         loop {
             match (self.read_queue.pop_front()) {
-                None => { self.read_more_bytes().await?; },
+                None => { self.accept_more_bytes().await?; },
                 Some(b) => {
                     buf[index] = b;
                     index += 1;
@@ -146,12 +146,12 @@ impl ConnPeerComms {
 
     async fn wait_for_bytes(&mut self, n : usize) -> ConnPeerResult {
         while (self.read_queue.len() < n) {
-            self.read_more_bytes().await?;
+            self.accept_more_bytes().await?;
         }
         Ok(())
     }
 
-    async fn read_more_bytes(&mut self) -> ConnPeerResult {
+    pub(crate) async fn accept_more_bytes(&mut self) -> ConnPeerResult {
         let mut buf   = [0u8; 64];
         match (self.stream.read(&mut buf).await?) {
             0     => Err(ConnPeerError::PeerClosed),
@@ -188,6 +188,7 @@ impl Write for PacketDecompress {
 }
 
 
+#[must_use]
 pub struct ReadPacketContainer<P>
 where
     P : PacketPrefixedDecode

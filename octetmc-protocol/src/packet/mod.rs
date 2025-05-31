@@ -48,3 +48,33 @@ unsafe impl PacketState for StateConfig { }
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Play
 pub struct StatePlay;
 unsafe impl PacketState for StatePlay { }
+
+
+/// `u8`-similar types.
+pub trait Byte : Copy {
+    /// Return `self` as a `u8`.
+    fn as_be_byte(self) -> u8;
+}
+
+impl Byte for u8 {
+    #[inline(always)]
+    fn as_be_byte(self) -> u8 { self.to_be() }
+}
+
+impl Byte for i8 {
+    #[inline(always)]
+    fn as_be_byte(self) -> u8 { self.to_be().cast_unsigned() }
+}
+
+impl Byte for bool {
+    #[inline(always)]
+    fn as_be_byte(self) -> u8 { <u8 as Byte>::as_be_byte(self as u8) }
+}
+
+impl<T> Byte for &T
+where
+    T : Byte
+{
+    #[inline(always)]
+    fn as_be_byte(self) -> u8 { <T as Byte>::as_be_byte(*self) }
+}

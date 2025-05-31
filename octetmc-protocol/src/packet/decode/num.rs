@@ -4,8 +4,11 @@ use uuid::Uuid;
 
 macro_rules! impl_packet_part_decode_for_num { ( $ty:ty $(,)? ) => {
     impl PacketPartDecode for $ty {
+
         type Output<'l> = $ty;
         type Error<'l>  = IncompleteData;
+
+        #[inline]
         fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead) -> Result<Self::Output<'l>, Self::Error<'l>> {
             Ok(<$ty>::from_be_bytes(buf.read_n_const(head)?))
         }
@@ -30,10 +33,12 @@ impl PacketPartDecode for Uuid {
     type Output<'l> = Uuid;
     type Error<'l>  = IncompleteData;
 
+    #[inline]
     fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>> {
             let msb = buf.read_decode::<u64>(head)?;
             let lsb = buf.read_decode::<u64>(head)?;
             Ok(Self::from_u64_pair(msb, lsb))
     }
+
 }

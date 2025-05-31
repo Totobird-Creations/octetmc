@@ -15,12 +15,17 @@ use bevy_defer::{ AsyncWorld, Task, AsyncCommandsExtension };
 mod comms;
 use comms::ConnPeerComms;
 
+pub(crate) mod event;
+
+
 mod handshake;
 use handshake::Intention;
 
 mod status;
 
 mod login;
+
+mod config_play;
 
 
 /// Enables the connection listener and client manager on install.
@@ -128,23 +133,18 @@ async fn run_peer(
 
 
 /// The state of a client's connection.
-pub enum ConnPeerState {
-
-    /// Clients declare their intention.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+enum ConnPeerState {
     Handshake,
-
-    /// Clients request server list information.
     Status,
-
-    /// Clients attempt to authenticate and join the game.
     Login,
+    ConfigPlay(ConfigPlay)
+}
 
-    /// The server configures registries and settings on the client.
-    Config,
-
-    /// The client has properly connected to the server and is in the game.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+enum ConfigPlay {
+    Config { active_ticks : u8 },
     Play
-
 }
 
 

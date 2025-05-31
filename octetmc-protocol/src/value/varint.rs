@@ -61,14 +61,14 @@ where
     V : VarIntType
 {
 
-    fn encode(&self, buf : &mut EncodeBuf) {
-        let mut array_buf = <<V as VarIntType>::Buf>::default();
-        buf.write_n(<V as VarIntType>::encode(&self.0, &mut array_buf));
-    }
-
     #[inline(always)]
     fn predict_size(&self) -> usize {
         <V as VarIntType>::MAX_BYTES
+    }
+
+    fn encode(&self, buf : &mut EncodeBuf) {
+        let mut array_buf = <<V as VarIntType>::Buf>::default();
+        buf.write_n(<V as VarIntType>::encode(&self.0, &mut array_buf));
     }
 
 }

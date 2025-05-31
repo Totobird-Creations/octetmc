@@ -122,7 +122,7 @@ impl PacketEncode for StatusResponseS2CStatusPacket<'_, '_, '_, '_, '_> {
     fn encode<'l>(&self, buf : &mut EncodeBuf) {
         let json = to_json_string(self).unwrap();
         buf.reserve(json.predict_size());
-        buf.encode_write(json.as_str());
+        buf.encode_write(json);
     }
 }
 

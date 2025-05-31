@@ -9,6 +9,9 @@ mod num;
 
 pub mod str;
 
+mod option;
+
+
 /// The maximum packet length allowed to be sent by the client.
 pub const MAX_PACKET_LENGTH : usize = 2usize.pow(21) - 1;
 
