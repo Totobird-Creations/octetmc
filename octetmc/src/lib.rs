@@ -44,7 +44,8 @@ plugin_group! {
         bevy_diagnostic:::FrameCountPlugin,
         :DefaultAsyncPlugin,
         conn:::OctetConnPlugin,
-        player:::OctetPlayerPlugin
+        player:::OctetPlayerPlugin,
+        player::login:::PlayerKickDupesPlugin
     }
 }
 

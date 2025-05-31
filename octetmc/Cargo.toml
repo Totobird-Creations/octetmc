@@ -40,7 +40,8 @@ version = "0.16"
 [dependencies.bevy_diagnostic]
 version = "0.16"
 [dependencies.bevy_defer]
-version = "0.14"
+version          = "0.14"
+default-features = false
 
 # Favicon handling
 [dependencies.image]
@@ -55,7 +56,19 @@ version = "1.1"
 version = "0.9"
 [dependencies.openssl]
 version = "0.10"
+
+# Authentication
 [dependencies.hex]
 version = "0.4"
+[dependencies.ethnum]
+version = "1.5"
 [dependencies.surf]
 version = "2.3"
+[dependencies.serde]
+version = "1.0"
+[dependencies.uuid]
+version  = "1.17"
+features = [ "v3" ]
+
+[dependencies.num-bigint]
+version = "*"

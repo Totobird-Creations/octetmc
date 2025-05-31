@@ -187,6 +187,18 @@ pub enum ConnPeerError {
     /// Failed to exchange pkey and establish shared secret cipher.
     KeyExchangeFailed,
 
+    /// The mojauth servers are currently unreachable.
+    AuthServerUnreachable,
+
+    /// The mojauth servers returned unrecognised data.
+    BadAuthServer,
+
+    /// The client's profile could not be verified.
+    AuthFailed,
+
+    /// The player is already logged in.
+    AlreadyLoggedIn,
+
     /// The client closed the connection.
     PeerClosed,
 
