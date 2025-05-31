@@ -26,7 +26,7 @@ pub(super) async fn handle_config_play(comms : &mut ConnPeerComms) -> ConnPeerRe
         }
 
 
-        if let Some(event) = comms.try_read_event()? {
+        while let Some(event) = comms.try_read_event()? {
             event.handle(comms).await?;
         }
 

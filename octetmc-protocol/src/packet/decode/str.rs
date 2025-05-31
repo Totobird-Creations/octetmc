@@ -13,7 +13,7 @@ impl PacketPartDecode for &str {
     type Error<'l>  = StringDecodeError;
 
     fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead) -> Result<Self::Output<'l>, Self::Error<'l>> {
-        let len = *buf.read_decode::<VarInt<u32>>(head)? as usize;
+        let len = *buf.read_decode::<VarInt<i32>>(head)? as usize;
         Ok(str::from_utf8(buf.read_n(head, len)?)?)
     }
 

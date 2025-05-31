@@ -218,7 +218,17 @@ impl ConnPeerComms {
                 if ((self.read_queue.len() + count) > MAX_READ_QUEUE_SIZE) {
                     return Err(ConnPeerError::ReadQueueOverflow);
                 }
-                self.read_queue.extend(buf[0..count].iter()); // TODO: Decrypt
+                let decrypted_buf = if let Some(decrypter) = &mut self.decrypter {
+                    let mut decrypted_buf = [0u8; 64];
+                    decrypter.update(
+                        // SAFETY: count can never be greater than `buf.len()`.
+                        unsafe { buf.get_unchecked(0..count) },
+                        unsafe { decrypted_buf.get_unchecked_mut(0..count) }
+                    ).unwrap();
+                    decrypted_buf
+                } else { buf };
+                // SAFETY: count can never be greater than `buf.len()`.
+                self.read_queue.extend(unsafe { decrypted_buf.get_unchecked(0..count) }.iter());
                 Ok(())
             }
         }

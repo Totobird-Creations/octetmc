@@ -18,7 +18,7 @@ impl ConnPeerComms {
         let uncompressed_packet_len = packet_data_buf.len();
         let is_compressed           = self.compress_threshold.is_some_and(|ct| uncompressed_packet_len >= ct);
 
-        if (is_compressed) {
+        if (is_compressed) { // Compressed.
 
             // let mut packet_len_buf    = Default::default();
             // let     varint_packet_len = VarInt::<u32>::from(uncompressed_packet_len as u32).encode_as_slice(&mut packet_len_buf);
@@ -30,13 +30,28 @@ impl ConnPeerComms {
 
             todo!()
 
-        } else {
+        } else { // Uncompressed.
 
             let mut packet_len_buf    = Default::default();
             let     varint_packet_len = VarInt::<u32>::from(uncompressed_packet_len as u32).encode_as_slice(&mut packet_len_buf);
 
-            self.stream.write_all(varint_packet_len).await?;
-            self.stream.write_all(packet_data_buf.as_bytes()).await?;
+            if let Some(encrypter) = &mut self.encrypter { // Encrypted.
+
+                let mut encrypted_packet_len_buf = [0u8; VarInt::<u32>::MAX_BYTES];
+                encrypter.update(varint_packet_len, &mut encrypted_packet_len_buf).unwrap();
+                self.stream.write_all(&encrypted_packet_len_buf[0..(varint_packet_len.len())]).await?;
+
+                // SAFETY: u8 has no Drop.
+                let mut encrypted_packet_data_buf = unsafe { Box::<[u8]>::new_uninit_slice(packet_data_buf.len()).assume_init() }; // I hate this but it 'works'.
+                encrypter.update(packet_data_buf.as_bytes(), &mut encrypted_packet_data_buf).unwrap();
+                self.stream.write_all(&encrypted_packet_data_buf).await?;
+
+            } else { // Unencrypted.
+
+                self.stream.write_all(varint_packet_len).await?;
+                self.stream.write_all(packet_data_buf.as_bytes()).await?;
+
+            }
             self.stream.flush().await?;
 
             Ok(())
