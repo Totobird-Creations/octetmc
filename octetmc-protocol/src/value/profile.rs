@@ -62,16 +62,15 @@ impl PacketPartEncode for PlayerProfile<'_> {
     }
 
     fn encode(&self, buf : &mut EncodeBuf) {
-        buf.encode_write(&self.uuid);
-        buf.encode_write(&*self.name);
+        buf.encode_write(self.uuid);
+        buf.encode_write(&self.name);
         if let Some(skin) = &self.skin {
-            buf.encode_write(&VarInt::<u32>::from(1));
+            buf.encode_write(VarInt::<u32>::from(1));
             buf.encode_write(SKIN_KEY);
-            buf.encode_write(&*skin.value);
+            buf.encode_write(&skin.value);
             buf.encode_write(skin.sig.as_ref());
-
         } else {
-            buf.encode_write(&VarInt::<u32>::from(0));
+            buf.encode_write(VarInt::<u32>::from(0));
         }
     }
 

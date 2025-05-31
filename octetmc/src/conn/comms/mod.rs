@@ -1,8 +1,10 @@
-use super::{ ConnPeerState, ConfigPlay };
+use super::{ ConnPeerState, ConfigPlay, ConnPeerResult, ConnPeerError };
 use super::event::ConnPeerEvent;
+use octetmc_protocol::value::text::{ Text, TextComponent, TextContent, TextStyle, TextInteract };
 use core::net::SocketAddr;
 use core::hint::unreachable_unchecked;
 use std::collections::VecDeque;
+use std::borrow::Cow;
 use smol::net::TcpStream;
 use smol::channel;
 use openssl::symm::Crypter;
@@ -14,6 +16,19 @@ mod write;
 
 
 const MAX_READ_QUEUE_SIZE : usize = 4096;
+
+const GENERIC_KICK_MESSAGE : Text<'_> = Text { components : Cow::Borrowed(&[
+    TextComponent {
+        content  : TextContent::Translate {
+            key      : Cow::Borrowed("multiplayer.disconnect.duplicate_login"),
+            fallback : None,
+            with     : Cow::Borrowed(&[])
+        },
+        style    : TextStyle::NONE,
+        interact : TextInteract::NONE,
+        extra    : Cow::Borrowed(&[])
+    }
+]) };
 
 
 pub(super) struct ConnPeerComms {
@@ -34,6 +49,7 @@ impl ConnPeerComms {
     #[inline]
     pub(super) fn new(stream : TcpStream, addr : SocketAddr) -> Self {
         let (conn_sender, conn_receiver,) = channel::unbounded();
+        stream.set_nodelay(true).unwrap();
         Self { stream, addr,
             read_queue         : VecDeque::with_capacity(MAX_READ_QUEUE_SIZE),
             compress_threshold : None,
@@ -48,8 +64,8 @@ impl ConnPeerComms {
     #[inline]
     pub(super) fn state(&self) -> ConnPeerState { self.state }
     #[inline]
-    pub(super) unsafe fn state_assume_config_play(&self) -> ConfigPlay {
-        let ConnPeerState::ConfigPlay(state) = self.state
+    pub(super) unsafe fn state_assume_config_play(&mut self) -> &mut ConfigPlay {
+        let ConnPeerState::ConfigPlay(state) = &mut self.state
             else { unsafe { unreachable_unchecked(); } };
         state
     }
@@ -78,4 +94,12 @@ impl ConnPeerComms {
         unsafe { self.conn_sender.take().unwrap_unchecked() }
     }
 
+    #[inline]
+    pub(super) fn try_read_event(&self) -> ConnPeerResult<Option<ConnPeerEvent>> {
+        match (self.conn_receiver.try_recv()) {
+            Ok(event)                          => Ok(Some(event)),
+            Err(channel::TryRecvError::Empty)  => Ok(None),
+            Err(channel::TryRecvError::Closed) => Err(ConnPeerError::Kicked(GENERIC_KICK_MESSAGE))
+        }
+    }
 }

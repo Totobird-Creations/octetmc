@@ -28,6 +28,7 @@ impl PacketEncode for LoginSuccessS2CLoginPacket<'_> {
         self.profile.predict_size()
     }
 
+    #[inline(always)]
     fn encode(&self, buf : &mut EncodeBuf) {
         buf.encode_write(&self.profile);
     }

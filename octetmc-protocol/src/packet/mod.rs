@@ -68,7 +68,7 @@ impl Byte for i8 {
 
 impl Byte for bool {
     #[inline(always)]
-    fn as_be_byte(self) -> u8 { <u8 as Byte>::as_be_byte(self as u8) }
+    fn as_be_byte(self) -> u8 { <u8 as Byte>::as_be_byte(if (self) { 1 } else { 0 }) }
 }
 
 impl<T> Byte for &T
