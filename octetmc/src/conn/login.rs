@@ -1,4 +1,7 @@
 use super::{ ConnPeerState, ConnPeerComms, ConnPeerResult, ConnPeerError };
+use crate::player::{ Player, PlayerProfile, PlayerProfileSkin, PlayerId };
+use crate::player::login::PlayerLoginEvent;
+use crate::util::future::timeout;
 use octetmc_protocol::packet::login::c2s::hello::HelloC2SLoginPacket;
 use octetmc_protocol::packet::login::c2s::key::KeyC2SLoginPacket;
 use octetmc_protocol::packet::login::s2c::hello::HelloS2CLoginPacket;
@@ -11,11 +14,18 @@ use openssl::rsa::{ Padding as RsaPadding, Rsa };
 use openssl::encrypt::Decrypter;
 use openssl::symm::{ Crypter, Cipher, Mode as CrypterMode };
 use openssl::sha::Sha1;
+use ethnum::i256;
+use surf::StatusCode;
+use serde::Deserialize as Deser;
+use uuid::Uuid;
+use bevy_defer::AsyncWorld;
 
 
-const LOGIN_TIMEOUT : Duration = Duration::from_millis(250);
+const LOGIN_TIMEOUT   : Duration = Duration::from_millis(250);
+const MOJAUTH_TIMEOUT : Duration = Duration::from_millis(2500);
 
-const SERVER_ID     : &str     = "octectmc";
+const SERVER_ID              : &str = "octectmc";
+const OFFLINE_UUID_NAMESPACE : Uuid = Uuid::from_bytes(*b"OCTECTMC_PROFILE");
 
 const MOJAUTH_URL_PREFIX   : &str = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=";
 const MOJAUTH_URL_SERVERID : &str = "&serverId=";
@@ -30,7 +40,7 @@ pub(super) async fn handle_login_process(
 
     // Wait for hello.
     let hello = comms.read_packet_timeout::<HelloC2SLoginPacket>(LOGIN_TIMEOUT).await?;
-    if (hello.username.len() > 16) {
+    if (hello.get().username.len() > 16) {
         return Err(ConnPeerError::UsernameTooLong);
     }
 
@@ -56,52 +66,105 @@ pub(super) async fn handle_login_process(
 
     // Create new pkey decrypter.
     let mut decrypter = Decrypter::new(&private_key).unwrap();
-    let _ = decrypter.set_rsa_padding(RsaPadding::PKCS1);
+    _ = decrypter.set_rsa_padding(RsaPadding::PKCS1);
 
     // Decrypt and compare verify token.
-    decrypt!(&decrypter, key.verify_token => decrypted_verify_token);
+    decrypt!(&decrypter, key.get().verify_token => decrypted_verify_token);
     if (decrypted_verify_token != verify_token) {
         return Err(ConnPeerError::KeyExchangeFailed);
     }
 
     // Decrypt secret key and create ciphers.
-    decrypt!(&decrypter, key.secret_key => secret_key);
-    let cipher    = Cipher::aes_128_cfb8();
-    let encrypter = Crypter::new(cipher, CrypterMode::Encrypt, secret_key, Some(secret_key)).map_err(|_| ConnPeerError::KeyExchangeFailed)?;
-    let decrypter = Crypter::new(cipher, CrypterMode::Decrypt, secret_key, Some(secret_key)).map_err(|_| ConnPeerError::KeyExchangeFailed)?;
+    decrypt!(&decrypter, key.get().secret_key => secret_key);
+    let cipher = Cipher::aes_128_cfb8();
+    let Ok(encrypter) = Crypter::new(cipher, CrypterMode::Encrypt, secret_key, Some(secret_key))
+        else { return Err(ConnPeerError::KeyExchangeFailed) };
+    let Ok(decrypter) = Crypter::new(cipher, CrypterMode::Decrypt, secret_key, Some(secret_key))
+        else { return Err(ConnPeerError::KeyExchangeFailed) };
     comms.set_crypters(encrypter, decrypter);
 
-    // Build the server ID.
-    let mut sha = Sha1::new();
-    sha.update(SERVER_ID.as_bytes());
-    sha.update(secret_key);
-    sha.update(&public_key_der);
-    let mut sha_buf = [0u8; 40];
-    let _ = hex::encode_to_slice(sha.finish(), &mut sha_buf);
+    let profile = if (mojauth_enabled) {
 
-    // Build the mojauth URL.
-    let mut url_buf = [0u8; MOJAUTH_URL_PREFIX.len() + 16 + MOJAUTH_URL_SERVERID.len() + 40];
-    let mut url_ptr = 0;
-    // SAFETY: url_buf has enough space for `MOJAUTH_URL_PREFIX`, `hello.username`, `MOJAUTH_URL_SERVERID`, and `sha_buf`.
-    //         None are written to overlap each other.
-    //         hello.username can not be longer than 16 bytes (checked above).
-    {
-        unsafe { ptr::copy_nonoverlapping(MOJAUTH_URL_PREFIX.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), MOJAUTH_URL_PREFIX.len()); }
-        url_ptr += MOJAUTH_URL_PREFIX.len();
-        unsafe { ptr::copy_nonoverlapping(hello.username.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), hello.username.len()); }
-        url_ptr += hello.username.len();
-        unsafe { ptr::copy_nonoverlapping(MOJAUTH_URL_SERVERID.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), MOJAUTH_URL_SERVERID.len()); }
-        url_ptr += MOJAUTH_URL_SERVERID.len();
-        unsafe { ptr::copy_nonoverlapping(sha_buf.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), sha_buf.len()); }
-        url_ptr += sha_buf.len();
-    }
-    let url = unsafe { str::from_utf8_unchecked(url_buf.get_unchecked(0..url_ptr)) };
+        // Build the server ID.
+        let mut sha = Sha1::new();
+        sha.update(SERVER_ID.as_bytes());
+        sha.update(secret_key);
+        sha.update(&public_key_der);
+        let sha_in_20 = sha.finish();
 
-    println!("{}", comms.addr());
-    println!("{:?}", url);
-    //surf::get(&);
+        let mut sha_in_32 = [0u8; 32];
+        unsafe { ptr::copy_nonoverlapping(sha_in_20.as_ptr(), sha_in_32.as_mut_ptr(), 20); }
+        let sha_in_i256 = i256::from_be_bytes(sha_in_32);
+        let mut sha_buf = [0u8; 40];
+        if (sha_in_i256 >= 0) {
+            // SAFETY: sha_buf has room for 40 items.
+            _ = hex::encode_to_slice(sha_in_20, &mut sha_buf).unwrap();
+        } else {
+            let neg_sha_in_32 = (-sha_in_i256).to_be_bytes();
+            // SAFETY: sha_in_32 bytes has 32 items.
+            //         sha_buf has room for 40 items.
+            _ = hex::encode_to_slice(unsafe{ neg_sha_in_32.get_unchecked(0..20) }, unsafe { sha_buf.get_unchecked_mut(0..40) });
+        }
+        // SAFETY: sha_buf has 40 items.
+        let sha_buf = unsafe { sha_buf.get_unchecked((sha_buf.iter().position(|&x| x != b'0').unwrap_or(39))..40) };
 
-    todo!()
+
+        // Build the mojauth URL.
+        let mut url_buf = [0u8; MOJAUTH_URL_PREFIX.len() + 16 + MOJAUTH_URL_SERVERID.len() + 41];
+        let mut url_ptr = 0;
+        // SAFETY: url_buf has enough space for `MOJAUTH_URL_PREFIX`, `hello.username`, `MOJAUTH_URL_SERVERID`, and `sha_buf`.
+        //         None are written to overlap each other.
+        //         hello.username can not be longer than 16 bytes (checked above).
+        {
+            unsafe { ptr::copy_nonoverlapping(MOJAUTH_URL_PREFIX.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), MOJAUTH_URL_PREFIX.len()); }
+            url_ptr += MOJAUTH_URL_PREFIX.len();
+            unsafe { ptr::copy_nonoverlapping(hello.get().username.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), hello.get().username.len()); }
+            url_ptr += hello.get().username.len();
+            unsafe { ptr::copy_nonoverlapping(MOJAUTH_URL_SERVERID.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), MOJAUTH_URL_SERVERID.len()); }
+            url_ptr += MOJAUTH_URL_SERVERID.len();
+            if (sha_in_i256 < 0) {
+                unsafe { url_buf.as_mut_ptr().byte_add(url_ptr).write(b'-'); }
+                url_ptr += 1;
+            }
+            unsafe { ptr::copy_nonoverlapping(sha_buf.as_ptr(), url_buf.as_mut_ptr().byte_add(url_ptr), sha_buf.len()); }
+            url_ptr += sha_buf.len();
+        }
+        let url = unsafe { str::from_utf8_unchecked(url_buf.get_unchecked(0..url_ptr)) };
+
+        let Ok(Ok(mut resp)) = timeout(MOJAUTH_TIMEOUT, surf::get(url).send()).await
+            else { return Err(ConnPeerError::AuthServerUnreachable); };
+        match (resp.status()) {
+            StatusCode::NoContent => {
+                return Err(ConnPeerError::AuthFailed);
+            },
+            StatusCode::Ok => {
+                let Ok(Ok(profile)) = timeout(MOJAUTH_TIMEOUT, resp.body_json::<MojauthProfile>()).await
+                    else { return Err(ConnPeerError::BadAuthServer); };
+                let MojauthProfileProp::Textures { sig : texture_sig, value : texture_value } = &profile.props[0];
+                PlayerProfile {
+                    uuid : profile.uuid,
+                    name : profile.name,
+                    skin : Some(PlayerProfileSkin {
+                        sig   : texture_sig.clone(),
+                        value : texture_value.clone()
+                    })
+                }
+            },
+            _ => { return Err(ConnPeerError::BadAuthServer); }
+        }
+
+    } else { PlayerProfile {
+        uuid : Uuid::new_v3(&OFFLINE_UUID_NAMESPACE, hello.get().username.as_bytes()),
+        name : hello.get().username.to_string(),
+        skin : None
+    } };
+
+    let player = AsyncWorld.spawn_bundle(Player {
+        profile
+    });
+    _ = AsyncWorld.send_event(PlayerLoginEvent { player : PlayerId::from(player.id()) });
+
+    Ok(())
 }
 
 
@@ -132,3 +195,27 @@ macro_rules! decrypt { ( $decrypter:expr , $cipherdata:expr $(,)? => $target:ide
     let $target = &__DECRYPT_PRIVATE_BUF[0..__DECRYPT_PRIVATE_WRITTEN];
 } }
 use decrypt;
+
+
+#[derive(Deser)]
+struct MojauthProfile {
+    #[serde(rename = "id")]
+    uuid    : Uuid,
+    name    : String,
+    #[serde(default, rename = "legacy")]
+    _legacy : bool,
+    #[serde(rename = "properties")]
+    props   : [MojauthProfileProp; 1]
+}
+
+#[derive(Deser)]
+#[serde(tag = "name")]
+enum MojauthProfileProp {
+    #[serde(rename = "textures")]
+    Textures {
+        #[serde(rename = "signature")]
+        sig   : Option<String>,
+        value : String
+    }
+
+}

@@ -7,7 +7,6 @@ use core::time::Duration;
 use core::mem::{ self, MaybeUninit, ManuallyDrop };
 use core::ptr;
 use core::pin::Pin;
-use core::ops::Deref;
 use std::io::{ self, Write };
 use std::borrow::Cow;
 use smol::io::AsyncReadExt;
@@ -193,21 +192,23 @@ pub struct ReadPacketContainer<P>
 where
     P : PacketPrefixedDecode
 {
-    raw     : ManuallyDrop<Pin<Box<[u8]>>>,
-    packet  : ManuallyDrop<P::Output<'static>>
+    raw    : ManuallyDrop<Pin<Box<[u8]>>>,
+    packet : ManuallyDrop<P::Output<'static>>
 }
 
-impl<P> Deref for ReadPacketContainer<P>
+impl<P> ReadPacketContainer<P>
 where
     P : PacketPrefixedDecode
 {
-    type Target = P::Output<'static>;
-    #[inline]
-    fn deref(&self) -> &Self::Target { &self.packet }
+    #[inline(always)]
+    pub fn get<'l>(&'l self) -> &'l P::Output<'l> {
+        // SAFETY: This just changes the lifetime so that it can not be used after `self` is dropped.
+        unsafe { mem::transmute::<&P::Output<'static>, &P::Output<'l>>(&self.packet) }
+    }
 }
 
 // Forces `self.raw` to live until after `self.packet` is dropped.
-impl<P> Drop for ReadPacketContainer<P>
+impl<P> Drop for ReadPacketContainer< P>
 where
     P : PacketPrefixedDecode
 {

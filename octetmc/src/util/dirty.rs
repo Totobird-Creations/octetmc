@@ -25,7 +25,7 @@ pub trait Dirtyable {
 
     /// Marks this `Dirtyable` as not dirty.
     #[inline]
-    fn mark_clean(&mut self) { let _ = self.take_dirty(); }
+    fn mark_clean(&mut self) { _ = self.take_dirty(); }
 
     /// Marks this `Dirtyable` as not dirty, returning the previous dirty state.
     #[inline]

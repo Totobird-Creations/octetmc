@@ -55,7 +55,7 @@ static CACHE_SERVER_FAVICON             : Mutex<Option<String>> = Mutex::new(Non
 pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResult {
     comms.set_state(ConnPeerState::Status);
 
-    match (*comms.read_packet_timeout::<C2SStatusPackets>(REQUEST_TIMEOUT).await?) {
+    match (comms.read_packet_timeout::<C2SStatusPackets>(REQUEST_TIMEOUT).await?.get()) {
 
         C2SStatusPackets::StatusRequest(_) => {
 
@@ -65,18 +65,18 @@ pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResul
                 CACHE_SERVER_FAVICON.lock()
             );
 
-            let _ = AsyncWorld.resource::<ServerBrand>().get_mut(|r| {
-                if (r.take_dirty()) { let _ = cache_brand.insert(r.to_string()); }
+            _ = AsyncWorld.resource::<ServerBrand>().get_mut(|r| {
+                if (r.take_dirty()) { _ = cache_brand.insert(r.to_string()); }
             });
             let brand = cache_brand.as_ref().unwrap_or(&*CACHE_LATEST_GAME_VERSION_STRING);
 
-            let _ = AsyncWorld.resource::<ServerMotd>().get_mut(|r| {
-                if (r.take_dirty()) { let _ = cache_motd.insert((**r).clone()); }
+            _ = AsyncWorld.resource::<ServerMotd>().get_mut(|r| {
+                if (r.take_dirty()) { _ = cache_motd.insert((**r).clone()); }
             });
             let motd = cache_motd.as_ref().unwrap_or(&DEFAULT_MOTD);
 
-            let _ = AsyncWorld.resource::<ServerFavicon>().get_mut(|r| {
-                if (r.take_dirty()) { let _ = cache_favicon.insert(format!("{FAVICON_PREFIX}{}", r.as_b64_png())); }
+            _ = AsyncWorld.resource::<ServerFavicon>().get_mut(|r| {
+                if (r.take_dirty()) { _ = cache_favicon.insert(format!("{FAVICON_PREFIX}{}", r.as_b64_png())); }
             });
             let favicon = cache_favicon.as_ref().map_or(DEFAULT_FAVICON, |s| s.as_str());
 
@@ -100,14 +100,14 @@ pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResul
                 block_chat_reports  : true
             }).await?;
 
-            let PingRequestC2SStatusPacket { timestamp } = *comms.read_packet_timeout::<PingRequestC2SStatusPacket>(REQUEST_TIMEOUT).await?;
-            comms.send_packet(&PongResponseS2CStatusPacket { timestamp }).await?;
+            let ping_request = comms.read_packet_timeout::<PingRequestC2SStatusPacket>(REQUEST_TIMEOUT).await?;
+            comms.send_packet(&PongResponseS2CStatusPacket { timestamp : ping_request.get().timestamp }).await?;
 
             Ok(())
         },
 
         C2SStatusPackets::PingRequest(PingRequestC2SStatusPacket { timestamp }) => {
-            comms.send_packet(&PongResponseS2CStatusPacket { timestamp }).await?;
+            comms.send_packet(&PongResponseS2CStatusPacket { timestamp : *timestamp }).await?;
 
             Ok(())
         }

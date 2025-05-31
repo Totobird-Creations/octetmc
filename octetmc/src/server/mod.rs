@@ -19,7 +19,8 @@ deref_single!{
     ///  and in server lists if the server version doesnt match the client's.
     #[derive(Resource)]
     pub struct ServerBrand(Cow<'static, str>);
-    Default { Cow::Borrowed(env!("CARGO_PKG_NAME")) }
+    Dirtyable;
+    From;
 }
 
 deref_single!{
@@ -28,6 +29,8 @@ deref_single!{
     /// The 'message of the day' is displayed in the server list.
     #[derive(Resource)]
     pub struct ServerMotd(Text<'static>);
+    Dirtyable;
+    From;
 }
 
 
