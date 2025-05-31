@@ -166,6 +166,9 @@ pub enum ConnPeerError {
         server : u32
     },
 
+    /// The client sent too much data in too short of a time span.
+    ReadQueueOverflow,
+
     /// An invalid packet length was received.
     InvalidPacketLength,
 

@@ -13,6 +13,9 @@ mod read;
 mod write;
 
 
+const MAX_READ_QUEUE_SIZE : usize = 4096;
+
+
 pub(super) struct ConnPeerComms {
     stream             : TcpStream,
     addr               : SocketAddr,
@@ -32,7 +35,7 @@ impl ConnPeerComms {
     pub(super) fn new(stream : TcpStream, addr : SocketAddr) -> Self {
         let (conn_sender, conn_receiver,) = channel::unbounded();
         Self { stream, addr,
-            read_queue         : VecDeque::new(),
+            read_queue         : VecDeque::with_capacity(MAX_READ_QUEUE_SIZE),
             compress_threshold : None,
             encrypter          : None,
             decrypter          : None,
