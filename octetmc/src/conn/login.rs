@@ -168,16 +168,14 @@ pub(super) async fn handle_login_process(
         profile : PlayerProfile {
             uuid : profile.uuid,
             name : Cow::Borrowed(&*profile.name),
-            skin : profile.skin.as_ref().map(|skin| PlayerProfileSkin {
+            skin : None/*profile.skin.as_ref().map(|skin| PlayerProfileSkin {
                 sig   : skin.sig.as_ref().map(|sig| Cow::Borrowed(&**sig)),
                 value : Cow::Borrowed(&*skin.value),
-            }),
+            }),*/
         },
     }).await?;
     let _ = comms.read_packet_timeout::<LoginAcknowledgedC2SLoginPacket>(LOGIN_TIMEOUT).await?;
     comms.set_state(ConnPeerState::ConfigPlay(ConfigPlay::Config { active_ticks : 0 }));
-
-    //return Err(ConnPeerError::PeerClosed);
 
     // Add a player to the ECS world.
     let player = AsyncWorld.spawn_bundle((Player {

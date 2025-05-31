@@ -24,7 +24,7 @@ where
     ///
     /// The returned slice may be shorter than the given buffer.
     #[inline(always)]
-    pub fn encode_as_slice<'l>(&self, buf : &'l mut <V as VarIntType>::Buf) -> &'l [u8] {
+    pub fn encode_as_slice<'l>(&self, buf : &'l mut <V as VarIntType>::Buf) -> &'l mut [u8] {
         <V as VarIntType>::encode(&self, buf)
     }
 

@@ -37,7 +37,8 @@ impl PacketEncode for HelloS2CLoginPacket<'_> {
         + VarInt::<u32>::MAX_BYTES
         + self.public_key.len()
         + VarInt::<u32>::MAX_BYTES
-        + self.verify_token.len() + 1
+        + self.verify_token.len()
+        + 1
     }
 
     fn encode(&self, buf : &mut EncodeBuf) {

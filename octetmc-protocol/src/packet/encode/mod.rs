@@ -38,7 +38,7 @@ where
     type State = <P as PacketEncode>::State;
 
     fn predict_size(&self) -> usize {
-        <P as PacketEncode>::predict_size(self)
+        1 + <P as PacketEncode>::predict_size(self)
     }
 
     fn encode_prefixed(&self, buf : &mut EncodeBuf) {
