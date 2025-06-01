@@ -12,14 +12,14 @@ pub(super) async fn handle_config_play(comms : &mut ConnPeerComms) -> ConnPeerRe
             ConfigPlay::Config { .. } => {
 
                 if let Some(packet) = comms.try_read_packet::<C2SConfigPackets>()? {
-                    println!("{:?}", packet.get());
+                    println!("{:?}", packet);
                 }
 
             },
             ConfigPlay::Play => {
 
                 if let Some(packet) = comms.try_read_packet::<C2SPlayPackets>()? {
-                    println!("{:?}", packet.get());
+                    println!("{:?}", packet);
                 }
 
             },

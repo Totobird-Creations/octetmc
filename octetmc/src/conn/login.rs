@@ -43,7 +43,7 @@ pub(super) async fn handle_login_process(
     comms.set_state(ConnPeerState::Login);
 
     // Wait for hello.
-    let hello = comms.read_packet_timeout::<HelloC2SLoginPacket>(LOGIN_TIMEOUT).await?;
+    let hello = comms.read_packet_boxed_timeout::<HelloC2SLoginPacket>(LOGIN_TIMEOUT).await?;
     if (hello.get().username.len() > 16) {
         return Err(ConnPeerError::UsernameTooLong);
     }
@@ -75,13 +75,13 @@ pub(super) async fn handle_login_process(
     _ = decrypter.set_rsa_padding(RsaPadding::PKCS1);
 
     // Decrypt and compare verify token.
-    decrypt!(&decrypter, key.get().verify_token => decrypted_verify_token);
+    decrypt!(&decrypter, key.verify_token => decrypted_verify_token);
     if (decrypted_verify_token != verify_token) {
         return Err(ConnPeerError::KeyExchangeFailed);
     }
 
     // Decrypt secret key and create ciphers.
-    decrypt!(&decrypter, key.get().secret_key => secret_key);
+    decrypt!(&decrypter, key.secret_key => secret_key);
     let cipher = Cipher::aes_128_cfb8();
     let Ok(encrypter) = Crypter::new(cipher, CrypterMode::Encrypt, secret_key, Some(secret_key))
         else { return Err(ConnPeerError::KeyExchangeFailed) };

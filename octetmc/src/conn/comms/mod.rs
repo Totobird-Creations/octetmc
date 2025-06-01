@@ -35,9 +35,9 @@ pub(super) struct ConnPeerComms {
     stream             : TcpStream,
     addr               : SocketAddr,
     read_queue         : VecDeque<u8>,
-    write_buf0         : Vec<u8>, // For encoding.
-    write_buf1         : Vec<u8>, // For compression.
-    write_buf2         : Vec<u8>, // For encryption.
+    buf0               : Vec<u8>, // For reading and encoding.
+    buf1               : Vec<u8>, // For compression.
+    buf2               : Vec<u8>, // For encryption.
     compress_threshold : Option<usize>,
     crypters           : Option<ConnPeerCrypters>,
     state              : ConnPeerState,
@@ -60,9 +60,9 @@ impl ConnPeerComms {
         stream.set_nodelay(true).unwrap();
         Self { stream, addr,
             read_queue         : VecDeque::with_capacity(MAX_READ_QUEUE_SIZE),
-            write_buf0         : Vec::new(),
-            write_buf1         : Vec::new(),
-            write_buf2         : Vec::new(),
+            buf0               : Vec::new(),
+            buf1               : Vec::new(),
+            buf2               : Vec::new(),
             compress_threshold : None,
             crypters           : None,
             state              : ConnPeerState::Handshake,

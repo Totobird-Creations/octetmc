@@ -11,11 +11,11 @@ pub(super) async fn wait_for_intention(comms : &mut ConnPeerComms) -> ConnPeerRe
 
     let packet = comms.read_packet_timeout::<IntentionC2SHandshakePacket>(INTENTION_TIMEOUT).await?;
 
-    Ok(match (packet.get().intention) {
+    Ok(match (packet.intention) {
         PtcIntention::Status                         => Intention::Status,
         PtcIntention::Login | PtcIntention::Transfer => {
-            if (packet.get().protocol != PROTOCOL_VERSION) {
-                return Err(ConnPeerError::ProtocolMismatch { client : packet.get().protocol, server : PROTOCOL_VERSION });
+            if (packet.protocol != PROTOCOL_VERSION) {
+                return Err(ConnPeerError::ProtocolMismatch { client : packet.protocol, server : PROTOCOL_VERSION });
             }
             Intention::Login
         }
