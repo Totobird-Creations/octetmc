@@ -108,13 +108,15 @@ impl fmt::Debug for DebugByteHex {
     fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut buf = [0u8; 2];
         _ = hex::encode_to_slice(&[self.0], &mut buf);
-        write!(f, "{}{}", buf[0] as char, buf[1] as char)
+        write!(f, "0x{}{}", buf[0] as char, buf[1] as char)
     }
 }
 
 struct DebugText<'l, 'k>(&'l Text<'k>);
 impl fmt::Debug for DebugText<'_, '_> {
     fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
-        todo!()
+        write!(f, "\"")?;
+        self.0.str_debug_display(f)?;
+        write!(f, "\"")
     }
 }

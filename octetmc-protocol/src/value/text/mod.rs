@@ -2,6 +2,7 @@
 
 
 use crate::value::ident::Ident;
+use core::fmt::{ self, Write as _ };
 use std::borrow::Cow;
 use serde::{
     Serialize as Ser,
@@ -47,6 +48,24 @@ pub struct Text<'l> {
     pub components : Cow<'l, [TextComponent<'l>]>
 
 }
+
+impl fmt::Display for Text<'_> {
+    fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
+        for component in &*self.components {
+            write!(f, "{component}")?;
+        }
+        Ok(())
+    }
+}
+
+impl Text<'_> {
+    /// Writes this `Text` using the `Display` formatter, but as if
+    ///  it is a `&str`. i.e., properly escaped.
+    pub fn str_debug_display(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(DebugStrFormatter { f }, "{self}")
+    }
+}
+
 impl Ser for Text<'_> {
     fn serialize<S>(&self, serer : S) -> Result<<S as Serer>::Ok, <S as Serer>::Error>
     where
@@ -56,3 +75,15 @@ impl Ser for Text<'_> {
 
 
 fn slice_is_empty<T>(slice : &[T]) -> bool { slice.is_empty() }
+
+
+
+struct DebugStrFormatter<'l, 'k> {
+    f : &'l mut fmt::Formatter<'k>
+}
+
+impl fmt::Write for DebugStrFormatter<'_, '_> {
+    fn write_str(&mut self, s : &str) -> fmt::Result {
+        write!(&mut self.f, "{}", s.escape_debug())
+    }
+}

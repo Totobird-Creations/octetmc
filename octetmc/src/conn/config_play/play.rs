@@ -3,6 +3,7 @@ use super::action::ConnPeerAction;
 use octetmc_protocol::packet::play::c2s::C2SPlayPackets;
 
 
+#[expect(dead_code)]
 pub(in super::super) async unsafe fn switch_to_config(comms : &mut ConnPeerComms) -> ConnPeerResult {
     match (unsafe { comms.state_assume_config_play() }) {
 

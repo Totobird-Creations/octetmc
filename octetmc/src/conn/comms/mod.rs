@@ -34,6 +34,7 @@ const GENERIC_KICK_MESSAGE : Text<'_> = Text { components : Cow::Borrowed(&[
 
 pub(super) struct ConnPeerComms {
     stream             : TcpStream,
+    #[expect(dead_code)]
     addr               : SocketAddr,
     read_queue         : VecDeque<u8>,
     buf0               : Vec<u8>, // For reading and encoding.
@@ -72,8 +73,6 @@ impl ConnPeerComms {
         }
     }
 
-    #[inline]
-    pub(super) fn state(&self) -> ConnPeerState { self.state }
     #[inline]
     pub(super) unsafe fn state_assume_config_play(&mut self) -> &mut ConfigPlay {
         let ConnPeerState::ConfigPlay(state) = &mut self.state

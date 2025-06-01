@@ -51,3 +51,21 @@ pub enum TextContent<'l> {
     }
 
 }
+
+impl fmt::Display for TextContent<'_> {
+    fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
+        match (self) {
+            TextContent::Literal   { value }             => write!(f, "{value}"),
+            TextContent::Translate { key, fallback, .. } => write!(f, "{}", fallback.as_ref().unwrap_or(key)),
+            TextContent::Keybind   { key }               => write!(f, "{key}"),
+        }
+    }
+}
+
+impl TextContent<'_> {
+    /// Writes this `TextContent` using the `Display` formatter, but as if
+    ///  it is a `&str`. i.e., properly escaped.
+    pub fn str_debug_display(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(DebugStrFormatter { f }, "{self}")
+    }
+}
