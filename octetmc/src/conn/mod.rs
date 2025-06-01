@@ -1,6 +1,7 @@
 //! Connection listener and client manager.
 
 
+use crate::util::Never;
 use octetmc_protocol::value::text::Text;
 use core::net::{ SocketAddr, SocketAddrV4, Ipv4Addr };
 use std::borrow::Cow;
@@ -99,7 +100,7 @@ fn start_listener(
     });
 }
 
-async fn run_listener(config : OctetConnPlugin) -> io::Result<!> {
+async fn run_listener(config : OctetConnPlugin) -> io::Result<Never> {
     let listener = TcpListener::bind(config.listen_addrs.as_ref()).await?;
     loop {
         let (stream, addr,) = listener.accept().await?;

@@ -3,13 +3,6 @@
 //! TODO: Top-level documentation
 
 
-#![feature(
-    // Language
-    decl_macro,
-    never_type
-)]
-
-
 use bevy_app::{ plugin_group, Plugin, App };
 use bevy_defer::AsyncPlugin;
 
