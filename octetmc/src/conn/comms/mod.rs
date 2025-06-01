@@ -35,12 +35,19 @@ pub(super) struct ConnPeerComms {
     stream             : TcpStream,
     addr               : SocketAddr,
     read_queue         : VecDeque<u8>,
+    write_buf0         : Vec<u8>,
+    write_buf1         : Vec<u8>,
     compress_threshold : Option<usize>,
-    encrypter          : Option<Crypter>,
-    decrypter          : Option<Crypter>,
+    crypters           : Option<ConnPeerCrypters>,
     state              : ConnPeerState,
     conn_sender        : Option<channel::Sender<ConnPeerEvent>>,
     conn_receiver      : channel::Receiver<ConnPeerEvent>
+}
+
+pub(super) struct ConnPeerCrypters {
+    encrypter  : Crypter,
+    decrypter  : Crypter,
+    block_size : usize
 }
 
 
@@ -52,9 +59,10 @@ impl ConnPeerComms {
         stream.set_nodelay(true).unwrap();
         Self { stream, addr,
             read_queue         : VecDeque::with_capacity(MAX_READ_QUEUE_SIZE),
+            write_buf0         : Vec::new(),
+            write_buf1         : Vec::new(),
             compress_threshold : None,
-            encrypter          : None,
-            decrypter          : None,
+            crypters           : None,
             state              : ConnPeerState::Handshake,
             conn_sender        : Some(conn_sender),
             conn_receiver
@@ -106,9 +114,9 @@ impl ConnPeerComms {
         self.compress_threshold = Some(threshold as usize);
     }
     #[inline]
-    pub(super) fn set_crypters(&mut self, encrypter : Crypter, decrypter : Crypter) {
-        self.encrypter = Some(encrypter);
-        self.decrypter = Some(decrypter);
+    pub(super) fn set_crypters(&mut self, encrypter : Crypter, decrypter : Crypter, block_size : usize) {
+        assert!(block_size <= 64);
+        self.crypters = Some(ConnPeerCrypters { encrypter, decrypter, block_size });
     }
 
     #[inline]

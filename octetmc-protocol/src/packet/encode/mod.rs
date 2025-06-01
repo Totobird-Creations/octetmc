@@ -144,12 +144,11 @@ pub trait PacketPartEncode {
 
 
 /// A buffer of bytes to encode and write a packet to.
-#[derive(Default)]
-pub struct EncodeBuf {
-    buf : Vec<u8>
+pub struct EncodeBuf<'l> {
+    buf : &'l mut Vec<u8>
 }
 
-impl EncodeBuf {
+impl EncodeBuf<'_> {
 
     /// Return the number of bytes written to this buffer.
     #[inline]
@@ -165,6 +164,14 @@ impl EncodeBuf {
     ///  should only call this if the size could not be predicted in `predict_size`.
     pub fn reserve(&mut self, additional : usize) {
         self.buf.reserve_exact(additional);
+    }
+
+    /// Reserve enough space in this buffer to contain a total of `n` bytes.
+    ///
+    /// Implementors of [`PartPrefixedEncode`], [`PacketEncode`], and [`PacketPartEncode`]
+    ///  should only call this if the size could not be predicted in `predict_size`.
+    pub fn reserve_to(&mut self, total : usize) {
+        self.buf.reserve_exact(total.saturating_sub(self.buf.len()));
     }
 
     /// Return a slice of the bytes written to this buffer.
@@ -195,4 +202,8 @@ impl EncodeBuf {
         <T as PacketPartEncode>::encode(&packet, self)
     }
 
+}
+
+impl<'l> From<&'l mut Vec<u8>> for EncodeBuf<'l> {
+    fn from(buf : &'l mut Vec<u8>) -> Self { Self { buf } }
 }

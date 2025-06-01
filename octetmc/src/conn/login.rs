@@ -85,7 +85,7 @@ pub(super) async fn handle_login_process(
         else { return Err(ConnPeerError::KeyExchangeFailed) };
     let Ok(decrypter) = Crypter::new(cipher, CrypterMode::Decrypt, secret_key, Some(secret_key))
         else { return Err(ConnPeerError::KeyExchangeFailed) };
-    comms.set_crypters(encrypter, decrypter);
+    comms.set_crypters(encrypter, decrypter, cipher.block_size());
 
     let profile = if (mojauth_enabled) {
 
