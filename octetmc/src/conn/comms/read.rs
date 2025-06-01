@@ -1,4 +1,4 @@
-use super::{ ConnPeerComms, MAX_READ_QUEUE_SIZE };
+use super::{ ConnPeerComms, ConnPeerCrypters, MAX_READ_QUEUE_SIZE };
 use crate::conn::{ ConnPeerResult, ConnPeerError };
 use crate::util::future::timeout;
 use octetmc_protocol::value::varint::{ VarInt, VarIntDecodeError };
@@ -218,15 +218,18 @@ impl ConnPeerComms {
                 if ((self.read_queue.len() + count) > MAX_READ_QUEUE_SIZE) {
                     return Err(ConnPeerError::ReadQueueOverflow);
                 }
-                let decrypted_buf = if let Some(decrypter) = &mut self.decrypter {
-                    let mut decrypted_buf = [0u8; 64];
-                    decrypter.update(
+                // Gives space for up to `block_size` 64.
+                let mut decrypted_buf = [0u8; 128];
+                let decrypted_buf = if let Some(ConnPeerCrypters { decrypter, .. }) = &mut self.crypters {
+                    // SAFETY: `block_size` can not be greater than 64 (see `ConnPeerComs::set_crypters`)
+                    let count = unsafe { decrypter.update_unchecked(
                         // SAFETY: count can never be greater than `buf.len()`.
-                        unsafe { buf.get_unchecked(0..count) },
-                        unsafe { decrypted_buf.get_unchecked_mut(0..count) }
-                    ).unwrap();
-                    decrypted_buf
-                } else { buf };
+                        buf.get_unchecked(0..count),
+                        decrypted_buf.get_unchecked_mut(0..count)
+                    ) }.unwrap();
+                    // SAFETY: `count` can not be greater than `buf.len() + block_size`.
+                    unsafe { decrypted_buf.get_unchecked(0..count) }
+                } else { &buf };
                 // SAFETY: count can never be greater than `buf.len()`.
                 self.read_queue.extend(unsafe { decrypted_buf.get_unchecked(0..count) }.iter());
                 Ok(())
