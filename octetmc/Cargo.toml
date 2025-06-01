@@ -12,7 +12,7 @@ keywords     = [ "octetmc", "minecraft", "event", "bevy", "ecs" ]
 categories   = [ "games" ]
 
 edition      = "2024"
-rust-version = "1.89"
+rust-version = "1.87"
 
 
 [lints.rust]

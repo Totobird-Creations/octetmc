@@ -2,7 +2,8 @@
 
 
 use crate::conn::event::ConnPeerEvent;
-use crate::util::macros::{ CratePrivateNew, deref_single };
+use crate::util::CratePrivateNew;
+use crate::util::macros::deref_single;
 use octetmc_protocol::value::profile::PlayerProfile;
 use core::ops::Deref;
 use bevy_app::{ Plugin, App, Update };
