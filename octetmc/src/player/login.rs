@@ -15,7 +15,7 @@ use bevy_ecs::event::{ Event, EventReader, EventWriter };
 pub struct PlayerLoginEvent {
 
     /// The [`Entity`] ID of the [`Player`] who joined.
-    pub player : PlayerId
+    pub player_id : PlayerId
 
 }
 
@@ -25,10 +25,10 @@ pub struct PlayerLoginEvent {
 pub struct KickPlayer {
 
     /// The [`Entity`] ID of the [`Player`] to kick.
-    pub player : PlayerId,
+    pub player_id : PlayerId,
 
     /// The message to display to the client.
-    pub reason : Text<'static>
+    pub reason    : Text<'static>
 
 }
 
@@ -63,10 +63,10 @@ fn kick_dupe_players(
         q_players : Query<(Entity, &Player,)>
 ) {
     ew_kick.write_batch(er_login.read().filter_map(|event| {
-        if let Ok((_, player,)) = (q_players.get(*event.player)) {
+        if let Ok((_, player,)) = (q_players.get(*event.player_id)) {
             Some(q_players.iter().filter_map(|(other_id, other_player,)| {
-                if ((other_id != *event.player) && (other_player.profile.uuid == player.profile.uuid)) {
-                    Some(KickPlayer { player : PlayerId::from(other_id), reason : DEFAULT_DUPE_KICK_MESSAGE })
+                if ((other_id != *event.player_id) && (other_player.profile.uuid == player.profile.uuid)) {
+                    Some(KickPlayer { player_id : PlayerId::from(other_id), reason : DEFAULT_DUPE_KICK_MESSAGE })
                 } else { None }
             }))
         } else { None }

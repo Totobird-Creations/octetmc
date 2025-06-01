@@ -45,6 +45,7 @@ impl ConnPeerComms {
         let is_compressed;
         let decompressed_packet_len;
         if (self.compress_threshold.is_some()) {
+            todo!();
 
             let consumed;
             (uncompressed_packet_len, consumed,) = self.try_read_packet_len()?.ok_or(ConnPeerError::InvalidPacketLength)?;
