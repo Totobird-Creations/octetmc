@@ -80,6 +80,28 @@ impl ConnPeerComms {
     }
 
     #[inline]
+    pub(super) async unsafe fn switch_state_play(&mut self) -> ConnPeerResult {
+        if let ConfigPlay::Play = (unsafe { self.state_assume_config_play() }) {
+            return Ok(());
+        }
+        todo!("switch state play");
+        //self.send_packet(packet).await?;
+        //self.set_state_config_play(ConfigPlay::Play);
+        //Ok(())
+    }
+    #[inline]
+    pub(super) async unsafe fn switch_state_config(&mut self) -> ConnPeerResult {
+        if let ConfigPlay::Config { active_ticks } = (unsafe { self.state_assume_config_play() }) {
+            *active_ticks = 0;
+        } else {
+            todo!("switch state config");
+            //self.send_packet(packet).await?;
+            //self.set_state_config_play(ConfigPlay::Config { active_ticks : 0 });
+        }
+        Ok(())
+    }
+
+    #[inline]
     pub(super) fn set_compress_threshold(&mut self, threshold : u32) {
         self.compress_threshold = Some(threshold as usize);
     }

@@ -12,8 +12,10 @@ impl ConnPeerEvent {
 
         Self::Tick => {
             if let ConfigPlay::Config { active_ticks } = unsafe { comms.state_assume_config_play() } {
+                // 2 ticks is the maximum duration to read a Bevy event.
+                // All config events should be handled by now.
                 if (*active_ticks >= 1) {
-                    todo!("switch to play");
+                    unsafe { comms.switch_state_play() }.await?;
                 } else { *active_ticks += 1; }
             }
             Ok(())
