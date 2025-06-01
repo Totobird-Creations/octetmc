@@ -1,6 +1,9 @@
 //! Packet definitions and en?decoders.
 
 
+use core::fmt;
+
+
 pub mod handshake;
 
 pub mod status;
@@ -18,6 +21,28 @@ pub mod encode;
 
 
 /// The state that a packet is sent in.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub enum PacketState {
+
+    /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Handshaking
+    Handshake,
+
+    /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status
+    Status,
+
+    /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login
+    Login,
+
+    /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Configuration
+    Config,
+
+    /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Play
+    Play
+
+}
+
+
+/// The state that a packet is sent in.
 ///
 /// This is used by the en/decode traits to restrict where they can be used.
 ///
@@ -27,27 +52,50 @@ pub mod encode;
     label = "`{Self}` is not a packet state",
     message = "`{Self}` is not a packet state"
 )]
-pub unsafe trait PacketState { }
+pub unsafe trait AsPacketState : Clone + Copy + fmt::Debug {
+    /// Returns `Self` as a `PacketState` variant.
+    fn as_packet_state() -> PacketState;
+}
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Handshaking
+#[derive(Clone, Copy, Debug)]
 pub struct StateHandshake;
-unsafe impl PacketState for StateHandshake { }
+unsafe impl AsPacketState for StateHandshake {
+    #[inline(always)]
+    fn as_packet_state() -> PacketState { PacketState::Handshake }
+}
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status
+#[derive(Clone, Copy, Debug)]
 pub struct StateStatus;
-unsafe impl PacketState for StateStatus { }
+unsafe impl AsPacketState for StateStatus {
+    #[inline(always)]
+    fn as_packet_state() -> PacketState { PacketState::Status }
+}
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login
+#[derive(Clone, Copy, Debug)]
 pub struct StateLogin;
-unsafe impl PacketState for StateLogin { }
+unsafe impl AsPacketState for StateLogin {
+    #[inline(always)]
+    fn as_packet_state() -> PacketState { PacketState::Login }
+}
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Configuration
+#[derive(Clone, Copy, Debug)]
 pub struct StateConfig;
-unsafe impl PacketState for StateConfig { }
+unsafe impl AsPacketState for StateConfig {
+    #[inline(always)]
+    fn as_packet_state() -> PacketState { PacketState::Config }
+}
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Play
+#[derive(Clone, Copy, Debug)]
 pub struct StatePlay;
-unsafe impl PacketState for StatePlay { }
+unsafe impl AsPacketState for StatePlay {
+    #[inline(always)]
+    fn as_packet_state() -> PacketState { PacketState::Play }
+}
 
 
 /// `u8`-similar types.

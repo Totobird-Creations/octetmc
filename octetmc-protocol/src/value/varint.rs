@@ -20,6 +20,10 @@ where
     /// The maximum number of bytes that a `VarInt` of this type can use.
     pub const MAX_BYTES : usize = V::MAX_BYTES;
 
+    /// Create a new `VarInt` with a given value.
+    #[inline(always)]
+    pub const fn new(value : V) -> Self { Self(value) }
+
     /// Encodes this `VarInt` into the given buffer.
     ///
     /// The returned slice may be shorter than the given buffer.
@@ -193,5 +197,6 @@ impl From<VarIntDecodeError> for Cow<'static, str> {
 }
 
 impl From<IncompleteData> for VarIntDecodeError {
+    #[inline(always)]
     fn from(_ : IncompleteData) -> Self { Self::IncompleteData }
 }

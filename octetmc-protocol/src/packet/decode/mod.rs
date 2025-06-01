@@ -1,7 +1,7 @@
 //! Packet decoding utilities.
 
 
-use super::PacketState;
+use super::AsPacketState;
 use std::borrow::Cow;
 
 
@@ -19,7 +19,7 @@ pub const MAX_PACKET_LENGTH : usize = 2usize.pow(21) - 1;
 /// Packet decoder, including packet ID.
 pub trait PacketPrefixedDecode : Sized {
     /// The state in which this packet can be used.
-    type State : PacketState;
+    type State : AsPacketState;
 
     /// The type returned by `decode_prefixed` on success.
     type Output<'l>;
@@ -120,7 +120,7 @@ pub(crate) use packet_decode_group_output;
 /// Packet decoder, excluding packet ID.
 pub trait PacketDecode : Sized {
     /// The state in which this packet can be used.
-    type State : PacketState;
+    type State : AsPacketState;
 
     /// The ID of this packet.
     const PREFIX : u8;
@@ -219,6 +219,9 @@ impl<'l> DecodeBuf<'l> {
     {
         <T as PacketPartDecode>::decode(self, head)
     }
+
+    /// Returns the number of bytes remaining to read.
+    pub fn remaining(&self, head : &DecodeBufHead) -> usize { self.buf.len().saturating_sub(head.head) }
 
 }
 
