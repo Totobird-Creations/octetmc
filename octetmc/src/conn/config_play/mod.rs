@@ -1,7 +1,17 @@
-use super::{ ConfigPlay, ConnPeerComms, ConnPeerResult };
+use super::error::ConnPeerResult;
+use super::state::ConfigPlay;
+use super::comms::ConnPeerComms;
 use octetmc_protocol::packet::config::c2s::C2SConfigPackets;
 use octetmc_protocol::packet::play::c2s::C2SPlayPackets;
 use bevy_defer::AsyncWorld;
+
+
+pub(super) mod config;
+
+pub(super) mod play;
+
+pub(crate) mod event;
+pub(crate) mod action;
 
 
 pub(super) async fn handle_config_play(comms : &mut ConnPeerComms) -> ConnPeerResult {
@@ -12,14 +22,14 @@ pub(super) async fn handle_config_play(comms : &mut ConnPeerComms) -> ConnPeerRe
             ConfigPlay::Config { .. } => {
 
                 if let Some(packet) = comms.try_read_packet::<C2SConfigPackets>()? {
-                    println!("{:?}", packet);
+                    config::handle_config_packet(packet).await?.handle(comms).await?;
                 }
 
             },
             ConfigPlay::Play => {
 
                 if let Some(packet) = comms.try_read_packet::<C2SPlayPackets>()? {
-                    println!("{:?}", packet);
+                    play::handle_play_packet(packet).await?.handle(comms).await?;
                 }
 
             },

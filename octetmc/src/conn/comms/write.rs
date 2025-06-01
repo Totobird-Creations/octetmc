@@ -1,5 +1,4 @@
-use super::{ ConnPeerComms, ConnPeerCrypters };
-use crate::conn::ConnPeerResult;
+use super::{ ConnPeerComms, ConnPeerCrypters, ConnPeerResult };
 use octetmc_protocol::value::varint::VarInt;
 use octetmc_protocol::packet::encode::{ PacketPrefixedEncode, EncodeBuf };
 use core::{ iter, ptr };

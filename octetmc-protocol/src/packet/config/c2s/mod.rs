@@ -5,10 +5,15 @@ use crate::packet::StateConfig;
 use crate::packet::decode::{ IncompleteData, packet_decode_group };
 
 
+pub mod finish_configuration;
+
+
 packet_decode_group!{
     type State     = StateConfig;
     type Error<'l> = IncompleteData;
     /// `C2SConfig`-type packets.
     pub enum C2SConfigPackets {
+        /// `FinishConfigurationC2SConfigPacket`
+        FinishConfiguration(finish_configuration::FinishConfigurationC2SConfigPacket)
     }
 }

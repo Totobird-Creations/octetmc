@@ -1,5 +1,4 @@
-use super::{ ConnPeerComms, ReadPacketBoxed };
-use crate::conn::{ ConnPeerResult, ConnPeerError };
+use super::{ ConnPeerComms, ReadPacketBoxed, ConnPeerResult, ConnPeerError };
 use octetmc_protocol::packet::decode::{ PacketPrefixedDecode, DecodeBufHead, DecodeBuf, UnknownPrefix };
 use core::mem::{ self, ManuallyDrop };
 use core::pin::Pin;

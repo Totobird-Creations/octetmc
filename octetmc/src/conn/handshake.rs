@@ -1,4 +1,5 @@
-use super::{ ConnPeerComms, ConnPeerResult, ConnPeerError };
+use super::error::{ ConnPeerResult, ConnPeerError };
+use super::comms::ConnPeerComms;
 use octetmc_protocol::PROTOCOL_VERSION;
 use octetmc_protocol::packet::handshake::c2s::intention::{ IntentionC2SHandshakePacket, Intention as PtcIntention };
 use core::time::Duration;

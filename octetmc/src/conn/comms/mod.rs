@@ -1,4 +1,5 @@
-use super::{ ConnPeerState, ConfigPlay, ConnPeerResult, ConnPeerError };
+use super::error::{ ConnPeerResult, ConnPeerError };
+use super::state::{ ConnPeerState, ConfigPlay };
 use super::event::ConnPeerEvent;
 use octetmc_protocol::value::text::{ Text, TextComponent, TextContent, TextStyle, TextInteract };
 use core::net::SocketAddr;
@@ -87,28 +88,6 @@ impl ConnPeerComms {
     #[inline(always)]
     pub(super) fn set_state_config_play(&mut self, state : ConfigPlay) {
         self.set_state(ConnPeerState::ConfigPlay(state));
-    }
-
-    #[inline]
-    pub(super) async unsafe fn switch_state_play(&mut self) -> ConnPeerResult {
-        if let ConfigPlay::Play = (unsafe { self.state_assume_config_play() }) {
-            return Ok(());
-        }
-        todo!("switch state play");
-        //self.send_packet(packet).await?;
-        //self.set_state_config_play(ConfigPlay::Play);
-        //Ok(())
-    }
-    #[inline]
-    pub(super) async unsafe fn switch_state_config(&mut self) -> ConnPeerResult {
-        if let ConfigPlay::Config { active_ticks } = (unsafe { self.state_assume_config_play() }) {
-            *active_ticks = 0;
-        } else {
-            todo!("switch state config");
-            //self.send_packet(packet).await?;
-            //self.set_state_config_play(ConfigPlay::Config { active_ticks : 0 });
-        }
-        Ok(())
     }
 
     #[inline]

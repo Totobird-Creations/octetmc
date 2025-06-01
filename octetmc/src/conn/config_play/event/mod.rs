@@ -1,4 +1,4 @@
-use super::{ ConfigPlay, ConnPeerComms, ConnPeerResult };
+use super::{ ConfigPlay, ConnPeerComms, ConnPeerResult, config };
 
 
 pub(crate) enum ConnPeerEvent {
@@ -15,7 +15,7 @@ impl ConnPeerEvent {
                 // 2 ticks is the maximum duration to read a Bevy event.
                 // All config events should be handled by now.
                 if (*active_ticks >= 1) {
-                    unsafe { comms.switch_state_play() }.await?;
+                    unsafe { config::switch_to_play(comms) }.await?;
                 } else { *active_ticks += 1; }
             }
             Ok(())
