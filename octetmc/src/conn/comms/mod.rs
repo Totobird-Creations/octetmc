@@ -36,7 +36,7 @@ pub(super) struct ConnPeerComms {
     addr               : SocketAddr,
     read_queue         : VecDeque<u8>,
     buf0               : Vec<u8>, // For reading and encoding.
-    buf1               : Vec<u8>, // For compression.
+    buf1               : Vec<u8>, // For decompression and compression.
     buf2               : Vec<u8>, // For encryption.
     compress_threshold : Option<usize>,
     crypters           : Option<ConnPeerCrypters>,

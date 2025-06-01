@@ -189,6 +189,9 @@ pub enum ConnPeerError {
     /// A received packet was longer than the decoder expected.
     NoPacketEnd,
 
+    /// A received packet could not be decompressed.
+    BadPacketZlib,
+
     /// The username that the client sent is too long.
     UsernameTooLong,
 

@@ -10,7 +10,6 @@ use bevy_app::{ Plugin, App, Update };
 use bevy_ecs::entity::Entity;
 use bevy_ecs::component::Component;
 use bevy_ecs::system::{ Query, Commands };
-use bevy_ecs::query::{ With, Added };
 use bevy_ecs::resource::Resource;
 use smol::channel;
 

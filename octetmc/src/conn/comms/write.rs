@@ -59,8 +59,8 @@ impl ConnPeerComms {
                     self.buf1.reserve_exact(VARINT32_SIZE_2 + uncompressed_packet.len());
                     self.buf1.extend_from_slice(&[0u8; VARINT32_SIZE_2]);
                     let mut z = ZlibEncoder::new(&mut self.buf1, COMPRESSION);
-                    _ = z.write_all(uncompressed_packet); // These errors can be ignored because writing to a `Vec` can not fail.
-                    _ = z.finish();
+                    _ = z.write_all(uncompressed_packet); // This error can be ignored because writing to a `Vec` can not fail.
+                    _ = z.finish(); // This error can be ignored because flushing a `Vec` can not fail.
                     let compressed_packet_len = self.buf1.len() - VARINT32_SIZE_2;
                     let dst0_end = unsafe { self.buf1.as_mut_ptr().byte_add(VARINT32_SIZE_2) };
                     let len0     = unsafe { Self::write_varint32_before(unaltered_packet_len, dst0_end) };
@@ -93,6 +93,7 @@ impl ConnPeerComms {
 
         Ok(())
     }
+
 
     unsafe fn write_varint32_before(value : usize, dst_end : *mut u8) -> usize {
         let mut buf = [0u8; VarInt::<u32>::MAX_BYTES];
