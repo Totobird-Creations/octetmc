@@ -1,5 +1,4 @@
-use super::{ ConnPeerComms, ConnPeerCrypters, MAX_READ_QUEUE_SIZE };
-use crate::conn::{ ConnPeerResult, ConnPeerError };
+use super::{ ConnPeerComms, ConnPeerCrypters, ConnPeerResult, ConnPeerError, MAX_READ_QUEUE_SIZE };
 use crate::util::future::timeout;
 use octetmc_protocol::packet::decode::{ PacketPrefixedDecode };
 use core::time::Duration;

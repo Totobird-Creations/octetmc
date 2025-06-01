@@ -25,10 +25,12 @@ impl PacketEncode for LoginCompressionS2CLoginPacket {
 
     const PREFIX : u8 = 0x03;
 
+    #[inline(always)]
     fn predict_size(&self) -> usize {
         VarInt::<u32>::MAX_BYTES
     }
 
+    #[inline]
     fn encode(&self, buf : &mut EncodeBuf) {
         buf.encode_write(&VarInt::<u32>::from(self.threshold));
     }

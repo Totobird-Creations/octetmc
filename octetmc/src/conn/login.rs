@@ -1,4 +1,6 @@
-use super::{ ConnPeerState, ConfigPlay, ConnPeerComms, ConnPeerResult, ConnPeerError };
+use super::error::{ ConnPeerResult, ConnPeerError };
+use super::state::{ ConnPeerState, ConfigPlay };
+use super::comms::ConnPeerComms;
 use crate::player::{ Player, PlayerId };
 use crate::player::login::PlayerLoginEvent;
 use crate::util::future::timeout;
@@ -64,11 +66,9 @@ pub(super) async fn handle_login_process(
         verify_token    : &verify_token,
         mojauth_enabled,
     }).await?;
-    println!("hello sent");
 
     // Wait for key response.
     let key = comms.read_packet_timeout::<KeyC2SLoginPacket>(LOGIN_TIMEOUT).await?;
-    println!("key read");
 
     // Create new pkey decrypter.
     let mut decrypter = Decrypter::new(&private_key).unwrap();

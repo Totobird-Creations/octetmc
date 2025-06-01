@@ -1,4 +1,6 @@
-use super::{ ConnPeerState, ConnPeerComms, ConnPeerResult };
+use super::error::ConnPeerResult;
+use super::state::ConnPeerState;
+use super::comms::ConnPeerComms;
 use crate::server::{ ServerBrand, ServerMotd, ServerFavicon };
 use crate::player::{ PlayerCount, MaxPlayerCount };
 use crate::util::dirty::Dirtyable;
