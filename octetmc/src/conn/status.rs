@@ -55,7 +55,7 @@ static CACHE_SERVER_FAVICON             : Mutex<Option<String>> = Mutex::new(Non
 pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResult {
     comms.set_state(ConnPeerState::Status);
 
-    match (comms.read_packet_timeout::<C2SStatusPackets>(REQUEST_TIMEOUT).await?.get()) {
+    match (comms.read_packet_timeout::<C2SStatusPackets>(REQUEST_TIMEOUT).await?) {
 
         C2SStatusPackets::StatusRequest(_) => {
 
@@ -101,13 +101,13 @@ pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResul
             }).await?;
 
             let ping_request = comms.read_packet_timeout::<PingRequestC2SStatusPacket>(REQUEST_TIMEOUT).await?;
-            comms.send_packet(&PongResponseS2CStatusPacket { timestamp : ping_request.get().timestamp }).await?;
+            comms.send_packet(&PongResponseS2CStatusPacket { timestamp : ping_request.timestamp }).await?;
 
             Ok(())
         },
 
         C2SStatusPackets::PingRequest(PingRequestC2SStatusPacket { timestamp }) => {
-            comms.send_packet(&PongResponseS2CStatusPacket { timestamp : *timestamp }).await?;
+            comms.send_packet(&PongResponseS2CStatusPacket { timestamp }).await?;
 
             Ok(())
         }

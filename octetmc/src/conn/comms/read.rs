@@ -2,10 +2,10 @@ use super::{ ConnPeerComms, ConnPeerCrypters, MAX_READ_QUEUE_SIZE };
 use crate::conn::{ ConnPeerResult, ConnPeerError };
 use crate::util::future::timeout;
 use octetmc_protocol::value::varint::{ VarInt, VarIntDecodeError };
-use octetmc_protocol::packet::decode::{ PacketPrefixedDecode, PacketPartDecode, DecodeBufHead, DecodeBuf, UnknownPrefix, MAX_PACKET_LENGTH };
+use octetmc_protocol::packet::decode::{ PacketPrefixedDecode, PacketPartDecode, DecodeBufHead, DecodeBuf, UnknownPrefix };
 use core::time::Duration;
 use core::mem::{ self, MaybeUninit, ManuallyDrop };
-use core::ptr;
+use core::{ iter, ptr };
 use core::pin::Pin;
 use std::io::{ self, Write };
 use std::borrow::Cow;
@@ -13,142 +13,173 @@ use smol::io::AsyncReadExt;
 use flate2::write::ZlibDecoder;
 
 
+const MAX_UNCOMPRESSED_PACKET_LEN : usize = 4096;
+
+
 impl ConnPeerComms {
 
-    pub(crate) fn try_read_packet<P>(&mut self) -> ConnPeerResult<Option<ReadPacketContainer<P>>>
+    #[inline]
+    pub(crate) fn try_read_packet<P>(&mut self) -> ConnPeerResult<Option<P::Output<'_>>>
     where
         P : PacketPrefixedDecode
+    { self.try_read_packet_inner::<P, _, _>(|bytes| Self::decode_packet::<P>(bytes)) }
+
+    #[expect(unused)]
+    #[inline]
+    pub(crate) fn try_read_packet_boxed<P>(&mut self) -> ConnPeerResult<Option<ReadPacketBoxed<P>>>
+    where
+        P : PacketPrefixedDecode
+    { self.try_read_packet_inner::<P, _, _>(|bytes| Self::decode_packet_boxed::<P>(bytes)) }
+
+    fn try_read_packet_inner<'l, P, F, T>(&'l mut self, f : F) -> ConnPeerResult<Option<T>>
+    where
+        P : PacketPrefixedDecode,
+        F : FnOnce(&'l [u8]) -> ConnPeerResult<T>
     {
         let Some((total_len, _,)) = self.try_read_packet_len()?
             else { return Ok(None); };
         if (self.read_queue.len() < total_len) { // <NOTE 1>
             return Ok(None);
         }
-        unsafe { self.read_packet_inner(total_len).map(Some) }
+        f(unsafe { self.read_packet_content_data(total_len)? }).map(Some)
     }
 
-    pub(crate) async fn read_packet<P>(&mut self) -> ConnPeerResult<ReadPacketContainer<P>>
+
+    #[inline]
+    pub(crate) async fn read_packet<P>(&mut self) -> ConnPeerResult<P::Output<'_>>
     where
         P : PacketPrefixedDecode
+    { self.read_packet_inner::<P, _, _>(|bytes| Self::decode_packet::<P>(bytes)).await }
+
+    #[inline]
+    pub(crate) async fn read_packet_boxed<P>(&mut self) -> ConnPeerResult<ReadPacketBoxed<P>>
+    where
+        P : PacketPrefixedDecode
+    { self.read_packet_inner::<P, _, _>(|bytes| Self::decode_packet_boxed::<P>(bytes)).await }
+
+    async fn read_packet_inner<'l, P, F, T>(&'l mut self, f : F) -> ConnPeerResult<T>
+    where
+        P : PacketPrefixedDecode,
+        F : FnOnce(&'l [u8]) -> ConnPeerResult<T>
     {
-        let (total_len, _,) = self.wait_for_packet_len().await?;
+        let (total_len, _,) = self.read_packet_len().await?;
         self.wait_for_bytes(total_len).await?; // <NOTE 2>
-        unsafe { self.read_packet_inner(total_len) }
+        f(unsafe { self.read_packet_content_data(total_len)? })
     }
 
-    unsafe fn read_packet_inner<P>(&mut self, total_len : usize) -> ConnPeerResult<ReadPacketContainer<P>>
+
+    pub(crate) async fn read_packet_timeout<P>(&mut self, dur : Duration) -> ConnPeerResult<P::Output<'_>>
     where
         P : PacketPrefixedDecode
-    {
-        let uncompressed_packet_len;
-        let compressed_packet_len;
-        let is_compressed;
-        let decompressed_packet_len;
-        if (self.compress_threshold.is_some()) {
-            todo!();
+    { Self::read_packet_timeout_inner::<P, _, _>(dur, self.read_packet::<P>()).await }
 
-            let consumed;
-            (uncompressed_packet_len, consumed,) = self.try_read_packet_len()?.ok_or(ConnPeerError::InvalidPacketLength)?;
-            compressed_packet_len  = total_len - consumed;
-            is_compressed          = uncompressed_packet_len != 0;
-            decompressed_packet_len = if (is_compressed) {
-                if (uncompressed_packet_len > compressed_packet_len) {
-                    return Err(ConnPeerError::PacketTooLong);
-                }
-                uncompressed_packet_len
-            } else { compressed_packet_len };
-
-        } else {
-
-            is_compressed           = false;
-            compressed_packet_len   = 0;
-            decompressed_packet_len = total_len;
-
-        }
-
-        let buf = Pin::from(if (is_compressed) {
-            let buf = Box::<[u8]>::new_uninit_slice(decompressed_packet_len);
-
-            let mut z = ZlibDecoder::new(PacketDecompress { buf, head : 0 });
-            let (a, b,) = self.read_queue.as_slices();
-            let consuming = compressed_packet_len.min(a.len());
-            // SAFETY: `consuming` is clamped down to `a.len()` on the line above.
-            if (z.write_all(unsafe { a.get_unchecked(0..consuming) }).is_err()) {
-                return Err(ConnPeerError::BadPacket(Cow::Borrowed("failed to decompress")));
-            }
-            let consuming = compressed_packet_len - consuming;
-            // SAFETY: `consuming` can never be `b.len()` or higher, as `self.read_queue` has enough bytes for the whole packet (see <NOTE 1> and <NOTE 2>).
-            if (z.write_all(unsafe { b.get_unchecked(0..consuming) }).is_err()) {
-                return Err(ConnPeerError::BadPacket(Cow::Borrowed("failed to decompress")));
-            }
-
-            self.read_queue.drain(0..compressed_packet_len);
-            // SAFETY: `<PacketDecompress as Write>::flush` can never return `Err`.
-            let d = unsafe { z.finish().unwrap_unchecked() };
-            if (d.head < d.buf.len()) {
-                return Err(ConnPeerError::BadPacket(Cow::Borrowed("failed to decompress")));
-            }
-            // SAFETY: All bytes in `d.buf` were written as checked in the if-condition above.
-            unsafe { d.buf.assume_init() }
-
-        } else {
-            let mut buf = Box::<[u8]>::new_uninit_slice(decompressed_packet_len);
-
-            let (a, b,) = self.read_queue.as_slices();
-            let consuming = decompressed_packet_len.min(a.len());
-            // SAFETY: `consuming` is clamped down to `a.len()` on the line above.
-            let a = unsafe { a.get_unchecked(0..consuming) };
-            unsafe { ptr::copy_nonoverlapping(a.as_ptr(), buf.as_mut_ptr() as _, a.len()); }
-            let consuming = decompressed_packet_len - consuming;
-            // SAFETY: `consuming` can never be `b.len()` or higher, as `self.read_queue` has enough bytes for the whole packet (see <NOTE 1> and <NOTE 2>).
-            let b = unsafe { b.get_unchecked(0..consuming) };
-            unsafe { ptr::copy_nonoverlapping(b.as_ptr(), buf.as_mut_ptr().byte_add(a.len()) as _, b.len()); }
-
-            self.read_queue.drain(0..decompressed_packet_len);
-            // SAFETY: All bytes in `buf` were written.
-            unsafe { buf.assume_init() }
-        });
-
-        let mut head = DecodeBufHead::default();
-        // SAFETY: `PacketDecodeContainer.packet` will not outlive `PacketDecodeContainer.raw`.
-        //         `PacketDecodeContainer.raw` can not move because it is `Pin<Box<_>>`.
-        let packet = P::decode_prefixed(DecodeBuf::from(unsafe { mem::transmute::<&[u8], &[u8]>(&*buf) }), &mut head).map_err(|e| match (e) {
-            UnknownPrefix::UnknownPrefix(p) => ConnPeerError::UnknownPacketPrefix(p),
-            UnknownPrefix::Error(e)         => ConnPeerError::BadPacket(e.into()),
-        })?;
-        if (head.consumed() < buf.len()) { return Err(ConnPeerError::NoPacketEnd); }
-        Ok(ReadPacketContainer {
-            raw    : ManuallyDrop::new(buf),
-            packet : ManuallyDrop::new(packet)
-        })
-    }
-
-    pub(crate) async fn read_packet_timeout<P>(&mut self, dur : Duration) -> ConnPeerResult<ReadPacketContainer<P>>
+    #[inline]
+    pub(crate) async fn read_packet_boxed_timeout<P>(&mut self, dur : Duration) -> ConnPeerResult<ReadPacketBoxed<P>>
     where
         P : PacketPrefixedDecode
-    { match (timeout(dur, self.read_packet::<P>()).await) {
+    { Self::read_packet_timeout_inner::<P, _, _>(dur, self.read_packet_boxed::<P>()).await }
+
+    async fn read_packet_timeout_inner<P, F, T>(dur : Duration, f : F) -> ConnPeerResult<T>
+    where
+        P : PacketPrefixedDecode,
+        F : Future<Output = ConnPeerResult<T>>
+    { match (timeout(dur, f).await) {
         Ok(Ok(out))  => Ok(out),
         Ok(Err(err)) => Err(err),
         Err(_)       => Err(ConnPeerError::TimedOut)
     } }
 
 
-    /// Returns (length value, consumed byte count,).
-    #[inline(always)]
-    async fn wait_for_packet_len(&mut self) -> ConnPeerResult<(usize, usize,)> {
-        self.read_packet_len(async |comms| comms.accept_more_bytes().await).await
+    fn decode_packet<P>(bytes : &[u8]) -> ConnPeerResult<P::Output<'_>>
+    where
+        P : PacketPrefixedDecode
+    {
+        let mut head = DecodeBufHead::default();
+        let packet = P::decode_prefixed(DecodeBuf::from(bytes), &mut head).map_err(|e| match (e) {
+            UnknownPrefix::UnknownPrefix(p) => ConnPeerError::UnknownPacketPrefix(p),
+            UnknownPrefix::Error(e)         => ConnPeerError::BadPacket(e.into()),
+        })?;
+        if (head.consumed() < bytes.len()) { return Err(ConnPeerError::NoPacketEnd); }
+        Ok(packet)
     }
 
-    /// Returns (length value, consumed byte count,).
-    async fn read_packet_len<F>(&mut self, mut on_not_enough : F) -> ConnPeerResult<(usize, usize,)>
+
+    fn decode_packet_boxed<P>(bytes : &[u8]) -> ConnPeerResult<ReadPacketBoxed<P>>
     where
-        F : AsyncFnMut(&mut Self) -> ConnPeerResult
+        P : PacketPrefixedDecode
     {
+        let mut bytes_boxed = Box::<[u8]>::new_uninit_slice(bytes.len());
+        // SAFETY: `bytes` and `bytes_boxed` have the same length.
+        unsafe { ptr::copy_nonoverlapping(bytes.as_ptr(), bytes_boxed.as_mut_ptr() as _, bytes.len()); }
+        // SAFETY: All elements were initialised in the line above.
+        let bytes_boxed = Pin::new(unsafe { bytes_boxed.assume_init() });
+
+        let mut head        = DecodeBufHead::default();
+        // SAFETY: `bytes_boxed` is kept alive by `ReadPacketBoxed<P>`.
+        let packet = P::decode_prefixed(DecodeBuf::from(unsafe { mem::transmute::<&[u8], &[u8]>(&*bytes_boxed) }), &mut head).map_err(|e| match (e) {
+            UnknownPrefix::UnknownPrefix(p) => ConnPeerError::UnknownPacketPrefix(p),
+            UnknownPrefix::Error(e)         => ConnPeerError::BadPacket(e.into()),
+        })?;
+        if (head.consumed() < bytes.len()) { return Err(ConnPeerError::NoPacketEnd); }
+        Ok(ReadPacketBoxed {
+            raw    : ManuallyDrop::new(bytes_boxed),
+            packet : ManuallyDrop::new(packet)
+        })
+    }
+
+
+    unsafe fn read_packet_content_data(&mut self, total_len : usize) -> ConnPeerResult<&[u8]> {
+        match (self.compress_threshold) {
+
+            None => {
+                self.buf0.extend(iter::repeat_n(0u8,
+                    total_len.saturating_sub(self.buf0.len())
+                ));
+
+                let (a, b,) = self.read_queue.as_slices();
+                let consuming = total_len.min(a.len());
+                // SAFETY: `consuming` is clamped down to `a.len()` on the line above.
+                let a = unsafe { a.get_unchecked(0..consuming) };
+                unsafe { ptr::copy_nonoverlapping(a.as_ptr(), self.buf0.as_mut_ptr(), a.len()); }
+                let consuming = total_len - consuming;
+                // SAFETY: `consuming` can never be `b.len()` or greater, as `self.read_queue` has enough bytes for the whole packet (see <NOTE 1> and <NOTE 2>).
+                let b = unsafe { b.get_unchecked(0..consuming) };
+                unsafe { ptr::copy_nonoverlapping(b.as_ptr(), self.buf0.as_mut_ptr().byte_add(a.len()), b.len()); }
+
+                self.read_queue.drain(0..total_len);
+                // SAFETY: `self.buf.len()` is greater than or equal to total_len.
+                Ok(unsafe { self.buf0.get_unchecked(0..total_len) })
+            },
+
+            Some(threshold) => {
+                // SAFETY: `self.read_queue` has enough bytes to read a `VarInt<u32>`.
+                let (uncompressed_len, consumed,) = unsafe { self.try_read_packet_len()?.unwrap_unchecked() };
+                println!("{}", uncompressed_len);
+                match (uncompressed_len) {
+
+                    0 => {
+                        todo!()
+                    },
+
+                    1..=MAX_UNCOMPRESSED_PACKET_LEN => {
+                        todo!()
+                    },
+
+                    _ => Err(ConnPeerError::PacketTooLong)
+                }
+            }
+
+        }
+    }
+
+
+    /// Returns (length value, consumed byte count,).
+    async fn read_packet_len(&mut self) -> ConnPeerResult<(usize, usize,)> {
         let mut buf   = [0u8; VarInt::<u32>::MAX_BYTES];
         let mut index = 0;
         loop {
             match (self.read_queue.get(index)) {
-                None => { on_not_enough(self).await?; },
+                None => { self.accept_more_bytes().await?; },
                 Some(&b) => {
                     // SAFETY: index can never be greater than `VarInt::<u32>::MAX_BYTES`.
                     match (unsafe { self.try_decode_varintu32(&mut buf, &mut index, b) }) {
@@ -176,32 +207,6 @@ impl ConnPeerComms {
                 }
             }
         } }
-    }
-
-    unsafe fn try_decode_varintu32(&mut self,
-        buf   : &mut [u8; VarInt::<u32>::MAX_BYTES],
-        index : &mut usize,
-        b     : u8
-    ) -> ConnPeerResult<Option<(usize, usize,)>> {
-        buf[*index] = b;
-        *index += 1;
-        match (VarInt::<u32>::decode(DecodeBuf::from(unsafe { buf.get_unchecked(0..(*index)) }), &mut DecodeBufHead::default())) {
-            Err(VarIntDecodeError::IncompleteData) => {
-                if (*index >= VarInt::<u32>::MAX_BYTES) {
-                    Err(ConnPeerError::InvalidPacketLength)
-                } else { Ok(None) }
-            },
-            Err(VarIntDecodeError::TooLong) => {
-                Err(ConnPeerError::InvalidPacketLength)
-            },
-            Ok(value) => {
-                let _ = self.read_queue.drain(0..(*index));
-                let value = *value as usize;
-                if (value > MAX_PACKET_LENGTH) {
-                    Err(ConnPeerError::PacketTooLong)
-                } else { Ok(Some((value, *index,))) }
-            }
-        }
     }
 
     async fn wait_for_bytes(&mut self, n : usize) -> ConnPeerResult {
@@ -238,6 +243,33 @@ impl ConnPeerComms {
         }
     }
 
+
+    unsafe fn try_decode_varintu32(&mut self,
+        buf   : &mut [u8; VarInt::<u32>::MAX_BYTES],
+        index : &mut usize,
+        b     : u8
+    ) -> ConnPeerResult<Option<(usize, usize,)>> {
+        buf[*index] = b;
+        *index += 1;
+        match (VarInt::<u32>::decode(DecodeBuf::from(unsafe { buf.get_unchecked(0..(*index)) }), &mut DecodeBufHead::default())) {
+            Err(VarIntDecodeError::IncompleteData) => {
+                if (*index >= VarInt::<u32>::MAX_BYTES) {
+                    Err(ConnPeerError::InvalidPacketLength)
+                } else { Ok(None) }
+            },
+            Err(VarIntDecodeError::TooLong) => {
+                Err(ConnPeerError::InvalidPacketLength)
+            },
+            Ok(value) => {
+                let _ = self.read_queue.drain(0..(*index));
+                let value = *value as usize;
+                if (value > MAX_UNCOMPRESSED_PACKET_LEN) {
+                    Err(ConnPeerError::PacketTooLong)
+                } else { Ok(Some((value, *index,))) }
+            }
+        }
+    }
+
 }
 
 
@@ -265,7 +297,7 @@ impl Write for PacketDecompress {
 
 
 #[must_use]
-pub struct ReadPacketContainer<P>
+pub struct ReadPacketBoxed<P>
 where
     P : PacketPrefixedDecode
 {
@@ -273,7 +305,7 @@ where
     packet : ManuallyDrop<P::Output<'static>>
 }
 
-impl<P> ReadPacketContainer<P>
+impl<P> ReadPacketBoxed<P>
 where
     P : PacketPrefixedDecode
 {
@@ -285,7 +317,7 @@ where
 }
 
 // Forces `self.raw` to live until after `self.packet` is dropped.
-impl<P> Drop for ReadPacketContainer< P>
+impl<P> Drop for ReadPacketBoxed< P>
 where
     P : PacketPrefixedDecode
 {
