@@ -24,3 +24,21 @@ pub struct TextComponent<'l> {
     pub extra    : Cow<'l, [TextComponent<'l>]>
 
 }
+
+impl fmt::Display for TextComponent<'_> {
+    fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.content)?;
+        for component in &*self.extra {
+            write!(f, "{component}")?;
+        }
+        Ok(())
+    }
+}
+
+impl TextComponent<'_> {
+    /// Writes this `TextComponent` using the `Display` formatter, but as if
+    ///  it is a `&str`. i.e., properly escaped.
+    pub fn str_debug_display(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(DebugStrFormatter { f }, "{self}")
+    }
+}
