@@ -89,7 +89,7 @@ pub const CONTINUE_BIT : u8 = 0x80;
 
 
 macro_rules! var_int_type_impl { ( $ty:ty $(,)? ) => {
-    impl VarIntType for $ty {
+    unsafe impl VarIntType for $ty {
         const MAX_BYTES : usize = size_of::<$ty>() + 1;
         type Buf = [u8; Self::MAX_BYTES];
 
@@ -129,7 +129,7 @@ macro_rules! var_int_type_impl { ( $ty:ty $(,)? ) => {
     }
 } }
 macro_rules! var_int_type_remap_impl { ( $ty:ty => $from:ty $(,)? ) => {
-    impl VarIntType for $ty {
+    unsafe impl VarIntType for $ty {
         const MAX_BYTES : usize = <$from as VarIntType>::MAX_BYTES;
         type Buf = [u8; Self::MAX_BYTES];
 
@@ -150,7 +150,7 @@ macro_rules! var_int_type_remap_impl { ( $ty:ty => $from:ty $(,)? ) => {
 /// A `VarInt`-compatible type.
 ///
 /// `u32`, `i32`, `u64`, and `i64` are compatible.
-pub trait VarIntType : Sized {
+pub unsafe trait VarIntType : Sized {
 
     /// The maximum number of bytes that a `VarInt` of this type can use.
     const MAX_BYTES : usize;

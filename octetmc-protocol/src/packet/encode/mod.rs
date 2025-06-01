@@ -166,14 +166,6 @@ impl EncodeBuf<'_> {
         self.buf.reserve_exact(additional);
     }
 
-    /// Reserve enough space in this buffer to contain a total of `n` bytes.
-    ///
-    /// Implementors of [`PartPrefixedEncode`], [`PacketEncode`], and [`PacketPartEncode`]
-    ///  should only call this if the size could not be predicted in `predict_size`.
-    pub fn reserve_to(&mut self, total : usize) {
-        self.buf.reserve_exact(total.saturating_sub(self.buf.len()));
-    }
-
     /// Return a slice of the bytes written to this buffer.
     #[inline]
     pub fn as_bytes(&self) -> &[u8] { &self.buf }

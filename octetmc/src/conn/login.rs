@@ -48,11 +48,11 @@ pub(super) async fn handle_login_process(
         return Err(ConnPeerError::UsernameTooLong);
     }
 
-    // TODO: Set compression threshold.
-    // if let Some(threshold) = compress_threshold {
-    //     comms.send_packet(&LoginCompressionS2CLoginPacket { threshold }).await?;
-    //     comms.set_compress_threshold(threshold);
-    // }
+    // Set compression threshold.
+    if let Some(threshold) = compress_threshold {
+        comms.send_packet(&LoginCompressionS2CLoginPacket { threshold }).await?;
+        comms.set_compress_threshold(threshold);
+    }
 
     // Generate and send public key.
     let (private_key, public_key,) = generate_key_pair(2048);
@@ -64,9 +64,11 @@ pub(super) async fn handle_login_process(
         verify_token    : &verify_token,
         mojauth_enabled,
     }).await?;
+    println!("hello sent");
 
     // Wait for key response.
     let key = comms.read_packet_timeout::<KeyC2SLoginPacket>(LOGIN_TIMEOUT).await?;
+    println!("key read");
 
     // Create new pkey decrypter.
     let mut decrypter = Decrypter::new(&private_key).unwrap();
@@ -168,10 +170,10 @@ pub(super) async fn handle_login_process(
         profile : PlayerProfile {
             uuid : profile.uuid,
             name : Cow::Borrowed(&*profile.name),
-            skin : None/*profile.skin.as_ref().map(|skin| PlayerProfileSkin {
+            skin : profile.skin.as_ref().map(|skin| PlayerProfileSkin {
                 sig   : skin.sig.as_ref().map(|sig| Cow::Borrowed(&**sig)),
                 value : Cow::Borrowed(&*skin.value),
-            }),*/
+            }),
         },
     }).await?;
     let _ = comms.read_packet_timeout::<LoginAcknowledgedC2SLoginPacket>(LOGIN_TIMEOUT).await?;
@@ -183,8 +185,9 @@ pub(super) async fn handle_login_process(
         // SAFETY: take_conn_sender_unchecked has not been called before.
         conn_sender : unsafe { comms.take_conn_sender_unchecked() }
     }));
-    _ = AsyncWorld.send_event(PlayerLoginEvent { player : PlayerId::from(player.id()) });
+    _ = AsyncWorld.send_event(PlayerLoginEvent { player_id : PlayerId::from(player.id()) });
 
+    // Continue to config_play.
     Ok(())
 }
 

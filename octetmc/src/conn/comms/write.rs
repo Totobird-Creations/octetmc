@@ -2,8 +2,14 @@ use super::{ ConnPeerComms, ConnPeerCrypters };
 use crate::conn::ConnPeerResult;
 use octetmc_protocol::value::varint::VarInt;
 use octetmc_protocol::packet::encode::{ PacketPrefixedEncode, EncodeBuf };
-use core::iter;
+use core::{ iter, ptr };
+use std::io::Write;
 use smol::io::AsyncWriteExt;
+use flate2::Compression;
+use flate2::write::ZlibEncoder;
+
+
+const COMPRESSION : Compression = Compression::new(6);
 
 
 impl ConnPeerComms {
@@ -12,56 +18,88 @@ impl ConnPeerComms {
     where
         P : PacketPrefixedEncode
     {
+        const VARINT32_SIZE   : usize = VarInt::<u32>::MAX_BYTES;
+        const VARINT32_SIZE_2 : usize = VARINT32_SIZE * 2;
+
+        // Make sure `self.write_buf0` has enough space.
         self.write_buf0.clear();
-        let mut packet_data_buf = EncodeBuf::from(&mut self.write_buf0);
-        packet_data_buf.reserve_to(P::predict_size(packet));
-        P::encode_prefixed(packet, &mut packet_data_buf);
+        self.write_buf0.reserve_exact(VARINT32_SIZE_2 + P::predict_size(packet));
+        self.write_buf0.extend_from_slice(&[0u8; VARINT32_SIZE_2]);
 
-        let uncompressed_packet_len = packet_data_buf.len();
-        let is_compressed           = self.compress_threshold.is_some_and(|ct| uncompressed_packet_len >= ct);
+        // Encode the packet.
+        P::encode_prefixed(packet, &mut EncodeBuf::from(&mut self.write_buf0));
+        let unaltered_packet_len = self.write_buf0.len() - VARINT32_SIZE_2;
 
-        if (is_compressed) { // Compressed.
+        // Compress the packet (if necessary) and attach length to the front.
+        let compressed_packet = match (self.compress_threshold) {
 
-            // let mut packet_len_buf    = Default::default();
-            // let     varint_packet_len = VarInt::<u32>::from(uncompressed_packet_len as u32).encode_as_slice(&mut packet_len_buf);
-            // let mut final_buf         = Box::<[u8]>::new_uninit_slice(buf.len () + varint_packet_len.len());
+            None => {
+                // SAFETY: `self.write_buf0` contains at least `VARINT32_SIZE_2` items.
+                let dst_end = unsafe { self.write_buf0.as_mut_ptr().byte_add(VARINT32_SIZE_2) };
+                let len     = unsafe { Self::write_varint32_before(unaltered_packet_len, dst_end) };
+                unsafe { self.write_buf0.get_unchecked((VARINT32_SIZE_2 - len)..) }
+            },
 
-            // // SAFETY: `final_buf` has exactly enough space for `packet_len_buf` and `buf`.
-            // unsafe { ptr::copy_nonoverlapping(packet_len_buf.as_ptr(), final_buf.as_mut_ptr() as _, packet_len_buf.len()); }
-            // unsafe { ptr::copy_nonoverlapping(buf.as_bytes().as_ptr(), final_buf.as_mut_ptr().byte_add(packet_len_buf.len()) as _, buf.len()); }
+            Some(threshold) => {
 
-            todo!()
+                // Packet is short enough. Skip compression.
+                if (unaltered_packet_len < threshold) {
+                    // SAFETY: `self.write_buf0` contains at least `VARINT32_SIZE_2` items.
+                    let dst0_end = unsafe { self.write_buf0.as_mut_ptr().byte_add(VARINT32_SIZE_2) };
+                    let len0     = unsafe { Self::write_varint32_before(0, dst0_end) };
+                    let dst1_end = unsafe { dst0_end.byte_sub(len0) };
+                    let len1     = unsafe { Self::write_varint32_before(unaltered_packet_len + len0, dst1_end) };
+                    unsafe { self.write_buf0.get_unchecked((VARINT32_SIZE_2 - len0 - len1)..) }
+                }
 
-        } else { // Uncompressed.
-
-            let mut packet_len_buf    = Default::default();
-            let     varint_packet_len = VarInt::<u32>::from(uncompressed_packet_len as u32).encode_as_slice(&mut packet_len_buf);
-
-            if let Some(ConnPeerCrypters { encrypter, block_size, .. }) = &mut self.crypters { // Encrypted.
-
-                let mut encrypted_packet_len_buf = [0u8; VarInt::<u32>::MAX_BYTES];
-                encrypter.update(varint_packet_len, &mut encrypted_packet_len_buf).unwrap();
-                self.stream.write_all(&encrypted_packet_len_buf[0..(varint_packet_len.len())]).await?;
-
-                self.write_buf1.extend(iter::repeat_n(0,
-                    (packet_data_buf.len() + *block_size).saturating_sub(self.write_buf1.len())
-                ));
-                // SAFETY: `self.write_buf1.len()` is greater than `packet_data_buf.len() + block_size`, guaranteed by the previous line.
-                let count = unsafe { encrypter.update_unchecked(packet_data_buf.as_bytes(), &mut self.write_buf1) }.unwrap();
-                // SAFETY: `self.write_buf1` has at least `count` items.
-                self.stream.write_all(unsafe { self.write_buf1.get_unchecked(0..count) }).await?;
-
-            } else { // Unencrypted.
-
-                self.stream.write_all(varint_packet_len).await?;
-                self.stream.write_all(packet_data_buf.as_bytes()).await?;
+                else {
+                    // SAFETY: `self.write_buf0` contains at least `VARINT32_SIZE_2` items.
+                    let uncompressed_packet = unsafe { self.write_buf0.get_unchecked(VARINT32_SIZE_2..) };
+                    self.write_buf1.clear();
+                    self.write_buf1.reserve_exact(VARINT32_SIZE_2 + uncompressed_packet.len());
+                    self.write_buf1.extend_from_slice(&[0u8; VARINT32_SIZE_2]);
+                    let mut z = ZlibEncoder::new(&mut self.write_buf1, COMPRESSION);
+                    _ = z.write_all(uncompressed_packet); // These errors can be ignored because writing to a `Vec` can not fail.
+                    _ = z.finish();
+                    let compressed_packet_len = self.write_buf1.len() - VARINT32_SIZE_2;
+                    let dst0_end = unsafe { self.write_buf1.as_mut_ptr().byte_add(VARINT32_SIZE_2) };
+                    let len0     = unsafe { Self::write_varint32_before(unaltered_packet_len, dst0_end) };
+                    let dst1_end = unsafe { dst0_end.byte_sub(len0) };
+                    let len1     = unsafe { Self::write_varint32_before(compressed_packet_len + len0, dst1_end) };
+                    unsafe { self.write_buf1.get_unchecked((VARINT32_SIZE_2 - len0 - len1)..) }
+                }
 
             }
-            self.stream.flush().await?;
 
-            Ok(())
+        };
+
+        // Encrypt the packet (if necessary) and send it to the client.
+        match (&mut self.crypters) {
+
+            None => { self.stream.write_all(compressed_packet).await?; },
+
+            Some(ConnPeerCrypters { encrypter, block_size, .. }) => {
+                self.write_buf2.extend(iter::repeat_n(0u8,
+                    (compressed_packet.len() + *block_size).saturating_sub(self.write_buf2.len())
+                ));
+                // SAFETY: `self.write_buf2.len()` is greater than `compressed_packet.len() + block_size`, guaranteed by the previous line.
+                let count = unsafe { encrypter.update_unchecked(compressed_packet, &mut self.write_buf2) }.unwrap();
+                // SAFETY: `self.write_buf2` contains at least `count` items.
+                self.stream.write_all(unsafe { self.write_buf2.get_unchecked(0..count) }).await?;
+            }
+
         }
+        self.stream.flush().await?;
 
+        Ok(())
+    }
+
+    unsafe fn write_varint32_before(value : usize, dst_end : *mut u8) -> usize {
+        let mut buf = [0u8; VarInt::<u32>::MAX_BYTES];
+        let     buf = VarInt::<u32>::from(value as u32).encode_as_slice(&mut buf);
+        let     dst = unsafe { dst_end.byte_sub(buf.len()) };
+        unsafe { ptr::copy_nonoverlapping(buf.as_ptr(), dst, buf.len()); }
+        buf.len()
     }
 
 }
