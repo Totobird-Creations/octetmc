@@ -1,4 +1,5 @@
 use super::{ ConnPeerComms, ReadPacketBoxed, ConnPeerResult, ConnPeerError };
+use octetmc_protocol::packet::AsPacketState;
 use octetmc_protocol::packet::decode::{ PacketPrefixedDecode, DecodeBufHead, DecodeBuf, UnknownPrefix };
 use core::mem::{ self, ManuallyDrop };
 use core::pin::Pin;
@@ -13,7 +14,7 @@ impl ConnPeerComms {
     {
         let mut head = DecodeBufHead::default();
         let packet = P::decode_prefixed(DecodeBuf::from(bytes), &mut head).map_err(|e| match (e) {
-            UnknownPrefix::UnknownPrefix(p) => ConnPeerError::UnknownPacketPrefix(p),
+            UnknownPrefix::UnknownPrefix(p) => ConnPeerError::UnknownPacketPrefix { state : <P as PacketPrefixedDecode>::State::as_packet_state(), prefix : p },
             UnknownPrefix::Error(e)         => ConnPeerError::BadPacket(e.into()),
         })?;
         if (head.consumed() < bytes.len()) { return Err(ConnPeerError::NoPacketEnd); }
@@ -34,7 +35,7 @@ impl ConnPeerComms {
         let mut head        = DecodeBufHead::default();
         // SAFETY: `bytes_boxed` is kept alive by `ReadPacketBoxed<P>`.
         let packet = P::decode_prefixed(DecodeBuf::from(unsafe { mem::transmute::<&[u8], &[u8]>(&*bytes_boxed) }), &mut head).map_err(|e| match (e) {
-            UnknownPrefix::UnknownPrefix(p) => ConnPeerError::UnknownPacketPrefix(p),
+            UnknownPrefix::UnknownPrefix(p) => ConnPeerError::UnknownPacketPrefix { state : <P as PacketPrefixedDecode>::State::as_packet_state(), prefix : p },
             UnknownPrefix::Error(e)         => ConnPeerError::BadPacket(e.into()),
         })?;
         if (head.consumed() < bytes.len()) { return Err(ConnPeerError::NoPacketEnd); }

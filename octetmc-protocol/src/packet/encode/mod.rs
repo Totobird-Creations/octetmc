@@ -1,7 +1,7 @@
 //! Packet encoding utilities.
 
 
-use super::{ PacketState, Byte };
+use super::{ AsPacketState, Byte };
 
 
 mod num;
@@ -15,7 +15,7 @@ mod option;
 /// Packet encoder, including packet ID.
 pub trait PacketPrefixedEncode {
     /// The state in which this packet can be used.
-    type State : PacketState;
+    type State : AsPacketState;
 
     /// Predict the number of bytes it will take to encode this packet.
     ///
@@ -105,7 +105,7 @@ pub(crate) use packet_encode_group;
 /// Packet encoder, excluding packet ID.
 pub trait PacketEncode {
     /// The state in which this packet can be used.
-    type State : PacketState;
+    type State : AsPacketState;
 
     /// The ID of this packet.
     const PREFIX : u8;

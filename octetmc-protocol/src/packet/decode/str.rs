@@ -43,6 +43,7 @@ impl From<StringDecodeError> for Cow<'static, str> {
 }
 
 impl From<IncompleteData> for StringDecodeError {
+    #[inline(always)]
     fn from(_ : IncompleteData) -> Self { Self::IncompleteData }
 }
 
@@ -54,5 +55,6 @@ impl From<VarIntDecodeError> for StringDecodeError {
 }
 
 impl From<str::Utf8Error> for StringDecodeError {
+    #[inline(always)]
     fn from(_ : str::Utf8Error) -> Self { Self::InvalidUtf8 }
 }

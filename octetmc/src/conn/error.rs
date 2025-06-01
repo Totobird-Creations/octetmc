@@ -1,6 +1,7 @@
 //! Client connection error types.
 
 
+use octetmc_protocol::packet::PacketState;
 use octetmc_protocol::value::text::Text;
 use core::fmt;
 use std::borrow::Cow;
@@ -34,7 +35,15 @@ pub enum ConnPeerError {
     PacketTooLong,
 
     /// A received packet has an unknown or unexpected ID.
-    UnknownPacketPrefix(u8),
+    UnknownPacketPrefix {
+
+        /// The state the connection is currently in.
+        state  : PacketState,
+
+        /// The packet prefix that was read.
+        prefix : u8
+
+    },
 
     /// A received packet could not be decoded.
     BadPacket(Cow<'static, str>),
@@ -86,7 +95,7 @@ impl fmt::Debug for ConnPeerError {
         ConnPeerError::ReadQueueOverflow                   => write!(f, "ReadQueueOverflow"),
         ConnPeerError::InvalidPacketLength                 => write!(f, "InvalidPacketLength"),
         ConnPeerError::PacketTooLong                       => write!(f, "PacketTooLong"),
-        ConnPeerError::UnknownPacketPrefix(prefix)         => f.debug_tuple("UnknownPacketPrefix").field(&DebugByteHex(*prefix)).finish(),
+        ConnPeerError::UnknownPacketPrefix {state, prefix} => f.debug_struct("UnknownPacketPrefix").field("state", state).field("prefix", &DebugByteHex(*prefix)).finish(),
         ConnPeerError::BadPacket(err)                      => f.debug_tuple("BadPacket").field(err).finish(),
         ConnPeerError::NoPacketEnd                         => write!(f, "NoPacketEnd"),
         ConnPeerError::BadPacketZlib                       => write!(f, "BadPacketZlib"),
