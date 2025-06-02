@@ -43,7 +43,12 @@ impl PacketDecode for IntentionC2SHandshakePacket<'_> {
             protocol  : *buf.read_decode::<VarInt::<u32>>(head)?,
             address   : buf.read_decode::<&str>(head)?,
             port      : buf.read_decode::<u16>(head)?,
-            intention : Intention::try_from(buf.read_decode::<VarInt::<u32>>(head)?)?
+            intention : (match (*buf.read_decode::<VarInt::<u32>>(head)?) {
+                1 => Intention::Status,
+                2 => Intention::Login,
+                3 => Intention::Transfer,
+                v => { return Err(IntentionDecodeError::UnknownIntention(v)); }
+            })
         })
     }
 }
@@ -65,17 +70,6 @@ pub enum Intention {
     Transfer = 3,
 
 }
-impl TryFrom<VarInt<u32>> for Intention {
-    type Error = UnknownIntention;
-    fn try_from(value : VarInt<u32>) -> Result<Self, Self::Error> {
-        match (*value) {
-            1 => Ok(Self::Status),
-            2 => Ok(Self::Login),
-            3 => Ok(Self::Transfer),
-            _ => Err(UnknownIntention)
-        }
-    }
-}
 
 
 /// An `IntentionC2SHandshakePacket` failed to decode.
@@ -91,16 +85,16 @@ pub enum IntentionDecodeError {
     StringInvalidUtf8,
 
     /// The client requested an unknown intention.
-    UnknownIntention
+    UnknownIntention(u32)
 
 }
 
 impl From<IntentionDecodeError> for Cow<'static, str> {
     fn from(value : IntentionDecodeError) -> Self { match (value) {
-        IntentionDecodeError::IncompleteData    => IncompleteData.into(),
-        IntentionDecodeError::VarIntTooLong     => VarIntDecodeError::TooLong.into(),
-        IntentionDecodeError::StringInvalidUtf8 => StringDecodeError::InvalidUtf8.into(),
-        IntentionDecodeError::UnknownIntention  => Self::Borrowed("unknown intention")
+        IntentionDecodeError::IncompleteData      => IncompleteData.into(),
+        IntentionDecodeError::VarIntTooLong       => VarIntDecodeError::TooLong.into(),
+        IntentionDecodeError::StringInvalidUtf8   => StringDecodeError::InvalidUtf8.into(),
+        IntentionDecodeError::UnknownIntention(_) => Self::Borrowed("unknown intention")
     } }
 }
 
@@ -122,11 +116,3 @@ impl From<StringDecodeError> for IntentionDecodeError {
         StringDecodeError::InvalidUtf8    => Self::StringInvalidUtf8
     } }
 }
-
-impl From<UnknownIntention> for IntentionDecodeError {
-    fn from(_ : UnknownIntention) -> Self { Self::UnknownIntention }
-}
-
-
-/// The client requested an unknown intention.
-pub struct UnknownIntention;

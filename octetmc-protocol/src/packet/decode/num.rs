@@ -29,16 +29,31 @@ impl_packet_part_decode_for_num!(f32);
 impl_packet_part_decode_for_num!(f64);
 
 
+impl PacketPartDecode for bool {
+    type Output<'l> = bool;
+    type Error<'l>  = IncompleteData;
+
+    #[inline]
+    fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead)
+        -> Result<Self::Output<'l>, Self::Error<'l>>
+    {
+        Ok(buf.read(head)? != 0)
+    }
+
+}
+
+
 impl PacketPartDecode for Uuid {
     type Output<'l> = Uuid;
     type Error<'l>  = IncompleteData;
 
     #[inline]
     fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead)
-        -> Result<Self::Output<'l>, Self::Error<'l>> {
-            let msb = buf.read_decode::<u64>(head)?;
-            let lsb = buf.read_decode::<u64>(head)?;
-            Ok(Self::from_u64_pair(msb, lsb))
+        -> Result<Self::Output<'l>, Self::Error<'l>>
+    {
+        let msb = buf.read_decode::<u64>(head)?;
+        let lsb = buf.read_decode::<u64>(head)?;
+        Ok(Self::from_u64_pair(msb, lsb))
     }
 
 }

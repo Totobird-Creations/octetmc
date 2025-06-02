@@ -1,4 +1,4 @@
-//! Variable-sized integers.
+//! Variable bit-width integers.
 
 
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketPartDecode, IncompleteData };
@@ -6,6 +6,8 @@ use crate::packet::encode::{ EncodeBuf, PacketPartEncode };
 use core::ops::{ Deref, DerefMut };
 use std::borrow::Cow;
 
+/// Variable bit-width integers.
+///
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:VarInt
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:VarLong
 pub struct VarInt<V>(V)

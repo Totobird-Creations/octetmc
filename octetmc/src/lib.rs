@@ -6,6 +6,8 @@
 use bevy_app::{ plugin_group, Plugin, App };
 use bevy_defer::AsyncPlugin;
 
+pub use octetmc_protocol as protocol;
+
 
 pub mod conn;
 
@@ -44,6 +46,25 @@ plugin_group! {
 
 /// Common imports.
 pub mod prelude {
+
+    /// The bevy libraries that octectmc uses.
+    ///
+    /// https://docs.rs/bevy/latest/bevy
+    pub mod bevy {
+        pub use bevy_app as app;
+        pub use bevy_ecs as ecs;
+        pub use bevy_time as time;
+        pub use bevy_diagnostic as diagnostic;
+        pub use bevy_defer as defer;
+        /// Common imports.
+        pub mod prelude {
+            pub use super::app::prelude::*;
+            pub use super::ecs::prelude::*;
+            pub use super::time::prelude::*;
+        }
+    }
+
+    pub use super::protocol;
     pub use super::OctetDefaultPlugins;
     pub use super::server::prelude::*;
     pub use super::player::prelude::*;
