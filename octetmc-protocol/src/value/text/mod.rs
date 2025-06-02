@@ -38,18 +38,47 @@ pub use hover_event::*;
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:Text_Component
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:JSON_Text_Component
 #[derive(Clone, Debug)]
-pub struct Text<'l> {
+pub struct Text<'l, 'k> {
 
     /// The components in this text.
     ///
     /// Components are displayed left-to-right.
     ///
     /// Formatting from one component may leak into the next.
-    pub components : Cow<'l, [TextComponent<'l>]>
+    pub components : Cow<'l, [TextComponent<'k>]>
 
 }
 
-impl fmt::Display for Text<'_> {
+impl Text<'_, '_> {
+
+    /// A `Text` with no components.
+    pub const EMPTY : Text<'static, 'static> = Text { components : Cow::Borrowed(&[]) };
+
+}
+
+impl<'l, 'k> Text<'l, 'k> {
+
+    /// Convert the inner parts of this `Text` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `Text<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> Text<'static, 'static> {
+        Text { components : Cow::Owned(match (self.components) {
+            Cow::Borrowed(components) => components.iter().map(|component| component.to_static_owned()).collect(),
+            Cow::Owned(components)    => components.into_iter().map(|component| component.into_static_owned()).collect()
+        }) }
+    }
+
+    /// Convert the inner parts of this `Text` to their owned counterparts.
+    ///  Returns the newly created `Text<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> Text<'static, 'static> {
+        Text { components : Cow::Owned(self.components.iter().map(|component| component.to_static_owned()).collect()) }
+    }
+
+}
+
+impl fmt::Display for Text<'_, '_> {
     fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
         for component in &*self.components {
             write!(f, "{component}")?;
@@ -58,7 +87,7 @@ impl fmt::Display for Text<'_> {
     }
 }
 
-impl Text<'_> {
+impl Text<'_, '_> {
     /// Writes this `Text` using the `Display` formatter, but as if
     ///  it is a `&str`. i.e., properly escaped.
     pub fn str_debug_display(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -66,7 +95,7 @@ impl Text<'_> {
     }
 }
 
-impl Ser for Text<'_> {
+impl Ser for Text<'_, '_> {
     fn serialize<S>(&self, serer : S) -> Result<<S as Serer>::Ok, <S as Serer>::Error>
     where
         S : Serer

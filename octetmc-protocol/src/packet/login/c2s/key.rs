@@ -5,6 +5,7 @@ use crate::value::varint::VarInt;
 use crate::packet::StateLogin;
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use crate::packet::decode::str::StringDecodeError;
+use std::borrow::Cow;
 
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Encryption_Response
@@ -12,11 +13,31 @@ use crate::packet::decode::str::StringDecodeError;
 pub struct KeyC2SLoginPacket<'l> {
 
     /// The secret key of the cipher to use for all future communications.
-    pub secret_key   : &'l [u8],
+    pub secret_key   : Cow<'l, [u8]>,
 
     /// The veryify token previously sent in `HelloS2CLoginPacket`,
     ///  encrypted with the sent public key.
-    pub verify_token : &'l [u8]
+    pub verify_token : Cow<'l, [u8]>
+
+}
+
+
+impl KeyC2SLoginPacket<'_> {
+
+    /// Convert the inner parts of this packet to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `KeyC2SLoginPacket<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> KeyC2SLoginPacket<'static> {
+        KeyC2SLoginPacket { secret_key : Cow::Owned(self.secret_key.into_owned()), verify_token : Cow::Owned(self.verify_token.into_owned()) }
+    }
+
+    /// Convert the inner parts of this packet to their owned counterparts.
+    ///  Returns the newly created `KeyC2SLoginPacket<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> KeyC2SLoginPacket<'static> {
+        KeyC2SLoginPacket { secret_key : Cow::Owned((&*self.secret_key).to_owned()), verify_token : Cow::Owned((&*self.verify_token).to_owned()) }
+    }
 
 }
 
@@ -35,6 +56,6 @@ impl PacketDecode for KeyC2SLoginPacket<'_> {
         let secret_key       = buf.read_n(head, secret_key_len)?;
         let verify_token_len = *buf.read_decode::<VarInt::<u32>>(head)? as usize;
         let verify_token     = buf.read_n(head, verify_token_len)?;
-        Ok(Self::Output { secret_key, verify_token })
+        Ok(Self::Output { secret_key : Cow::Borrowed(secret_key), verify_token : Cow::Borrowed(verify_token) })
     }
 }

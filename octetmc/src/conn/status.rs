@@ -75,12 +75,12 @@ pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResul
             _ = AsyncWorld.resource::<ServerMotd>().get_mut(|r| {
                 if (r.take_dirty()) { _ = cache_motd.insert((**r).clone()); }
             });
-            let motd = cache_motd.as_ref().unwrap_or(&DEFAULT_MOTD);
+            let motd = Text { components : Cow::Borrowed(&cache_motd.as_ref().unwrap_or(&DEFAULT_MOTD).components) };
 
             _ = AsyncWorld.resource::<ServerFavicon>().get_mut(|r| {
                 if (r.take_dirty()) { _ = cache_favicon.insert(format!("{FAVICON_PREFIX}{}", r.as_b64_png())); }
             });
-            let favicon = cache_favicon.as_ref().map_or(DEFAULT_FAVICON, |s| s.as_str());
+            let favicon = cache_favicon.as_ref().map_or(DEFAULT_FAVICON, |s| s);
 
             let players = AsyncWorld.resource::<PlayerCount>().get(|r| r.0).ok();
 

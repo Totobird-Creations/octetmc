@@ -61,9 +61,9 @@ pub(super) async fn handle_login_process(
     let verify_token               = generate_verify_token::<4>(&mut rand::rng());
     let public_key_der             = public_key.public_key_to_der().unwrap();
     comms.send_packet(&HelloS2CLoginPacket {
-        server_id       : SERVER_ID,
-        public_key      : &public_key_der,
-        verify_token    : &verify_token,
+        server_id       : Cow::Borrowed(SERVER_ID),
+        public_key      : Cow::Borrowed(&public_key_der),
+        verify_token    : Cow::Borrowed(&verify_token),
         mojauth_enabled,
     }).await?;
 
@@ -210,7 +210,7 @@ macro_rules! decrypt { ( $decrypter:expr , $cipherdata:expr $(,)? => $target:ide
     #[allow(non_snake_case)]
     let mut __DECRYPT_PRIVATE_DECRYPTER  = $decrypter;
     #[allow(non_snake_case)]
-    let mut __DECRYPT_PRIVATE_CIPHERDATA = $cipherdata;
+    let mut __DECRYPT_PRIVATE_CIPHERDATA = &*$cipherdata;
     #[allow(non_snake_case)]
     // SAFETY: u8 has no Drop. The uninitialised part of the [u8] is inaccessible from $target.
     let mut __DECRYPT_PRIVATE_BUF     = unsafe { Box::<[u8]>::new_uninit_slice(__DECRYPT_PRIVATE_DECRYPTER.decrypt_len(__DECRYPT_PRIVATE_CIPHERDATA).map_err(|_| ConnPeerError::KeyExchangeFailed)?).assume_init() };

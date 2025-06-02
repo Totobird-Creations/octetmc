@@ -182,7 +182,7 @@ impl EncodeBuf<'_> {
     /// Write a slice of bytes to this buffer.
     #[inline]
     pub fn write_n(&mut self, bytes : &[u8]) {
-        self.buf.extend_from_slice(bytes);
+        self.buf.extend_from_slice(bytes.as_ref());
     }
 
     /// Encode and write a packet part to this buffer.

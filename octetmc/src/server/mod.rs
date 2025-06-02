@@ -28,7 +28,7 @@ deref_single!{
     ///
     /// The 'message of the day' is displayed in the server list.
     #[derive(Resource)]
-    pub struct ServerMotd(Text<'static>);
+    pub struct ServerMotd(Text<'static, 'static>);
     Dirtyable;
     From;
 }

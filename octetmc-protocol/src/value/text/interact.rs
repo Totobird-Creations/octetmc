@@ -35,3 +35,30 @@ impl TextInteract<'_> {
     };
 
 }
+
+impl<'l> TextInteract<'l> {
+
+    /// Convert the inner parts of this `TextInteract` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `TextInteract<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> TextInteract<'static> {
+        TextInteract {
+            insert : self.insert.map(|insert| Cow::Owned(insert.into_owned())),
+            click  : self.click.map(|click| click.into_static_owned()),
+            hover  : self.hover.map(|hover| hover.into_static_owned()),
+        }
+    }
+
+    /// Convert the inner parts of this `TextInteract` to their owned counterparts.
+    ///  Returns the newly created `TextInteract<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> TextInteract<'static> {
+        TextInteract {
+            insert : self.insert.as_ref().map(|insert| Cow::Owned((&**insert).to_owned())),
+            click  : self.click.as_ref().map(|click| click.to_static_owned()),
+            hover  : self.hover.as_ref().map(|hover| hover.to_static_owned()),
+        }
+    }
+
+}

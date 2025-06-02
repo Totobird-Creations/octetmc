@@ -16,6 +16,26 @@ pub struct ClientInformationC2SConfigPacket<'l> {
 }
 
 
+impl ClientInformationC2SConfigPacket<'_> {
+
+    /// Convert the inner parts of this packet to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `ClientInformationC2SConfigPacket<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> ClientInformationC2SConfigPacket<'static> {
+        ClientInformationC2SConfigPacket { info : self.info.into_static_owned() }
+    }
+
+    /// Convert the inner parts of this packet to their owned counterparts.
+    ///  Returns the newly created `ClientInformationC2SConfigPacket<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> ClientInformationC2SConfigPacket<'static> {
+        ClientInformationC2SConfigPacket { info : self.info.to_static_owned() }
+    }
+
+}
+
+
 impl PacketDecode for ClientInformationC2SConfigPacket<'_> {
     type State = StateConfig;
 

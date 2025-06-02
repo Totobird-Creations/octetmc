@@ -2,6 +2,7 @@
 
 
 use crate::value::ident::Ident;
+use std::borrow::Cow;
 
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels
@@ -16,7 +17,7 @@ pub enum ChannelData<'l> {
     Brand {
 
         /// The brand of the server/client. The vanilla value is `vanilla`.
-        brand : &'l str
+        brand : Cow<'l, str>
 
     },
 
@@ -27,8 +28,38 @@ pub enum ChannelData<'l> {
         channel : Ident<'l>,
 
         /// The message data.
-        data    : &'l [u8]
+        data    : Cow<'l, [u8]>
 
     }
+
+}
+
+impl<'l> ChannelData<'l> {
+
+    /// Convert the inner parts of this `ChannelData` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `ChannelData<'static>`.
+    pub fn into_static_owned(self) -> ChannelData<'static> { match (self) {
+        Self::Brand { brand } => ChannelData::Brand {
+            brand : Cow::Owned(brand.into_owned())
+        },
+        Self::Custom { channel, data } => ChannelData::Custom {
+            channel : channel.into_static_owned(),
+            data    : Cow::Owned(data.into_owned())
+        },
+    } }
+
+    /// Convert the inner parts of this `ChannelData` to their owned counterparts.
+    ///  Returns the newly created `ChannelData<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> ChannelData<'static> { match (self) {
+        Self::Brand { brand } => ChannelData::Brand {
+            brand : Cow::Owned((&**brand).to_owned())
+        },
+        Self::Custom { channel, data } => ChannelData::Custom {
+            channel : channel.to_static_owned(),
+            data    : Cow::Owned((&**data).to_owned())
+        },
+    } }
 
 }
