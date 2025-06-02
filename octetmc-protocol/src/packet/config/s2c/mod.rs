@@ -5,7 +5,39 @@ use crate::packet::StateConfig;
 use crate::packet::encode::packet_encode_group;
 
 
+// TODO: cookie_request
+
+// TODO: custom_payload
+
+// TODO: disconnect
+
 pub mod finish_configuration;
+
+// TODO: keep_alive
+
+// TODO: ping
+
+// TODO: reset_chat
+
+// TODO: registry_data
+
+// TODO: resource_pack_pop
+
+// TODO: resource_pack_push
+
+// TODO: store_cookie
+
+// TODO: transfer
+
+// TODO: update_enabled_features
+
+// TODO: update_tags
+
+// TODO: select_known_packs
+
+// TODO: custom_report_details
+
+// TODO: server_links
 
 
 packet_encode_group!{

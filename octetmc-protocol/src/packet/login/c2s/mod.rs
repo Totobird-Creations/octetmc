@@ -10,7 +10,11 @@ pub mod hello;
 
 pub mod key;
 
+// TODO: custom_query_answer
+
 pub mod login_acknowledged;
+
+// TODO: cookie_response
 
 
 packet_decode_group!{
