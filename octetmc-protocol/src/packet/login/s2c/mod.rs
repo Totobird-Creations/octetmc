@@ -5,11 +5,17 @@ use crate::packet::StateLogin;
 use crate::packet::encode::packet_encode_group;
 
 
+// TODO: login_disconnect
+
 pub mod hello;
 
-pub mod login_success;
+pub mod login_finished;
 
 pub mod login_compression;
+
+// TODO: custom_query
+
+// TODO: cookie_request
 
 
 packet_encode_group!{
@@ -19,7 +25,7 @@ packet_encode_group!{
         /// `HelloS2CLoginPacket`
         Hello(hello::HelloS2CLoginPacket<'l>),
         /// `LoginSuccessS2CLoginPacket`
-        LoginSuccess(login_success::LoginSuccessS2CLoginPacket<'l>),
+        LoginSuccess(login_finished::LoginFinishedS2CLoginPacket<'l>),
         /// `LoginCompressionS2CLoginPacket`
         LoginCompression(login_compression::LoginCompressionS2CLoginPacket)
     }

@@ -8,7 +8,7 @@ use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Success
 #[derive(Debug, Clone)]
-pub struct LoginSuccessS2CLoginPacket<'l> {
+pub struct LoginFinishedS2CLoginPacket<'l> {
 
     /// The player's profile.
     ///
@@ -18,7 +18,7 @@ pub struct LoginSuccessS2CLoginPacket<'l> {
 }
 
 
-impl PacketEncode for LoginSuccessS2CLoginPacket<'_> {
+impl PacketEncode for LoginFinishedS2CLoginPacket<'_> {
     type State = StateLogin;
 
     const PREFIX : u8 = 0x02;

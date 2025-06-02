@@ -12,9 +12,19 @@ use std::borrow::Cow;
 
 pub mod client_information;
 
+// TODO: bookie_response
+
 pub mod custom_payload;
 
 pub mod finish_configuration;
+
+// TODO: keep_alive
+
+// TODO: pong
+
+// TODO: resource_pack
+
+// TODO: select_known_packs
 
 
 packet_decode_group!{

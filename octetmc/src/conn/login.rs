@@ -9,7 +9,7 @@ use octetmc_protocol::packet::login::c2s::hello::HelloC2SLoginPacket;
 use octetmc_protocol::packet::login::c2s::key::KeyC2SLoginPacket;
 use octetmc_protocol::packet::login::c2s::login_acknowledged::LoginAcknowledgedC2SLoginPacket;
 use octetmc_protocol::packet::login::s2c::hello::HelloS2CLoginPacket;
-use octetmc_protocol::packet::login::s2c::login_success::LoginSuccessS2CLoginPacket;
+use octetmc_protocol::packet::login::s2c::login_finished::LoginFinishedS2CLoginPacket;
 use octetmc_protocol::packet::login::s2c::login_compression::LoginCompressionS2CLoginPacket;
 use core::time::Duration;
 use core::ptr;
@@ -166,7 +166,7 @@ pub(super) async fn handle_login_process(
     } };
 
     // Send login success and await confirmation.
-    comms.send_packet(&LoginSuccessS2CLoginPacket {
+    comms.send_packet(&LoginFinishedS2CLoginPacket {
         profile : PlayerProfile {
             uuid : profile.uuid,
             name : Cow::Borrowed(&*profile.name),
