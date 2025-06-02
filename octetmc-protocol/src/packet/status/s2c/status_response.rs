@@ -22,23 +22,23 @@ pub const FAVICON_PREFIX : &str = "data:image/png;base64,";
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status_Response
 #[derive(Debug, Clone, Ser)]
-pub struct StatusResponseS2CStatusPacket<'a, 'b, 'c, 'd, 'e> {
+pub struct StatusResponseS2CStatusPacket<'l, 'k> {
 
     /// Server version information
-    pub version             : StatusVersion<'a>,
+    pub version             : StatusVersion<'l>,
 
     /// Server player information.
     ///
     /// If omitted, `???` is displayed in dark grey instead.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub players             : Option<StatusPlayers<'b>>,
+    pub players             : Option<StatusPlayers<'l>>,
 
     /// Server MOTD.
     ///
     /// If omitted, no MOTD is shown.
     #[serde(rename = "description")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub motd                : Option<&'c Text<'d>>,
+    pub motd                : Option<Text<'l, 'k>>,
 
     /// Server base64 png favicon, prefixed with
     ///  `data:image/png;base64,`.
@@ -46,7 +46,7 @@ pub struct StatusResponseS2CStatusPacket<'a, 'b, 'c, 'd, 'e> {
     /// If omitted, the client will use the last known favicon,
     ///  or the default icon.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub favicon             : Option<Cow<'e, str>>,
+    pub favicon             : Option<Cow<'l, str>>,
 
     /// Whether this server enforces 'secure chat'.
     ///
@@ -64,6 +64,40 @@ pub struct StatusResponseS2CStatusPacket<'a, 'b, 'c, 'd, 'e> {
 
 }
 
+
+impl<'l, 'k> StatusResponseS2CStatusPacket<'l, 'k> {
+
+    /// Convert the inner parts of this packet to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `StatusResponseS2CStatusPacket<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> StatusResponseS2CStatusPacket<'static, 'static> {
+        StatusResponseS2CStatusPacket {
+            version             : self.version.into_static_owned(),
+            players             : self.players.map(|players| players.into_static_owned()),
+            motd                : self.motd.map(|motd| motd.into_static_owned()),
+            favicon             : self.favicon.map(|favicon| Cow::Owned(favicon.into_owned())),
+            enforce_secure_chat : self.enforce_secure_chat,
+            block_chat_reports  : self.block_chat_reports
+        }
+    }
+    /// Convert the inner parts of this packet to their owned counterparts.
+    ///  Returns the newly created `StatusResponseS2CStatusPacket<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> StatusResponseS2CStatusPacket<'static, 'static> {
+        StatusResponseS2CStatusPacket {
+            version             : self.version.to_static_owned(),
+            players             : self.players.as_ref().map(|players| players.to_static_owned()),
+            motd                : self.motd.as_ref().map(|motd| motd.to_static_owned()),
+            favicon             : self.favicon.as_ref().map(|favicon| Cow::Owned((&**favicon).to_owned())),
+            enforce_secure_chat : self.enforce_secure_chat,
+            block_chat_reports  : self.block_chat_reports
+        }
+    }
+
+}
+
+
 /// Server version information.
 #[derive(Debug, Clone, Ser)]
 pub struct StatusVersion<'l> {
@@ -79,6 +113,27 @@ pub struct StatusVersion<'l> {
 
 }
 
+
+impl<'l> StatusVersion<'l> {
+
+    /// Convert the inner parts of this `StatusVersion` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `StatusVersion<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> StatusVersion<'static> {
+        StatusVersion { name : Cow::Owned(self.name.into_owned()), protocol : self.protocol }
+    }
+
+    /// Convert the inner parts of this `StatusVersion` to their owned counterparts.
+    ///  Returns the newly created `StatusVersion<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> StatusVersion<'static> {
+        StatusVersion { name : Cow::Owned((&*self.name).to_owned()), protocol : self.protocol }
+    }
+
+}
+
+
 /// Server player information.
 #[derive(Debug, Clone, Ser)]
 pub struct StatusPlayers<'l> {
@@ -91,6 +146,37 @@ pub struct StatusPlayers<'l> {
 
     /// A sample of the currently online players.
     pub sample : Cow<'l, [StatusPlayersSampleEntry<'l>]>
+
+}
+
+
+impl<'l> StatusPlayers<'l> {
+
+    /// Convert the inner parts of this `StatusPlayers` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `StatusPlayers<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> StatusPlayers<'static> {
+        StatusPlayers {
+            online : self.online,
+            max    : self.max,
+            sample : Cow::Owned(match (self.sample) {
+                Cow::Borrowed(sample) => sample.iter().map(|entry| entry.to_static_owned()).collect(),
+                Cow::Owned(sample)    => sample.into_iter().map(|entry| entry.into_static_owned()).collect(),
+            })
+        }
+    }
+
+    /// Convert the inner parts of this `StatusPlayers` to their owned counterparts.
+    ///  Returns the newly created `StatusPlayers<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> StatusPlayers<'static> {
+        StatusPlayers {
+            online : self.online,
+            max    : self.max,
+            sample : Cow::Owned(self.sample.iter().map(|entry| entry.to_static_owned()).collect())
+        }
+    }
 
 }
 
@@ -112,7 +198,27 @@ pub struct StatusPlayersSampleEntry<'l> {
 }
 
 
-impl PacketEncode for StatusResponseS2CStatusPacket<'_, '_, '_, '_, '_> {
+impl<'l> StatusPlayersSampleEntry<'l> {
+
+    /// Convert the inner parts of this `StatusPlayersSampleEntry` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `StatusPlayersSampleEntry<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> StatusPlayersSampleEntry<'static> {
+        StatusPlayersSampleEntry { name : Cow::Owned(self.name.into_owned()), id : self.id }
+    }
+
+    /// Convert the inner parts of this `StatusPlayersSampleEntry` to their owned counterparts.
+    ///  Returns the newly created `StatusPlayersSampleEntry<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> StatusPlayersSampleEntry<'static> {
+        StatusPlayersSampleEntry { name : Cow::Owned((&*self.name).to_owned()), id : self.id }
+    }
+
+}
+
+
+impl PacketEncode for StatusResponseS2CStatusPacket<'_, '_> {
     type State = StateStatus;
 
     const PREFIX : u8 = 0x00;

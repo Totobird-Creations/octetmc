@@ -6,7 +6,7 @@ use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteD
 
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Acknowledged
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct LoginAcknowledgedC2SLoginPacket;
 
 
@@ -19,7 +19,5 @@ impl PacketDecode for LoginAcknowledgedC2SLoginPacket {
 
     fn decode<'l>(_buf : DecodeBuf<'l>, _head : &mut DecodeBufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>>
-    {
-        Ok(Self)
-    }
+    { Ok(Self) }
 }

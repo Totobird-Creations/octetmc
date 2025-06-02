@@ -42,6 +42,30 @@ packet_decode_group!{
 }
 
 
+impl C2SConfigPackets<'_> {
+
+    /// Convert the inner parts of this packet to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `C2SConfigPackets<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> C2SConfigPackets<'static> { match (self) {
+        Self::ClientInformation   (v) => C2SConfigPackets::ClientInformation   (v.into_static_owned()),
+        Self::CustomPayload       (v) => C2SConfigPackets::CustomPayload       (v.into_static_owned()),
+        Self::FinishConfiguration (v) => C2SConfigPackets::FinishConfiguration (v),
+    } }
+
+    /// Convert the inner parts of this packet to their owned counterparts.
+    ///  Returns the newly created `C2SConfigPackets<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> C2SConfigPackets<'static> { match (self) {
+        Self::ClientInformation   (v) => C2SConfigPackets::ClientInformation   (v.to_static_owned()),
+        Self::CustomPayload       (v) => C2SConfigPackets::CustomPayload       (v.to_static_owned()),
+        Self::FinishConfiguration (v) => C2SConfigPackets::FinishConfiguration (*v),
+    } }
+
+}
+
+
 /// A `C2SConfigPackets` failed to decode.
 pub enum C2SConfigPacketDecodeError {
 

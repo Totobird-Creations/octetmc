@@ -252,11 +252,11 @@ impl<'l> Ident<'l> {
         Ident { nspace : Cow::Owned(self.nspace.into_owned()), path : Cow::Owned(self.path.into_owned()) }
     }
 
-    /// Take references to the inner parts of this `Ident`, constructing a new
-    ///  `Ident` with the same lifetime.
+    /// Convert the inner parts of this `Ident` to their owned counterparts.
+    ///  Returns the newly created `Ident<'static>`.
     #[inline]
-    pub fn as_ref(&self) -> Ident<'_> {
-        Ident { nspace : Cow::Borrowed(&*self.nspace), path : Cow::Borrowed(&*self.path) }
+    pub fn to_static_owned(&self) -> Ident<'static> {
+        Ident { nspace : Cow::Owned((&*self.nspace).to_owned()), path : Cow::Owned((&*self.path).to_owned()) }
     }
 
     /// Returns the inner parts of this `Ident`.

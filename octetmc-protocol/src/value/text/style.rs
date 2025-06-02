@@ -61,3 +61,40 @@ impl TextStyle<'_> {
     };
 
 }
+
+impl<'l> TextStyle<'l> {
+
+    /// Convert the inner parts of this `TextStyle` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `TextStyle<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> TextStyle<'static> {
+        TextStyle {
+            colour    : self.colour,
+            font      : self.font.map(|font| font.into_static_owned()),
+            bold      : self.bold,
+            italic    : self.italic,
+            underline : self.underline,
+            strike    : self.strike,
+            obfuscate : self.obfuscate,
+            shadow    : self.shadow
+        }
+    }
+
+    /// Convert the inner parts of this `TextStyle` to their owned counterparts.
+    ///  Returns the newly created `TextStyle<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> TextStyle<'static> {
+        TextStyle {
+            colour    : self.colour,
+            font      : self.font.as_ref().map(|font| font.to_static_owned()),
+            bold      : self.bold,
+            italic    : self.italic,
+            underline : self.underline,
+            strike    : self.strike,
+            obfuscate : self.obfuscate,
+            shadow    : self.shadow
+        }
+    }
+
+}

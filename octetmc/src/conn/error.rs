@@ -76,7 +76,7 @@ pub enum ConnPeerError {
     PeerClosed,
 
     /// The server kicked the client.
-    Kicked(Text<'static>),
+    Kicked(Text<'static, 'static>),
 
     /// Some other IO error occured.
     Io(io::Error)
@@ -121,8 +121,8 @@ impl fmt::Debug for DebugByteHex {
     }
 }
 
-struct DebugText<'l, 'k>(&'l Text<'k>);
-impl fmt::Debug for DebugText<'_, '_> {
+struct DebugText<'l, 'k, 'j>(&'j Text<'l, 'k>);
+impl fmt::Debug for DebugText<'_, '_, '_> {
     fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "\"")?;
         self.0.str_debug_display(f)?;

@@ -18,7 +18,7 @@ mod write;
 
 const MAX_READ_QUEUE_SIZE : usize = 4096;
 
-const GENERIC_KICK_MESSAGE : Text<'_> = Text { components : Cow::Borrowed(&[
+const GENERIC_KICK_MESSAGE : Text<'_, '_> = Text { components : Cow::Borrowed(&[
     TextComponent {
         content  : TextContent::Translate {
             key      : Cow::Borrowed("multiplayer.disconnect.duplicate_login"),

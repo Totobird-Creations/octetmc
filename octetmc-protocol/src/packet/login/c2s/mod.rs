@@ -30,3 +30,27 @@ packet_decode_group!{
         LoginAcknowledged(login_acknowledged::LoginAcknowledgedC2SLoginPacket)
     }
 }
+
+
+impl C2SLoginPackets<'_> {
+
+    /// Convert the inner parts of this packet to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `C2SLoginPackets<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> C2SLoginPackets<'static> { match (self) {
+        Self::Hello             (v) => C2SLoginPackets::Hello             (v.into_static_owned()),
+        Self::Key               (v) => C2SLoginPackets::Key               (v.into_static_owned()),
+        Self::LoginAcknowledged (v) => C2SLoginPackets::LoginAcknowledged (v)
+    } }
+
+    /// Convert the inner parts of this packet to their owned counterparts.
+    ///  Returns the newly created `C2SLoginPackets<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> C2SLoginPackets<'static> { match (self) {
+        Self::Hello             (v) => C2SLoginPackets::Hello             (v.to_static_owned()),
+        Self::Key               (v) => C2SLoginPackets::Key               (v.to_static_owned()),
+        Self::LoginAcknowledged (v) => C2SLoginPackets::LoginAcknowledged (*v)
+    } }
+
+}

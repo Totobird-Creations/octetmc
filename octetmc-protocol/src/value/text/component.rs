@@ -25,6 +25,38 @@ pub struct TextComponent<'l> {
 
 }
 
+impl<'l> TextComponent<'l> {
+
+    /// Convert the inner parts of this `TextComponent` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `TextComponent<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> TextComponent<'static> {
+        TextComponent {
+            content  : self.content.into_static_owned(),
+            style    : self.style.into_static_owned(),
+            interact : self.interact.into_static_owned(),
+            extra    : Cow::Owned(match (self.extra) {
+                Cow::Borrowed(extra) => extra.iter().map(|component| component.to_static_owned()).collect(),
+                Cow::Owned(extra)    => extra.into_iter().map(|component| component.into_static_owned()).collect()
+            })
+        }
+    }
+
+    /// Convert the inner parts of this `TextComponent` to their owned counterparts.
+    ///  Returns the newly created `TextComponent<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> TextComponent<'static> {
+        TextComponent {
+            content  : self.content.to_static_owned(),
+            style    : self.style.to_static_owned(),
+            interact : self.interact.to_static_owned(),
+            extra    : Cow::Owned(self.extra.iter().map(|component| component.to_static_owned()).collect())
+        }
+    }
+
+}
+
 impl fmt::Display for TextComponent<'_> {
     fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.content)?;

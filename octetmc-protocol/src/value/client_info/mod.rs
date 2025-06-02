@@ -27,7 +27,7 @@ pub use particle_status::*;
 pub struct ClientInfo<'l> {
 
     /// Currently selected player game language as a language code.
-    pub locale                : &'l str,
+    pub locale                : Cow<'l, str>,
 
     /// Client-side render distance, in chunks.
     pub view_distance         : u8,
@@ -59,6 +59,45 @@ pub struct ClientInfo<'l> {
 
 }
 
+impl<'l> ClientInfo<'l> {
+
+    /// Convert the inner parts of this `ClientInfo` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `ClientInfo<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> ClientInfo<'static> {
+        ClientInfo {
+            locale                : Cow::Owned(self.locale.into_owned()),
+            view_distance         : self.view_distance,
+            chat_mode             : self.chat_mode,
+            chat_colours          : self.chat_colours,
+            skin_parts            : self.skin_parts,
+            main_hand             : self.main_hand,
+            text_filtering        : self.text_filtering,
+            allow_server_listings : self.allow_server_listings,
+            particle_status       : self.particle_status
+        }
+    }
+
+    /// Convert the inner parts of this `ClientInfo` to their owned counterparts.
+    ///  Returns the newly created `ClientInfo<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> ClientInfo<'static> {
+        ClientInfo {
+            locale                : Cow::Owned((&*self.locale).to_owned()),
+            view_distance         : self.view_distance,
+            chat_mode             : self.chat_mode,
+            chat_colours          : self.chat_colours,
+            skin_parts            : self.skin_parts,
+            main_hand             : self.main_hand,
+            text_filtering        : self.text_filtering,
+            allow_server_listings : self.allow_server_listings,
+            particle_status       : self.particle_status
+        }
+    }
+
+}
+
 
 impl PacketPartDecode for ClientInfo<'_> {
 
@@ -71,7 +110,7 @@ impl PacketPartDecode for ClientInfo<'_> {
         let locale       = buf.read_decode::<&str>(head)?;
         if (locale.len() > 16) { return Err(ClientInfoDecodeError::LocaleTooLong); }
         Ok(Self::Output {
-            locale,
+            locale                : Cow::Borrowed(locale),
             view_distance         : buf.read(head)?,
             chat_mode             : buf.read_decode::<ClientChatMode>(head)?,
             chat_colours          : buf.read_decode::<bool>(head)?,

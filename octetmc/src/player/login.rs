@@ -28,7 +28,7 @@ pub struct KickPlayer {
     pub player_id : PlayerId,
 
     /// The message to display to the client.
-    pub reason    : Text<'static>
+    pub reason    : Text<'static, 'static>
 
 }
 
@@ -44,7 +44,7 @@ impl Plugin for PlayerKickDupesPlugin {
 }
 
 
-const DEFAULT_DUPE_KICK_MESSAGE : Text<'_> = Text { components : Cow::Borrowed(&[
+const DEFAULT_DUPE_KICK_MESSAGE : Text<'_, '_> = Text { components : Cow::Borrowed(&[
     TextComponent {
         content  : TextContent::Translate {
             key      : Cow::Borrowed("multiplayer.disconnect.duplicate_login"),

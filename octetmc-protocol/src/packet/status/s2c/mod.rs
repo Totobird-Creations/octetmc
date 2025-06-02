@@ -13,9 +13,9 @@ pub mod pong_response;
 packet_encode_group!{
     type State = StateStatus;
     /// `S2CStatus`-type packets.
-    pub enum S2CStatusPackets<'a, 'b, 'c, 'd, 'e> {
+    pub enum S2CStatusPackets<'l, 'k> {
         /// `StatusResponseS2CStatusPacket`
-        StatusResponse(status_response::StatusResponseS2CStatusPacket<'a, 'b, 'c, 'd, 'e>),
+        StatusResponse(status_response::StatusResponseS2CStatusPacket<'l, 'k>),
         /// `PongResponseS2CStatusPacket`
         PingResponse(pong_response::PongResponseS2CStatusPacket)
     }

@@ -6,7 +6,7 @@ use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteD
 
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Acknowledge_Finish_Configuration
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct FinishConfigurationC2SConfigPacket;
 
 
@@ -19,7 +19,5 @@ impl PacketDecode for FinishConfigurationC2SConfigPacket {
 
     fn decode<'l>(_buf : DecodeBuf<'l>, _head : &mut DecodeBufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>>
-    {
-        Ok(Self)
-    }
+    { Ok(Self) }
 }

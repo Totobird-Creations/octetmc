@@ -37,6 +37,52 @@ pub struct PlayerProfileSkin<'l> {
 
 }
 
+impl<'l> PlayerProfile<'l> {
+
+    /// Convert the inner parts of this `PlayerProfile` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `PlayerProfile<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> PlayerProfile<'static> {
+        PlayerProfile {
+            uuid : self.uuid,
+            name : Cow::Owned(self.name.into_owned()),
+            skin : self.skin.map(|skin| skin.into_static_owned())
+        }
+    }
+
+    /// Convert the inner parts of this `PlayerProfile` to their owned counterparts.
+    ///  Returns the newly created `PlayerProfile<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> PlayerProfile<'static> {
+        PlayerProfile {
+            uuid : self.uuid,
+            name : Cow::Owned((&*self.name).to_owned()),
+            skin : self.skin.as_ref().map(|skin| skin.to_static_owned())
+        }
+    }
+
+}
+
+impl PlayerProfileSkin<'_> {
+
+    /// Convert the inner parts of this `PlayerProfileSkin` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `PlayerProfileSkin<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> PlayerProfileSkin<'static> {
+        PlayerProfileSkin { sig : self.sig.map(|sig| Cow::Owned(sig.into_owned())), value : Cow::Owned(self.value.into_owned()) }
+    }
+
+    /// Convert the inner parts of this `PlayerProfileSkin` to their owned counterparts.
+    ///  Returns the newly created `PlayerProfileSkin<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> PlayerProfileSkin<'static> {
+        PlayerProfileSkin { sig : self.sig.as_ref().map(|sig| Cow::Owned((&**sig).to_owned())), value : Cow::Owned((&*self.value).to_owned()) }
+    }
+
+}
+
 
 impl PacketPartEncode for PlayerProfile<'_> {
 

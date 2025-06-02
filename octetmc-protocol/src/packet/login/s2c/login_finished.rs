@@ -18,6 +18,26 @@ pub struct LoginFinishedS2CLoginPacket<'l> {
 }
 
 
+impl<'l> LoginFinishedS2CLoginPacket<'l> {
+
+    /// Convert the inner parts of this packet to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `LoginFinishedS2CLoginPacket<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> LoginFinishedS2CLoginPacket<'static> {
+        LoginFinishedS2CLoginPacket { profile : self.profile.into_static_owned() }
+    }
+
+    /// Convert the inner parts of this packet to their owned counterparts.
+    ///  Returns the newly created `LoginFinishedS2CLoginPacket<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> LoginFinishedS2CLoginPacket<'static> {
+        LoginFinishedS2CLoginPacket { profile : self.profile.to_static_owned() }
+    }
+
+}
+
+
 impl PacketEncode for LoginFinishedS2CLoginPacket<'_> {
     type State = StateLogin;
 

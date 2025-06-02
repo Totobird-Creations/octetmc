@@ -18,13 +18,43 @@ pub struct IntentionC2SHandshakePacket<'l> {
     pub protocol  : u32,
 
     /// The hostname that was used to connect.
-    pub address   : &'l str,
+    pub address   : Cow<'l, str>,
 
     /// The port that was used to connect.
     pub port      : u16,
 
     /// The client's intention.
     pub intention : Intention
+
+}
+
+
+impl<'l> IntentionC2SHandshakePacket<'l> {
+
+    /// Convert the inner parts of this packet to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `IntentionC2SHandshakePacket<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> IntentionC2SHandshakePacket<'static> {
+        IntentionC2SHandshakePacket {
+            protocol  : self.protocol,
+            address   : Cow::Owned(self.address.into_owned()),
+            port      : self.port,
+            intention : self.intention
+        }
+    }
+
+    /// Convert the inner parts of this packet to their owned counterparts.
+    ///  Returns the newly created `IntentionC2SHandshakePacket<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> IntentionC2SHandshakePacket<'static> {
+        IntentionC2SHandshakePacket {
+            protocol  : self.protocol,
+            address   : Cow::Owned((&*self.address).to_owned()),
+            port      : self.port,
+            intention : self.intention
+        }
+    }
 
 }
 
@@ -41,7 +71,7 @@ impl PacketDecode for IntentionC2SHandshakePacket<'_> {
     {
         Ok(Self::Output {
             protocol  : *buf.read_decode::<VarInt::<u32>>(head)?,
-            address   : buf.read_decode::<&str>(head)?,
+            address   : Cow::Borrowed(buf.read_decode::<&str>(head)?),
             port      : buf.read_decode::<u16>(head)?,
             intention : (match (*buf.read_decode::<VarInt::<u32>>(head)?) {
                 1 => Intention::Status,
