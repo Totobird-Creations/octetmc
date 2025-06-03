@@ -48,9 +48,9 @@ impl HelloS2CLoginPacket<'_> {
     #[inline]
     pub fn to_static_owned(&self) -> HelloS2CLoginPacket<'static> {
         HelloS2CLoginPacket {
-            server_id       : Cow::Owned((&*self.server_id).to_owned()),
-            public_key      : Cow::Owned((&*self.public_key).to_owned()),
-            verify_token    : Cow::Owned((&*self.verify_token).to_owned()),
+            server_id       : Cow::Owned((*self.server_id).to_owned()),
+            public_key      : Cow::Owned((*self.public_key).to_owned()),
+            verify_token    : Cow::Owned((*self.verify_token).to_owned()),
             mojauth_enabled : self.mojauth_enabled
         }
     }
@@ -75,9 +75,9 @@ impl PacketEncode for HelloS2CLoginPacket<'_> {
     fn encode(&self, buf : &mut EncodeBuf) {
         buf.encode_write(&*self.server_id);
         buf.encode_write(VarInt::<u32>::from(self.public_key.len() as u32));
-        buf.write_n(&*self.public_key);
+        buf.write_n(&self.public_key);
         buf.encode_write(VarInt::<u32>::from(self.verify_token.len() as u32));
-        buf.write_n(&*self.verify_token);
+        buf.write_n(&self.verify_token);
         buf.write(self.mojauth_enabled);
     }
 }

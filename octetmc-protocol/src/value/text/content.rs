@@ -73,13 +73,13 @@ impl<'l> TextContent<'l> {
     /// Convert the inner parts of this `TextContent` to their owned counterparts.
     ///  Returns the newly created `TextContent<'static>`.
     pub fn to_static_owned(&self) -> TextContent<'static> { match (self) {
-        Self::Literal   { value }               => TextContent::Literal { value : Cow::Owned((&**value).to_owned()) },
+        Self::Literal   { value }               => TextContent::Literal { value : Cow::Owned((**value).to_owned()) },
         Self::Translate { key, fallback, with } => TextContent::Translate {
-            key      : Cow::Owned((&**key).to_owned()),
-            fallback : fallback.as_ref().map(|fallback| Cow::Owned((&**fallback).to_owned())),
+            key      : Cow::Owned((**key).to_owned()),
+            fallback : fallback.as_ref().map(|fallback| Cow::Owned((**fallback).to_owned())),
             with     : with.iter().map(|component| component.to_static_owned()).collect()
         },
-        Self::Keybind   { key }                 => TextContent::Keybind { key : Cow::Owned((&**key).to_owned()) }
+        Self::Keybind   { key }                 => TextContent::Keybind { key : Cow::Owned((**key).to_owned()) }
     } }
 
 }

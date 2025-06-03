@@ -17,6 +17,7 @@ impl PacketDecode for LoginAcknowledgedC2SLoginPacket {
     type Output<'l> = LoginAcknowledgedC2SLoginPacket;
     type Error<'l>  = IncompleteData;
 
+    #[inline(always)]
     fn decode<'l>(_buf : DecodeBuf<'l>, _head : &mut DecodeBufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>>
     { Ok(Self) }

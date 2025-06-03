@@ -57,7 +57,7 @@ impl<'l> PlayerProfile<'l> {
     pub fn to_static_owned(&self) -> PlayerProfile<'static> {
         PlayerProfile {
             uuid : self.uuid,
-            name : Cow::Owned((&*self.name).to_owned()),
+            name : Cow::Owned((*self.name).to_owned()),
             skin : self.skin.as_ref().map(|skin| skin.to_static_owned())
         }
     }
@@ -78,7 +78,7 @@ impl PlayerProfileSkin<'_> {
     ///  Returns the newly created `PlayerProfileSkin<'static>`.
     #[inline]
     pub fn to_static_owned(&self) -> PlayerProfileSkin<'static> {
-        PlayerProfileSkin { sig : self.sig.as_ref().map(|sig| Cow::Owned((&**sig).to_owned())), value : Cow::Owned((&*self.value).to_owned()) }
+        PlayerProfileSkin { sig : self.sig.as_ref().map(|sig| Cow::Owned((**sig).to_owned())), value : Cow::Owned((*self.value).to_owned()) }
     }
 
 }

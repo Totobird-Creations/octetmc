@@ -116,7 +116,7 @@ struct DebugByteHex(u8);
 impl fmt::Debug for DebugByteHex {
     fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut buf = [0u8; 2];
-        _ = hex::encode_to_slice(&[self.0], &mut buf);
+        _ = hex::encode_to_slice([self.0], &mut buf);
         write!(f, "0x{}{}", buf[0] as char, buf[1] as char)
     }
 }

@@ -89,7 +89,7 @@ impl<'l, 'k> StatusResponseS2CStatusPacket<'l, 'k> {
             version             : self.version.to_static_owned(),
             players             : self.players.as_ref().map(|players| players.to_static_owned()),
             motd                : self.motd.as_ref().map(|motd| motd.to_static_owned()),
-            favicon             : self.favicon.as_ref().map(|favicon| Cow::Owned((&**favicon).to_owned())),
+            favicon             : self.favicon.as_ref().map(|favicon| Cow::Owned((**favicon).to_owned())),
             enforce_secure_chat : self.enforce_secure_chat,
             block_chat_reports  : self.block_chat_reports
         }
@@ -128,7 +128,7 @@ impl<'l> StatusVersion<'l> {
     ///  Returns the newly created `StatusVersion<'static>`.
     #[inline]
     pub fn to_static_owned(&self) -> StatusVersion<'static> {
-        StatusVersion { name : Cow::Owned((&*self.name).to_owned()), protocol : self.protocol }
+        StatusVersion { name : Cow::Owned((*self.name).to_owned()), protocol : self.protocol }
     }
 
 }
@@ -212,7 +212,7 @@ impl<'l> StatusPlayersSampleEntry<'l> {
     ///  Returns the newly created `StatusPlayersSampleEntry<'static>`.
     #[inline]
     pub fn to_static_owned(&self) -> StatusPlayersSampleEntry<'static> {
-        StatusPlayersSampleEntry { name : Cow::Owned((&*self.name).to_owned()), id : self.id }
+        StatusPlayersSampleEntry { name : Cow::Owned((*self.name).to_owned()), id : self.id }
     }
 
 }

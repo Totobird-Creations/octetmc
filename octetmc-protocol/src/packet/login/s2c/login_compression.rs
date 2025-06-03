@@ -32,6 +32,6 @@ impl PacketEncode for LoginCompressionS2CLoginPacket {
 
     #[inline]
     fn encode(&self, buf : &mut EncodeBuf) {
-        buf.encode_write(&VarInt::<u32>::from(self.threshold));
+        buf.encode_write(VarInt::<u32>::from(self.threshold));
     }
 }

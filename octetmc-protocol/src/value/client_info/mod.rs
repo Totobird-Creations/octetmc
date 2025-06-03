@@ -84,7 +84,7 @@ impl<'l> ClientInfo<'l> {
     #[inline]
     pub fn to_static_owned(&self) -> ClientInfo<'static> {
         ClientInfo {
-            locale                : Cow::Owned((&*self.locale).to_owned()),
+            locale                : Cow::Owned((*self.locale).to_owned()),
             view_distance         : self.view_distance,
             chat_mode             : self.chat_mode,
             chat_colours          : self.chat_colours,

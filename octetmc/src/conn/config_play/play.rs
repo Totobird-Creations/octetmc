@@ -1,10 +1,11 @@
 use super::{ ConfigPlay, ConnPeerComms, ConnPeerResult };
 use super::action::ConnPeerAction;
+use crate::player::PlayerId;
 use octetmc_protocol::packet::play::c2s::C2SPlayPackets;
 
 
 #[expect(dead_code)]
-pub(in super::super) async unsafe fn switch_to_config(comms : &mut ConnPeerComms) -> ConnPeerResult {
+pub(in super::super) async unsafe fn switch_to_config(_player_id : PlayerId, comms : &mut ConnPeerComms) -> ConnPeerResult {
     match (unsafe { comms.state_assume_config_play() }) {
 
         ConfigPlay::Config { active_ticks } => {
@@ -25,7 +26,7 @@ pub(in super::super) async unsafe fn switch_to_config(comms : &mut ConnPeerComms
 }
 
 
-pub(super) async fn handle_play_packet(packet : C2SPlayPackets) -> ConnPeerResult<ConnPeerAction> {
+pub(super) async fn handle_play_packet(_player_id : PlayerId, packet : C2SPlayPackets) -> ConnPeerResult<ConnPeerAction> {
     match (packet) {
 
     }

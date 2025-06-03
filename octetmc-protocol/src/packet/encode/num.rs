@@ -41,8 +41,8 @@ impl PacketPartEncode for Uuid {
     #[inline]
     fn encode(&self, buf : &mut EncodeBuf) {
         let (msb, lsb,) = self.as_u64_pair();
-        buf.encode_write(&msb);
-        buf.encode_write(&lsb);
+        buf.encode_write(msb);
+        buf.encode_write(lsb);
     }
 
 }

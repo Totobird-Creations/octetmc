@@ -91,9 +91,9 @@ impl ServerFavicon {
 
 impl Dirtyable for ServerFavicon {
     #[inline]
-    fn is_dirty(self : &Self) -> bool { self.dirty }
+    fn is_dirty(&self) -> bool { self.dirty }
     #[inline]
-    fn dirty_mut(self : &mut Self) -> &mut bool { &mut self.dirty }
+    fn dirty_mut(&mut self) -> &mut bool { &mut self.dirty }
 }
 
 impl<I> From<&I> for ServerFavicon

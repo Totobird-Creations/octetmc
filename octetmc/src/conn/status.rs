@@ -91,8 +91,8 @@ pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResul
                     name     : Cow::Borrowed(brand),
                     protocol : PROTOCOL_VERSION
                 },
-                players : players.map(|count| StatusPlayers {
-                    online : count as u32,
+                players : players.map(|online| StatusPlayers {
+                    online,
                     max    : max_players,
                     sample : Cow::Borrowed(&[])
                 }),

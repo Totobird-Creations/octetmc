@@ -4,6 +4,7 @@ use super::comms::ConnPeerComms;
 use crate::player::{ Player, PlayerId };
 use crate::player::login::PlayerLoginEvent;
 use crate::util::future::timeout;
+use crate::util::CratePrivateNew;
 use octetmc_protocol::value::profile::{ PlayerProfile, PlayerProfileSkin };
 use octetmc_protocol::packet::login::c2s::hello::HelloC2SLoginPacket;
 use octetmc_protocol::packet::login::c2s::key::KeyC2SLoginPacket;
@@ -41,7 +42,7 @@ pub(super) async fn handle_login_process(
     comms              : &mut ConnPeerComms,
     compress_threshold : Option<u32>,
     mojauth_enabled    : bool
-) -> ConnPeerResult {
+) -> ConnPeerResult<PlayerId> {
     comms.set_state(ConnPeerState::Login);
 
     // Wait for hello.
@@ -104,7 +105,7 @@ pub(super) async fn handle_login_process(
         let mut sha_buf = [0u8; 40];
         if (sha_in_i256 >= 0) {
             // SAFETY: sha_buf has room for 40 items.
-            _ = hex::encode_to_slice(sha_in_20, &mut sha_buf).unwrap();
+            _ = hex::encode_to_slice(sha_in_20, &mut sha_buf);
         } else {
             let neg_sha_in_32 = (-sha_in_i256).to_be_bytes();
             // SAFETY: sha_in_32 bytes has 32 items.
@@ -179,16 +180,14 @@ pub(super) async fn handle_login_process(
     let _ = comms.read_packet_timeout::<LoginAcknowledgedC2SLoginPacket>(LOGIN_TIMEOUT).await?;
     comms.set_state(ConnPeerState::ConfigPlay(ConfigPlay::Config { active_ticks : 0 }));
 
+    // SAFETY: take_conn_sender_unchecked has not been called before.
+    let (conn_out_sender, conn_in_receiver,) = unsafe { comms.take_mainloop_conn_channels_unchecked() };
     // Add a player to the ECS world.
-    let player = AsyncWorld.spawn_bundle((Player {
-        profile,
-        // SAFETY: take_conn_sender_unchecked has not been called before.
-        conn_sender : unsafe { comms.take_conn_sender_unchecked() }
-    }));
+    let player = AsyncWorld.spawn_bundle(Player::new(conn_out_sender, conn_in_receiver, profile));
     _ = AsyncWorld.send_event(PlayerLoginEvent { player_id : PlayerId::from(player.id()) });
 
     // Continue to config_play.
-    Ok(())
+    Ok(PlayerId::crate_private_new(player.id()))
 }
 
 

@@ -39,7 +39,7 @@ impl HelloC2SLoginPacket<'_> {
     ///  Returns the newly created `HelloC2SLoginPacket<'static>`.
     #[inline]
     pub fn to_static_owned(&self) -> HelloC2SLoginPacket<'static> {
-        HelloC2SLoginPacket { username : Cow::Owned((&*self.username).to_owned()), uuid : self.uuid }
+        HelloC2SLoginPacket { username : Cow::Owned((*self.username).to_owned()), uuid : self.uuid }
     }
 
 }
