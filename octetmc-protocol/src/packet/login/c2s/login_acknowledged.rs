@@ -5,7 +5,7 @@ use crate::packet::StateLogin;
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Acknowledged
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Acknowledged>
 #[derive(Debug, Clone, Copy)]
 pub struct LoginAcknowledgedC2SLoginPacket;
 

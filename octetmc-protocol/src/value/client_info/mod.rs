@@ -34,7 +34,7 @@ pub struct ClientInfo<'l> {
 
     /// What kinds of messages the player will see in chat.
     ///
-    /// https://minecraft.wiki/w/Java_Edition_protocol/Chat#Client_chat_mode
+    /// <https://minecraft.wiki/w/Java_Edition_protocol/Chat#Client_chat_mode>
     pub chat_mode             : ClientChatMode,
 
     /// Whether the client will display chat messages in colour.

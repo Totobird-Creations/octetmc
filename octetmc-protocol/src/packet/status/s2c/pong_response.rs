@@ -5,7 +5,7 @@ use crate::packet::StateStatus;
 use crate::packet::encode::{ EncodeBuf, PacketEncode };
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Pong_Response_(status)
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Pong_Response_(status)>
 #[derive(Debug, Clone)]
 pub struct PongResponseS2CStatusPacket {
 

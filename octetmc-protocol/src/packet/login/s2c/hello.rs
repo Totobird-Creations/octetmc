@@ -7,7 +7,7 @@ use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 use std::borrow::Cow;
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Encryption_Request
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Encryption_Request>
 #[derive(Debug, Clone)]
 pub struct HelloS2CLoginPacket<'l> {
 

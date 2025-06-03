@@ -8,8 +8,9 @@ use std::borrow::Cow;
 
 /// Variable bit-width integers.
 ///
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:VarInt
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:VarLong
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:VarInt>
+/// <br />
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:VarLong>
 pub struct VarInt<V>(V)
 where
     V : VarIntType;
@@ -88,9 +89,9 @@ where
 }
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#VarInt_and_VarLong
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#VarInt_and_VarLong>
 pub const SEGMENT_BITS : u8 = 0x7F;
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#VarInt_and_VarLong
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#VarInt_and_VarLong>
 pub const CONTINUE_BIT : u8 = 0x80;
 
 

@@ -16,7 +16,7 @@ use serde::{
 const VANILLA_NAMESPACE : &str = "minecraft";
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:Identifier
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:Identifier>
 #[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct Ident<'l> {
     nspace : Cow<'l, str>,
@@ -257,6 +257,13 @@ impl<'l> Ident<'l> {
     #[inline]
     pub fn to_static_owned(&self) -> Ident<'static> {
         Ident { nspace : Cow::Owned((*self.nspace).to_owned()), path : Cow::Owned((*self.path).to_owned()) }
+    }
+
+    /// Convert the inner parts of this `Ident` to their borrowed counterparts.
+    ///  Returns the newly created `Ident` with the same lifetime.
+    #[inline]
+    pub fn as_ref(&self) -> Ident<'_> {
+        Ident { nspace : Cow::Borrowed(&self.nspace), path : Cow::Borrowed(&self.path) }
     }
 
     /// Returns the inner parts of this `Ident`.

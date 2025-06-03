@@ -8,13 +8,13 @@ use crate::packet::decode::str::StringDecodeError;
 use std::borrow::Cow;
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Handshake
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Handshake>
 #[derive(Debug, Clone)]
 pub struct IntentionC2SHandshakePacket<'l> {
 
     /// The protocol version this server is running.
     ///
-    /// https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge/Protocol_version_numbers
+    /// <https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge/Protocol_version_numbers>
     pub protocol  : u32,
 
     /// The hostname that was used to connect.

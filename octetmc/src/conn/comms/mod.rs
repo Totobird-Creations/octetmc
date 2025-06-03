@@ -44,6 +44,7 @@ pub(super) struct ConnPeerComms {
     compress_threshold : Option<usize>,
     crypters           : Option<ConnPeerCrypters>,
     state              : ConnPeerState,
+    logged_in          : bool,
     conn_out_sender    : Option<channel::Sender<ConnPeerOutMessage>>,
     conn_out_receiver  : channel::Receiver<ConnPeerOutMessage>,
     conn_in_sender     : channel::Sender<ConnPeerInMessage>,
@@ -72,27 +73,12 @@ impl ConnPeerComms {
             compress_threshold : None,
             crypters           : None,
             state              : ConnPeerState::Handshake,
+            logged_in          : false,
             conn_out_sender    : Some(conn_out_sender),
             conn_out_receiver,
             conn_in_sender,
             conn_in_receiver   : Some(conn_in_receiver)
         }
-    }
-
-    #[inline]
-    pub(super) unsafe fn state_assume_config_play(&mut self) -> &mut ConfigPlay {
-        let ConnPeerState::ConfigPlay(state) = &mut self.state
-            else { unsafe { unreachable_unchecked(); } };
-        state
-    }
-
-    #[inline]
-    pub(super) fn set_state(&mut self, state : ConnPeerState) {
-        self.state = state;
-    }
-    #[inline(always)]
-    pub(super) fn set_state_config_play(&mut self, state : ConfigPlay) {
-        self.set_state(ConnPeerState::ConfigPlay(state));
     }
 
     #[inline]
@@ -112,6 +98,25 @@ impl ConnPeerComms {
         self.conn_out_sender.take().unwrap_unchecked(),
         self.conn_in_receiver.take().unwrap_unchecked()
     ) } }
+
+    #[inline]
+    pub(super) unsafe fn state_assume_config_play(&mut self) -> &mut ConfigPlay {
+        let ConnPeerState::ConfigPlay(state) = &mut self.state
+            else { unsafe { unreachable_unchecked(); } };
+        state
+    }
+
+    #[inline]
+    pub(super) fn set_state(&mut self, state : ConnPeerState) {
+        self.state = state;
+    }
+    #[inline(always)]
+    pub(super) fn set_state_config_play(&mut self, state : ConfigPlay) {
+        self.set_state(ConnPeerState::ConfigPlay(state));
+    }
+
+    #[inline]
+    pub(super) fn is_logged_in(&self) -> bool { self.logged_in }
 
     #[inline]
     pub(super) fn try_read_out_message(&self) -> ConnPeerResult<Option<ConnPeerOutMessage>> {

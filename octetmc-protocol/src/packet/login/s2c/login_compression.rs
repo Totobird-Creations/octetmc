@@ -6,7 +6,7 @@ use crate::packet::StateLogin;
 use crate::packet::encode::{ EncodeBuf, PacketEncode };
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Encryption_Request
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Encryption_Request>
 #[derive(Debug, Clone, Copy)]
 pub struct LoginCompressionS2CLoginPacket {
 

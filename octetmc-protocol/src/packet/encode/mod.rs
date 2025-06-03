@@ -164,7 +164,7 @@ impl EncodeBuf<'_> {
 
     /// Reserve enough space in this buffer to add `n` more bytes.
     ///
-    /// Implementors of [`PartPrefixedEncode`], [`PacketEncode`], and [`PacketPartEncode`]
+    /// Implementors of [`PacketPrefixedEncode`], [`PacketEncode`], and [`PacketPartEncode`]
     ///  should only call this if the size could not be predicted in `predict_size`.
     pub fn reserve(&mut self, additional : usize) {
         self.buf.reserve_exact(additional);

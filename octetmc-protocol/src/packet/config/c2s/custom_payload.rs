@@ -8,7 +8,7 @@ use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use std::borrow::Cow;
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Serverbound_Plugin_Message_(configuration)
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Serverbound_Plugin_Message_(configuration)>
 #[derive(Debug, Clone)]
 pub struct CustomPayloadC2SConfigPacket<'l> {
 

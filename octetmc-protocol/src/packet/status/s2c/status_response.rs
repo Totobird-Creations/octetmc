@@ -20,7 +20,7 @@ pub const MAX_PLAYERS : u32 = 2u32.pow(31) - 1;
 pub const FAVICON_PREFIX : &str = "data:image/png;base64,";
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status_Response
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status_Response>
 #[derive(Debug, Clone, Ser)]
 pub struct StatusResponseS2CStatusPacket<'l, 'k> {
 

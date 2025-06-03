@@ -44,7 +44,7 @@ pub enum TextContent<'l> {
 
         /// The keybind identifier.
         ///
-        /// https://minecraft.wiki/w/Controls#Configurable_controls
+        /// <https://minecraft.wiki/w/Controls#Configurable_controls>
         #[serde(rename = "keybind")]
         key : Cow<'l, str>
 

@@ -8,7 +8,7 @@ use std::borrow::Cow;
 use uuid::Uuid;
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Start
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Start>
 #[derive(Debug, Clone)]
 pub struct HelloC2SLoginPacket<'l> {
 
