@@ -33,6 +33,17 @@ pub struct KickPlayer {
 }
 
 
+/// Bevy [`Plugin`] which automatically logs players in.
+#[derive(Default)]
+pub struct PlayerAutoLoginPlugin;
+
+impl Plugin for PlayerAutoLoginPlugin {
+    fn build(&self, app : &mut App) {
+        todo!()
+    }
+}
+
+
 /// Bevy [`Plugin`] which kicks duplicate players.
 #[derive(Default)]
 pub struct PlayerKickDupesPlugin;

@@ -1,7 +1,9 @@
 //! World dimension settings.
 
 
+use super::biome::Biome;
 use octetmc_protocol::value::ident::Ident;
+use std::borrow::Cow;
 
 
 /// The dimension type that a world can be.
@@ -53,6 +55,9 @@ pub struct Dimension<'l> {
     /// The world's sea level.
     ///
     /// Default is 64, unless superflat.
-    pub sea_level       : i32
+    pub sea_level       : i32,
+
+    /// Biome types which can appear in this world.
+    pub biomes          : Cow<'l, [Biome<'l>]>
 
 }

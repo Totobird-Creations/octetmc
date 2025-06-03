@@ -2,6 +2,15 @@
 #![cfg_attr(doc, feature(doc_cfg))]
 //! # OctetMC (Protocol)
 //! TODO: Top-level documentation
+//!
+//!
+//! ---
+//!
+//! Some documentation is copied from the [`Minecraft Wiki`](https://minecraft.wiki/w/Java_Edition_protocol), (formerly [wiki.vg](https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge)).
+//!
+//! [wiki.vg](https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge) is licensed under [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/)
+//!
+//! The [Minecraft Wiki](https://minecraft.wiki/) is licensed under [Creative Commons Attribution-NonCommercial-ShareAlike 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/).
 
 
 use semver::Version;

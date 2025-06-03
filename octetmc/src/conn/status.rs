@@ -5,7 +5,8 @@ use crate::server::{ ServerBrand, ServerMotd, ServerFavicon };
 use crate::player::{ PlayerCount, MaxPlayerCount };
 use crate::util::dirty::Dirtyable;
 use octetmc_protocol::{ LATEST_GAME_VERSION, PROTOCOL_VERSION };
-use octetmc_protocol::value::text::{ Text, TextComponent, TextContent, TextStyle, TextInteract, TextBasicColour };
+use octetmc_protocol::value::rgb::Rgb;
+use octetmc_protocol::value::text::{ Text, TextComponent, TextContent, TextStyle, TextInteract, TextColour };
 use octetmc_protocol::packet::status::c2s::C2SStatusPackets;
 use octetmc_protocol::packet::status::c2s::ping_request::PingRequestC2SStatusPacket;
 use octetmc_protocol::packet::status::s2c::status_response::{ StatusResponseS2CStatusPacket, StatusVersion, StatusPlayers, FAVICON_PREFIX, MAX_PLAYERS };
@@ -29,7 +30,7 @@ const DEFAULT_MOTD    : Text     = Text { components : Cow::Borrowed(&[
     TextComponent {
         content  : TextContent::Literal { value : Cow::Borrowed("OctectMC") },
         style    : TextStyle {
-            colour : Some(TextBasicColour::Rgb { r : 124, g : 68, b : 255 }),
+            colour : Some(TextColour::Rgb(Rgb { r : 124, g : 68, b : 255 })),
             ..TextStyle::NONE
         },
         interact : TextInteract::NONE,

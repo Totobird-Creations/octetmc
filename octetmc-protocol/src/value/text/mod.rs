@@ -19,11 +19,8 @@ pub use content::*;
 mod style;
 pub use style::*;
 
-mod basic_colour;
-pub use basic_colour::*;
-
-mod argb_colour;
-pub use argb_colour::*;
+mod colour;
+pub use colour::*;
 
 mod interact;
 pub use interact::*;
