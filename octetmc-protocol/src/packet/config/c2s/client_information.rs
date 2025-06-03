@@ -6,7 +6,7 @@ use crate::packet::StateConfig;
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Client_Information_(configuration)
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Client_Information_(configuration)>
 #[derive(Debug, Clone)]
 pub struct ClientInformationC2SConfigPacket<'l> {
 

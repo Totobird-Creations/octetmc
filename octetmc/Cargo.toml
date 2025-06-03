@@ -25,20 +25,26 @@ path = "../octetmc-protocol"
 # Async
 [dependencies.smol]
 version = "2.0"
-[dependencies.pin-project]
-version = "1.1"
+[dependencies.pin-project-lite]
+version = "0.2"
 [dependencies.futures]
-version = "0.3"
+version          = "0.3"
+default-features = false
+features         = [ "async-await" ]
 
 # ECS
 [dependencies.bevy_app]
-version = "0.16"
+version          = "0.16"
+default-features = false
 [dependencies.bevy_ecs]
-version = "0.16"
+version          = "0.16"
+default-features = false
 [dependencies.bevy_time]
-version = "0.16"
+version          = "0.16"
+default-features = false
 [dependencies.bevy_diagnostic]
-version = "0.16"
+version          = "0.16"
+default-features = false
 [dependencies.bevy_defer]
 version          = "0.14"
 default-features = false
@@ -53,22 +59,25 @@ version = "0.22"
 [dependencies.flate2]
 version = "1.1"
 [dependencies.rand]
-version = "0.9"
+version          = "0.9"
+default-features = false
+features         = [ "thread_rng" ]
 [dependencies.openssl]
 version = "0.10"
 
 # Authentication
 [dependencies.hex]
-version = "0.4"
+version          = "0.4"
+default-features = false
 [dependencies.ethnum]
 version = "1.5"
 [dependencies.surf]
-version = "2.3"
+version          = "2.3"
+default-features = false
+features         = [ "curl-client" ]
 [dependencies.serde]
 version = "1.0"
 [dependencies.uuid]
-version  = "1.17"
-features = [ "v3" ]
-
-[dependencies.num-bigint]
-version = "*"
+version          = "1.17"
+default-features = false
+features         = [ "v3" ]

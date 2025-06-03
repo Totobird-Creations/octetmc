@@ -24,19 +24,19 @@ pub mod encode;
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum PacketState {
 
-    /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Handshaking
+    /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Handshaking>
     Handshake,
 
-    /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status
+    /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status>
     Status,
 
-    /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login
+    /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login>
     Login,
 
-    /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Configuration
+    /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Configuration>
     Config,
 
-    /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Play
+    /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Play>
     Play
 
 }
@@ -57,7 +57,7 @@ pub unsafe trait AsPacketState : Clone + Copy + fmt::Debug {
     fn as_packet_state() -> PacketState;
 }
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Handshaking
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Handshaking>
 #[derive(Clone, Copy, Debug)]
 pub struct StateHandshake;
 unsafe impl AsPacketState for StateHandshake {
@@ -65,7 +65,7 @@ unsafe impl AsPacketState for StateHandshake {
     fn as_packet_state() -> PacketState { PacketState::Handshake }
 }
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status>
 #[derive(Clone, Copy, Debug)]
 pub struct StateStatus;
 unsafe impl AsPacketState for StateStatus {
@@ -73,7 +73,7 @@ unsafe impl AsPacketState for StateStatus {
     fn as_packet_state() -> PacketState { PacketState::Status }
 }
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login>
 #[derive(Clone, Copy, Debug)]
 pub struct StateLogin;
 unsafe impl AsPacketState for StateLogin {
@@ -81,7 +81,7 @@ unsafe impl AsPacketState for StateLogin {
     fn as_packet_state() -> PacketState { PacketState::Login }
 }
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Configuration
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Configuration>
 #[derive(Clone, Copy, Debug)]
 pub struct StateConfig;
 unsafe impl AsPacketState for StateConfig {
@@ -89,7 +89,7 @@ unsafe impl AsPacketState for StateConfig {
     fn as_packet_state() -> PacketState { PacketState::Config }
 }
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Play
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Play>
 #[derive(Clone, Copy, Debug)]
 pub struct StatePlay;
 unsafe impl AsPacketState for StatePlay {

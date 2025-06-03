@@ -6,7 +6,7 @@ use crate::packet::StateLogin;
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Success
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Success>
 #[derive(Debug, Clone)]
 pub struct LoginFinishedS2CLoginPacket<'l> {
 

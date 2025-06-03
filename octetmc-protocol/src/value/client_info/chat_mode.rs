@@ -3,7 +3,7 @@ use crate::packet::decode::{ PacketPartDecode, DecodeBuf, DecodeBufHead, Incompl
 use std::borrow::Cow;
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Chat#Client_chat_mode
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Chat#Client_chat_mode>
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 pub enum ClientChatMode {
 

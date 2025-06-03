@@ -35,8 +35,9 @@ mod hover_event;
 pub use hover_event::*;
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:Text_Component
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:JSON_Text_Component
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:Text_Component>
+/// <br />
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:JSON_Text_Component>
 #[derive(Clone, Debug)]
 pub struct Text<'l, 'k> {
 

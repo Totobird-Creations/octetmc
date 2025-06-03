@@ -5,7 +5,7 @@ use crate::packet::StateConfig;
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Acknowledge_Finish_Configuration
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Acknowledge_Finish_Configuration>
 #[derive(Debug, Clone, Copy)]
 pub struct FinishConfigurationC2SConfigPacket;
 

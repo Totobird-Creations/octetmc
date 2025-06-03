@@ -10,8 +10,12 @@ pub mod ident;
 
 pub mod text;
 
+pub mod block_pos;
+
 
 pub mod profile;
+
+pub mod game_mode;
 
 
 pub mod client_info;

@@ -8,7 +8,7 @@ use crate::packet::decode::str::StringDecodeError;
 use std::borrow::Cow;
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Encryption_Response
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Encryption_Response>
 #[derive(Debug, Clone)]
 pub struct KeyC2SLoginPacket<'l> {
 

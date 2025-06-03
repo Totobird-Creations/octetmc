@@ -5,7 +5,7 @@ use crate::value::ident::Ident;
 use std::borrow::Cow;
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels>
 ///
 /// octectmc does not support the debug channels.
 #[derive(Debug, Clone)]
@@ -13,7 +13,7 @@ pub enum ChannelData<'l> {
 
     /// Announces the server and client implementation name right after a player has logged in.
     ///
-    /// https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels#Brand
+    /// <https://minecraft.wiki/w/Java_Edition_protocol/Plugin_channels#Brand>
     Brand {
 
         /// The brand of the server/client. The vanilla value is `vanilla`.

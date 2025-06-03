@@ -1,4 +1,5 @@
 #![forbid(missing_docs)]
+#![cfg_attr(doc, feature(doc_cfg))]
 //! # OctetMC
 //! TODO: Top-level documentation
 
@@ -38,6 +39,7 @@ plugin_group! {
         bevy_diagnostic:::DiagnosticsPlugin,
         bevy_diagnostic:::FrameCountPlugin,
         :DefaultAsyncPlugin,
+
         conn:::OctetConnPlugin,
         player:::OctetPlayerPlugin,
         player::login:::PlayerKickDupesPlugin
@@ -49,7 +51,7 @@ pub mod prelude {
 
     /// The bevy libraries that octectmc uses.
     ///
-    /// https://docs.rs/bevy/latest/bevy
+    /// <https://docs.rs/bevy/latest/bevy/>
     pub mod bevy {
         pub use bevy_app as app;
         pub use bevy_ecs as ecs;

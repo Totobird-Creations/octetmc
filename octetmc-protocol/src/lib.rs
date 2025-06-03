@@ -1,4 +1,5 @@
 #![forbid(missing_docs)]
+#![cfg_attr(doc, feature(doc_cfg))]
 //! # OctetMC (Protocol)
 //! TODO: Top-level documentation
 

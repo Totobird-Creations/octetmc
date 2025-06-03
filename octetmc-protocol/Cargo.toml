@@ -33,7 +33,8 @@ unused_parens = "allow"
 version = "1.0"
 
 [dependencies.uuid]
-version = "1.17"
+version          = "1.17"
+default-features = false
 
 [dependencies.serde]
 version  = "1.0"

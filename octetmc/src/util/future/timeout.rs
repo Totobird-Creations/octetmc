@@ -2,18 +2,19 @@ use core::task::{ Context, Poll };
 use core::pin::Pin;
 use core::time::Duration;
 use std::time::Instant;
-use pin_project::pin_project;
+use pin_project_lite::pin_project;
 
 
-/// A `Future` which times out at a given point in time.
-#[pin_project]
-pub struct Timeout<F>
-where
-    F : Future
-{
-    #[pin]
-    fut     : F,
-    timeout : Instant
+pin_project!{
+    /// A `Future` which times out at a given point in time.
+    pub struct Timeout<F>
+    where
+        F : Future
+    {
+        #[pin]
+        fut     : F,
+        timeout : Instant
+    }
 }
 
 impl<F> Future for Timeout<F>

@@ -5,7 +5,7 @@ use crate::packet::StateConfig;
 use crate::packet::encode::{ EncodeBuf, PacketEncode };
 
 
-/// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Finish_Configuration
+/// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Finish_Configuration>
 #[derive(Debug, Clone)]
 pub struct FinishConfigurationS2CConfigPacket;
 
