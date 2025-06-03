@@ -12,6 +12,17 @@ pub mod text;
 
 pub mod block_pos;
 
+pub mod rgb;
+
+
+pub mod block_state;
+
+pub mod item_slot;
+
+pub mod sound_event;
+
+pub mod particle;
+
 
 pub mod profile;
 

@@ -1,9 +1,10 @@
 use super::*;
+use crate::value::rgb::Rgb;
 
 
-/// Basic colours for text.
+/// Colours for text foreground.
 #[derive(Clone, Copy, Debug, Ser)]
-pub enum TextBasicColour {
+pub enum TextColour {
 
     /// `#000000`
     #[serde(rename = "black")]
@@ -71,21 +72,14 @@ pub enum TextBasicColour {
 
     /// A 24-bit RGB colour.
     #[serde(untagged, serialize_with = "rgb_to_hex")]
-    Rgb {
-        /// Red lane.
-        r : u8,
-        /// Green lane.
-        g : u8,
-        /// Blue lane.
-        b : u8
-    }
+    Rgb(Rgb)
 
 }
 
 
-fn rgb_to_hex<S>(r : &u8, g : &u8, b : &u8, serer : S) -> Result<<S as Serer>::Ok, <S as Serer>::Error>
+fn rgb_to_hex<S>(rgb : &Rgb, serer : S) -> Result<<S as Serer>::Ok, <S as Serer>::Error>
 where
     S : Serer
 {
-    format!("#{r:0>2x}{g:0>2x}{b:0>2x}").serialize(serer)
+    format!("#{:0>2x}{:0>2x}{:0>2x}", rgb.r, rgb.g, rgb.b).serialize(serer)
 }

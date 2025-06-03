@@ -1,9 +1,27 @@
-use super::*;
+//! Colour datastructures.
 
 
-/// A 32-bit ARGB colour for text.
+use serde::{
+    Serialize as Ser,
+    Serializer as Serer
+};
+
+
+/// A 24-bit RGB colour.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct TextARGBColour {
+pub struct Rgb {
+    /// Red lane.
+    pub r : u8,
+    /// Green lane.
+    pub g : u8,
+    /// Blue lane.
+    pub b : u8
+}
+
+
+/// A 32-bit ARGB colour.
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct Argb {
     /// Alpha lane.
     pub a : u8,
     /// Red lane.
@@ -14,7 +32,7 @@ pub struct TextARGBColour {
     pub b : u8
 }
 
-impl Ser for TextARGBColour {
+impl Ser for Argb {
     fn serialize<S>(&self, serer : S) -> Result<<S as Serer>::Ok, <S as Serer>::Error>
     where
         S : Serer

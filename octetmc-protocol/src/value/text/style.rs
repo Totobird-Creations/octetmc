@@ -1,4 +1,5 @@
 use super::*;
+use crate::value::rgb::Argb;
 
 
 /// The visual style of a text component.
@@ -8,7 +9,7 @@ pub struct TextStyle<'l> {
     /// The colour of the text.
     #[serde(rename = "color")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub colour    : Option<TextBasicColour>,
+    pub colour    : Option<TextColour>,
 
     /// The font of the text.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -42,7 +43,7 @@ pub struct TextStyle<'l> {
     /// The shadow colour of the text.
     #[serde(rename = "shadow_color")]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub shadow    : Option<TextARGBColour>
+    pub shadow    : Option<Argb>
 
 }
 
