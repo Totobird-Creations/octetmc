@@ -17,9 +17,8 @@ impl PacketDecode for StatusRequestC2SStatusPacket {
     type Output<'l> = StatusRequestC2SStatusPacket;
     type Error<'l>  = IncompleteData;
 
+    #[inline(always)]
     fn decode<'l>(_buf : DecodeBuf<'l>, _head : &mut DecodeBufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>>
-    {
-        Ok(Self)
-    }
+    { Ok(Self) }
 }

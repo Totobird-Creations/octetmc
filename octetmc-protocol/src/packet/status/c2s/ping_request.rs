@@ -22,9 +22,8 @@ impl PacketDecode for PingRequestC2SStatusPacket {
     type Output<'l> = PingRequestC2SStatusPacket;
     type Error<'l>  = IncompleteData;
 
+    #[inline]
     fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>>
-    {
-        Ok(Self { timestamp : buf.read_decode::<u64>(head)? })
-    }
+    { Ok(Self { timestamp : buf.read_decode::<u64>(head)? }) }
 }

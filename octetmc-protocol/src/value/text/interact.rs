@@ -55,7 +55,7 @@ impl<'l> TextInteract<'l> {
     #[inline]
     pub fn to_static_owned(&self) -> TextInteract<'static> {
         TextInteract {
-            insert : self.insert.as_ref().map(|insert| Cow::Owned((&**insert).to_owned())),
+            insert : self.insert.as_ref().map(|insert| Cow::Owned((**insert).to_owned())),
             click  : self.click.as_ref().map(|click| click.to_static_owned()),
             hover  : self.hover.as_ref().map(|hover| hover.to_static_owned()),
         }

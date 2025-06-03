@@ -50,7 +50,7 @@ impl<'l> IntentionC2SHandshakePacket<'l> {
     pub fn to_static_owned(&self) -> IntentionC2SHandshakePacket<'static> {
         IntentionC2SHandshakePacket {
             protocol  : self.protocol,
-            address   : Cow::Owned((&*self.address).to_owned()),
+            address   : Cow::Owned((*self.address).to_owned()),
             port      : self.port,
             intention : self.intention
         }

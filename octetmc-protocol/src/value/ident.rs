@@ -13,7 +13,7 @@ use serde::{
 };
 
 
-const VANILLA_NAMESPACE : &'static str = "minecraft";
+const VANILLA_NAMESPACE : &str = "minecraft";
 
 
 /// https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:Identifier
@@ -85,8 +85,8 @@ impl<'l> Ident<'l> {
     /// Panics if the given namespace or path are invalid.
     #[inline]
     pub fn new_cow(nspace : Cow<'l, str>, path : Cow<'l, str>) -> Self {
-        if (Self::check_nspace(&*nspace).is_err()) { panic!("called `Ident::new_cow` with invalid namespace") }
-        if (Self::check_path(&*path).is_err()) { panic!("called `Ident::new_cow` with invalid path") }
+        if (Self::check_nspace(&nspace).is_err()) { panic!("called `Ident::new_cow` with invalid namespace") }
+        if (Self::check_path(&path).is_err()) { panic!("called `Ident::new_cow` with invalid path") }
         unsafe { Self::new_cow_unchecked(nspace, path) }
     }
 
@@ -96,22 +96,22 @@ impl<'l> Ident<'l> {
     /// Panics if the given path is invalid.
     #[inline]
     pub fn new_vanilla_cow(path : Cow<'l, str>) -> Self {
-        if (Self::check_path(&*path).is_err()) { panic!("called `Ident::new_cow` with invalid path") }
+        if (Self::check_path(&path).is_err()) { panic!("called `Ident::new_cow` with invalid path") }
         unsafe { Self::new_cow_unchecked(Cow::Borrowed(VANILLA_NAMESPACE), path) }
     }
 
     /// Create a new `Ident` from a namespace and path.
     #[inline]
     pub fn new_cow_checked(nspace : Cow<'l, str>, path : Cow<'l, str>) -> Result<Self, IdentDecodeError> {
-        if let Err(err) = Self::check_nspace(&*nspace) { return Err(err); }
-        if let Err(err) = Self::check_path(&*path) { return Err(err); }
+        Self::check_nspace(&nspace)?;
+        Self::check_path(&path)?;
         Ok(unsafe { Self::new_cow_unchecked(nspace, path) })
     }
 
     /// Create a new `Ident` from the vanilla namespace and a path.
     #[inline]
     pub fn new_vanilla_cow_checked(path : Cow<'l, str>) -> Result<Self, IdentDecodeError> {
-        if let Err(err) = Self::check_path(&*path) { return Err(err); }
+        Self::check_path(&path)?;
         Ok(unsafe { Self::new_cow_unchecked(Cow::Borrowed(VANILLA_NAMESPACE), path) })
     }
 
@@ -195,8 +195,8 @@ impl Ident<'static> {
     /// ### Panics
     /// Panics if the given namespace or path are invalid.
     pub fn new_owned(nspace : String, path : String) -> Self {
-        if (Self::check_nspace(&*nspace).is_err()) { panic!("called `Ident::new_cow` with invalid namespace") }
-        if (Self::check_path(&*path).is_err()) { panic!("called `Ident::new_cow` with invalid path") }
+        if (Self::check_nspace(&nspace).is_err()) { panic!("called `Ident::new_cow` with invalid namespace") }
+        if (Self::check_path(&path).is_err()) { panic!("called `Ident::new_cow` with invalid path") }
         unsafe { Self::new_owned_unchecked(nspace, path) }
     }
 
@@ -205,20 +205,20 @@ impl Ident<'static> {
     /// ### Panics
     /// Panics if the given path is invalid.
     pub fn new_vanilla_owned(path : String) -> Self {
-        if (Self::check_path(&*path).is_err()) { panic!("called `Ident::new_cow` with invalid path") }
+        if (Self::check_path(&path).is_err()) { panic!("called `Ident::new_cow` with invalid path") }
         unsafe { Self::new_cow_unchecked(Cow::Borrowed(VANILLA_NAMESPACE), Cow::Owned(path)) }
     }
 
     /// Create a new `Ident` from a namespace and path.
     pub fn new_owned_checked(nspace : String, path : String) -> Result<Self, IdentDecodeError> {
-        if let Err(err) = Self::check_nspace(&*nspace) { return Err(err); }
-        if let Err(err) = Self::check_path(&*path) { return Err(err); }
+        Self::check_nspace(&nspace)?;
+        Self::check_path(&path)?;
         Ok(unsafe { Self::new_owned_unchecked(nspace, path) })
     }
 
     /// Create a new `Ident` from the vanilla namespace and a path.
     pub fn new_vanilla_owned_checked(path : String) -> Result<Self, IdentDecodeError> {
-        if let Err(err) = Self::check_path(&*path) { return Err(err); }
+        Self::check_path(&path)?;
         Ok(unsafe { Self::new_cow_unchecked(Cow::Borrowed(VANILLA_NAMESPACE), Cow::Owned(path)) })
     }
 
@@ -256,7 +256,7 @@ impl<'l> Ident<'l> {
     ///  Returns the newly created `Ident<'static>`.
     #[inline]
     pub fn to_static_owned(&self) -> Ident<'static> {
-        Ident { nspace : Cow::Owned((&*self.nspace).to_owned()), path : Cow::Owned((&*self.path).to_owned()) }
+        Ident { nspace : Cow::Owned((*self.nspace).to_owned()), path : Cow::Owned((*self.path).to_owned()) }
     }
 
     /// Returns the inner parts of this `Ident`.

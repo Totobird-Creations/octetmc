@@ -62,18 +62,18 @@ impl<'l> TextClickEvent<'l> {
         Self::OpenURL        { url }     => TextClickEvent::OpenURL        { url     : Cow::Owned(url.into_owned()) },
         Self::RunCommand     { command } => TextClickEvent::RunCommand     { command : Cow::Owned(command.into_owned()) },
         Self::SuggestCommand { command } => TextClickEvent::SuggestCommand { command : Cow::Owned(command.into_owned()) },
-        Self::SetBookPage    { page }    => TextClickEvent::SetBookPage    { page    : page },
+        Self::SetBookPage    { page }    => TextClickEvent::SetBookPage    { page },
         Self::SetClipboard   { value }   => TextClickEvent::SetClipboard   { value   : Cow::Owned(value.into_owned()) }
     } }
 
     /// Convert the inner parts of this `TextClickEvent` to their owned counterparts.
     ///  Returns the newly created `TextClickEvent<'static>`.
     pub fn to_static_owned(&self) -> TextClickEvent<'static> { match (self) {
-        Self::OpenURL        { url }     => TextClickEvent::OpenURL        { url     : Cow::Owned((&**url).to_owned()) },
-        Self::RunCommand     { command } => TextClickEvent::RunCommand     { command : Cow::Owned((&**command).to_owned()) },
-        Self::SuggestCommand { command } => TextClickEvent::SuggestCommand { command : Cow::Owned((&**command).to_owned()) },
+        Self::OpenURL        { url }     => TextClickEvent::OpenURL        { url     : Cow::Owned((**url).to_owned()) },
+        Self::RunCommand     { command } => TextClickEvent::RunCommand     { command : Cow::Owned((**command).to_owned()) },
+        Self::SuggestCommand { command } => TextClickEvent::SuggestCommand { command : Cow::Owned((**command).to_owned()) },
         Self::SetBookPage    { page }    => TextClickEvent::SetBookPage    { page    : *page },
-        Self::SetClipboard   { value }   => TextClickEvent::SetClipboard   { value   : Cow::Owned((&**value).to_owned()) }
+        Self::SetClipboard   { value }   => TextClickEvent::SetClipboard   { value   : Cow::Owned((**value).to_owned()) }
     } }
 
 }

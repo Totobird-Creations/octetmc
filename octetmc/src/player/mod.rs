@@ -1,10 +1,13 @@
 //! Player information and operations.
 
 
-use crate::conn::event::ConnPeerEvent;
+use crate::conn;
+use crate::conn::out_message::ConnPeerOutMessage;
+use crate::conn::in_message::ConnPeerInMessage;
 use crate::util::CratePrivateNew;
 use crate::util::macros::deref_single;
 use octetmc_protocol::value::profile::PlayerProfile;
+use octetmc_protocol::value::client_info::ClientInfo;
 use core::ops::Deref;
 use bevy_app::{ Plugin, App, Update };
 use bevy_ecs::entity::Entity;
@@ -16,12 +19,42 @@ use smol::channel;
 
 pub mod login;
 
+pub mod info;
+
 
 /// A player connected to the server.
 #[derive(Component)]
 pub struct Player {
-    pub(crate) profile     : PlayerProfile<'static>,
-    pub(crate) conn_sender : channel::Sender<ConnPeerEvent>
+
+    conn_out_sender  : channel::Sender<ConnPeerOutMessage>,
+    conn_in_receiver : channel::Receiver<ConnPeerInMessage>,
+
+    profile          : PlayerProfile<'static>,
+    info             : Option<ClientInfo<'static>>,
+    brand            : Option<String>
+
+}
+
+impl Player {
+
+    #[inline(always)]
+    pub(crate) fn new(
+        conn_out_sender  : channel::Sender<ConnPeerOutMessage>,
+        conn_in_receiver : channel::Receiver<ConnPeerInMessage>,
+        profile          : PlayerProfile<'static>
+    ) -> Self { Self {
+        conn_out_sender,
+        conn_in_receiver,
+        profile,
+        info             : None,
+        brand            : None
+    } }
+
+    #[inline]
+    pub(crate) fn try_read_in_message(&self) -> Result<ConnPeerInMessage, channel::TryRecvError> {
+        self.conn_in_receiver.try_recv()
+    }
+
 }
 
 impl Player {
@@ -29,6 +62,22 @@ impl Player {
     /// Returns the player's profile.
     #[inline]
     pub fn profile(&self) -> &PlayerProfile { &self.profile }
+
+
+    /// Returns the player's client info, if available.
+    #[inline]
+    pub fn info(&self) -> Option<&ClientInfo<'_>> { self.info.as_ref() }
+
+    #[inline]
+    pub(crate) fn set_info(&mut self, info : ClientInfo<'static>) { self.info = Some(info); }
+
+
+    /// Returns the player's client brand, if available.
+    #[inline]
+    pub fn brand(&self) -> Option<&str> { self.brand.as_deref() }
+
+    #[inline]
+    pub(crate) fn set_brand(&mut self, brand : String) { self.brand = Some(brand); }
 
 }
 
@@ -87,7 +136,10 @@ impl Plugin for OctetPlayerPlugin {
     fn build(&self, app : &mut App) {
         app .add_event::<login::PlayerLoginEvent>()
             .add_event::<login::KickPlayer>()
-            .add_systems(Update, tick_player_conns);
+            .add_event::<info::PlayerInfoUpdated>()
+            .add_event::<info::PlayerChannelDataReceived>()
+            .add_systems(Update, tick_player_conns)
+            .add_systems(Update, conn::in_message::handle_in_messages);
         if (self.track_player_count) {
             app.insert_resource(PlayerCount(0));
         }
@@ -102,7 +154,7 @@ fn tick_player_conns(
         q_players : Query<(Entity, &Player,)>
 ) {
     for (entity, player,) in &q_players {
-        if (player.conn_sender.force_send(ConnPeerEvent::Tick).is_err()) {
+        if (player.conn_out_sender.force_send(ConnPeerOutMessage::Tick).is_err()) {
             cmds.entity(entity).despawn();
         }
     }

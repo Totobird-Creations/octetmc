@@ -24,18 +24,17 @@ impl ConnPeerComms {
     pub(crate) fn try_read_packet<P>(&mut self) -> ConnPeerResult<Option<P::Output<'_>>>
     where
         P : PacketPrefixedDecode
-    { self.try_read_packet_inner::<P, _, _>(|bytes| Self::decode_packet::<P>(bytes)) }
+    { self.try_read_packet_inner(|bytes| Self::decode_packet::<P>(bytes)) }
 
     #[expect(unused)]
     #[inline]
     pub(crate) fn try_read_packet_boxed<P>(&mut self) -> ConnPeerResult<Option<ReadPacketBoxed<P>>>
     where
         P : PacketPrefixedDecode
-    { self.try_read_packet_inner::<P, _, _>(|bytes| Self::decode_packet_boxed::<P>(bytes)) }
+    { self.try_read_packet_inner(|bytes| Self::decode_packet_boxed::<P>(bytes)) }
 
-    fn try_read_packet_inner<'l, P, F, T>(&'l mut self, f : F) -> ConnPeerResult<Option<T>>
+    fn try_read_packet_inner<'l, F, T>(&'l mut self, f : F) -> ConnPeerResult<Option<T>>
     where
-        P : PacketPrefixedDecode,
         F : FnOnce(&'l [u8]) -> ConnPeerResult<T>
     {
         let Some((total_len, _,)) = self.try_read_packet_len()?
@@ -51,17 +50,16 @@ impl ConnPeerComms {
     pub(crate) async fn read_packet<P>(&mut self) -> ConnPeerResult<P::Output<'_>>
     where
         P : PacketPrefixedDecode
-    { self.read_packet_inner::<P, _, _>(|bytes| Self::decode_packet::<P>(bytes)).await }
+    { self.read_packet_inner(|bytes| Self::decode_packet::<P>(bytes)).await }
 
     #[inline]
     pub(crate) async fn read_packet_boxed<P>(&mut self) -> ConnPeerResult<ReadPacketBoxed<P>>
     where
         P : PacketPrefixedDecode
-    { self.read_packet_inner::<P, _, _>(|bytes| Self::decode_packet_boxed::<P>(bytes)).await }
+    { self.read_packet_inner(|bytes| Self::decode_packet_boxed::<P>(bytes)).await }
 
-    async fn read_packet_inner<'l, P, F, T>(&'l mut self, f : F) -> ConnPeerResult<T>
+    async fn read_packet_inner<'l, F, T>(&'l mut self, f : F) -> ConnPeerResult<T>
     where
-        P : PacketPrefixedDecode,
         F : FnOnce(&'l [u8]) -> ConnPeerResult<T>
     {
         let (total_len, _,) = self.read_packet_len().await?;
@@ -73,17 +71,16 @@ impl ConnPeerComms {
     pub(crate) async fn read_packet_timeout<P>(&mut self, dur : Duration) -> ConnPeerResult<P::Output<'_>>
     where
         P : PacketPrefixedDecode
-    { Self::read_packet_timeout_inner::<P, _, _>(dur, self.read_packet::<P>()).await }
+    { Self::read_packet_timeout_inner(dur, self.read_packet::<P>()).await }
 
     #[inline]
     pub(crate) async fn read_packet_boxed_timeout<P>(&mut self, dur : Duration) -> ConnPeerResult<ReadPacketBoxed<P>>
     where
         P : PacketPrefixedDecode
-    { Self::read_packet_timeout_inner::<P, _, _>(dur, self.read_packet_boxed::<P>()).await }
+    { Self::read_packet_timeout_inner(dur, self.read_packet_boxed::<P>()).await }
 
-    async fn read_packet_timeout_inner<P, F, T>(dur : Duration, f : F) -> ConnPeerResult<T>
+    async fn read_packet_timeout_inner<F, T>(dur : Duration, f : F) -> ConnPeerResult<T>
     where
-        P : PacketPrefixedDecode,
         F : Future<Output = ConnPeerResult<T>>
     { match (timeout(dur, f).await) {
         Ok(Ok(out))  => Ok(out),

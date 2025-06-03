@@ -31,7 +31,7 @@ where
     /// The returned slice may be shorter than the given buffer.
     #[inline(always)]
     pub fn encode_as_slice<'l>(&self, buf : &'l mut <V as VarIntType>::Buf) -> &'l mut [u8] {
-        <V as VarIntType>::encode(&self, buf)
+        <V as VarIntType>::encode(self, buf)
     }
 
 }
@@ -156,6 +156,9 @@ macro_rules! var_int_type_remap_impl { ( $ty:ty => $from:ty $(,)? ) => {
 /// A `VarInt`-compatible type.
 ///
 /// `u32`, `i32`, `u64`, and `i64` are compatible.
+///
+/// ### Safety
+/// `Buf` must be `[u8; Self::MAX_BYTES]`.
 pub unsafe trait VarIntType : Sized {
 
     /// The maximum number of bytes that a `VarInt` of this type can use.

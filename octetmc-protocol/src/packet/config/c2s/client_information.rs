@@ -43,9 +43,8 @@ impl PacketDecode for ClientInformationC2SConfigPacket<'_> {
     type Output<'l> = ClientInformationC2SConfigPacket<'l>;
     type Error<'l>  = ClientInfoDecodeError;
 
+    #[inline]
     fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>>
-    {
-        Ok(Self::Output { info : buf.read_decode::<ClientInfo>(head)? })
-    }
+    { Ok(Self::Output { info : buf.read_decode::<ClientInfo>(head)? }) }
 }

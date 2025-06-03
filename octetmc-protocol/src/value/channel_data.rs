@@ -54,11 +54,11 @@ impl<'l> ChannelData<'l> {
     #[inline]
     pub fn to_static_owned(&self) -> ChannelData<'static> { match (self) {
         Self::Brand { brand } => ChannelData::Brand {
-            brand : Cow::Owned((&**brand).to_owned())
+            brand : Cow::Owned((**brand).to_owned())
         },
         Self::Custom { channel, data } => ChannelData::Custom {
             channel : channel.to_static_owned(),
-            data    : Cow::Owned((&**data).to_owned())
+            data    : Cow::Owned((**data).to_owned())
         },
     } }
 

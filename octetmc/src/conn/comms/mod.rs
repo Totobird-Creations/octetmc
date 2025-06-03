@@ -1,6 +1,7 @@
 use super::error::{ ConnPeerResult, ConnPeerError };
 use super::state::{ ConnPeerState, ConfigPlay };
-use super::event::ConnPeerEvent;
+use super::out_message::ConnPeerOutMessage;
+use super::in_message::ConnPeerInMessage;
 use octetmc_protocol::value::text::{ Text, TextComponent, TextContent, TextStyle, TextInteract };
 use core::net::SocketAddr;
 use core::hint::unreachable_unchecked;
@@ -43,8 +44,10 @@ pub(super) struct ConnPeerComms {
     compress_threshold : Option<usize>,
     crypters           : Option<ConnPeerCrypters>,
     state              : ConnPeerState,
-    conn_sender        : Option<channel::Sender<ConnPeerEvent>>,
-    conn_receiver      : channel::Receiver<ConnPeerEvent>
+    conn_out_sender    : Option<channel::Sender<ConnPeerOutMessage>>,
+    conn_out_receiver  : channel::Receiver<ConnPeerOutMessage>,
+    conn_in_sender     : channel::Sender<ConnPeerInMessage>,
+    conn_in_receiver   : Option<channel::Receiver<ConnPeerInMessage>>
 }
 
 pub(super) struct ConnPeerCrypters {
@@ -58,7 +61,8 @@ impl ConnPeerComms {
 
     #[inline]
     pub(super) fn new(stream : TcpStream, addr : SocketAddr) -> Self {
-        let (conn_sender, conn_receiver,) = channel::unbounded();
+        let (conn_out_sender, conn_out_receiver,) = channel::unbounded();
+        let (conn_in_sender,  conn_in_receiver,)  = channel::unbounded();
         stream.set_nodelay(true).unwrap();
         Self { stream, addr,
             read_queue         : VecDeque::with_capacity(MAX_READ_QUEUE_SIZE),
@@ -68,8 +72,10 @@ impl ConnPeerComms {
             compress_threshold : None,
             crypters           : None,
             state              : ConnPeerState::Handshake,
-            conn_sender        : Some(conn_sender),
-            conn_receiver
+            conn_out_sender    : Some(conn_out_sender),
+            conn_out_receiver,
+            conn_in_sender,
+            conn_in_receiver   : Some(conn_in_receiver)
         }
     }
 
@@ -100,16 +106,25 @@ impl ConnPeerComms {
     }
 
     #[inline]
-    pub(super) unsafe fn take_conn_sender_unchecked(&mut self) -> channel::Sender<ConnPeerEvent> {
-        unsafe { self.conn_sender.take().unwrap_unchecked() }
-    }
+    pub(super) unsafe fn take_mainloop_conn_channels_unchecked(&mut self)
+        -> (channel::Sender<ConnPeerOutMessage>, channel::Receiver<ConnPeerInMessage>,)
+    { unsafe { (
+        self.conn_out_sender.take().unwrap_unchecked(),
+        self.conn_in_receiver.take().unwrap_unchecked()
+    ) } }
 
     #[inline]
-    pub(super) fn try_read_event(&self) -> ConnPeerResult<Option<ConnPeerEvent>> {
-        match (self.conn_receiver.try_recv()) {
+    pub(super) fn try_read_out_message(&self) -> ConnPeerResult<Option<ConnPeerOutMessage>> {
+        match (self.conn_out_receiver.try_recv()) {
             Ok(event)                          => Ok(Some(event)),
             Err(channel::TryRecvError::Empty)  => Ok(None),
             Err(channel::TryRecvError::Closed) => Err(ConnPeerError::Kicked(GENERIC_KICK_MESSAGE))
         }
     }
+
+    #[inline]
+    pub(super) async fn send_in_message(&self, message : ConnPeerInMessage)
+        -> Result<(), channel::SendError<ConnPeerInMessage>>
+    { self.conn_in_sender.send(message).await }
+
 }

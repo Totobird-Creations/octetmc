@@ -36,7 +36,7 @@ impl KeyC2SLoginPacket<'_> {
     ///  Returns the newly created `KeyC2SLoginPacket<'static>`.
     #[inline]
     pub fn to_static_owned(&self) -> KeyC2SLoginPacket<'static> {
-        KeyC2SLoginPacket { secret_key : Cow::Owned((&*self.secret_key).to_owned()), verify_token : Cow::Owned((&*self.verify_token).to_owned()) }
+        KeyC2SLoginPacket { secret_key : Cow::Owned((*self.secret_key).to_owned()), verify_token : Cow::Owned((*self.verify_token).to_owned()) }
     }
 
 }

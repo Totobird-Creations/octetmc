@@ -26,7 +26,7 @@ mod status;
 mod login;
 
 mod config_play;
-pub(crate) use config_play::event;
+pub(crate) use config_play::{ out_message, in_message };
 
 
 /// Enables the connection listener and client manager on install.
@@ -125,12 +125,12 @@ async fn run_peer(
     match (handshake::wait_for_intention(&mut comms).await?) {
         handshake::Intention::Status => status::handle_requests(&mut comms).await,
         handshake::Intention::Login  => {
-            login::handle_login_process(
+            let player_id = login::handle_login_process(
                 &mut comms,
                 compress_threshold,
                 mojauth_enabled
             ).await?;
-            config_play::handle_config_play(&mut comms).await
+            config_play::handle_config_play(player_id, &mut comms).await
         }
     }
 }

@@ -20,11 +20,13 @@ impl PacketEncode for PongResponseS2CStatusPacket {
 
     const PREFIX : u8 = 0x01;
 
+    #[inline(always)]
     fn predict_size(&self) -> usize {
         size_of::<u64>()
     }
 
+    #[inline]
     fn encode(&self, buf : &mut EncodeBuf) {
-        buf.encode_write(&self.timestamp);
+        buf.encode_write(self.timestamp);
     }
 }

@@ -36,9 +36,7 @@ impl PacketPartDecode for bool {
     #[inline]
     fn decode<'l>(buf : DecodeBuf<'l>, head : &mut DecodeBufHead)
         -> Result<Self::Output<'l>, Self::Error<'l>>
-    {
-        Ok(buf.read(head)? != 0)
-    }
+    { Ok(buf.read(head)? != 0) }
 
 }
 

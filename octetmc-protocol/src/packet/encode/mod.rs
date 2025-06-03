@@ -154,6 +154,10 @@ impl EncodeBuf<'_> {
     #[inline]
     pub fn len(&self) -> usize { self.buf.len() }
 
+    /// Returns `true` if this buffer contains no bytes.
+    #[inline]
+    pub fn is_empty(&self) -> bool { self.buf.is_empty() }
+
     /// Return the number of bytes that this buffer has the space for without reallocating.
     #[inline]
     pub fn capacity(&self) -> usize { self.buf.capacity() }
@@ -168,7 +172,7 @@ impl EncodeBuf<'_> {
 
     /// Return a slice of the bytes written to this buffer.
     #[inline]
-    pub fn as_bytes(&self) -> &[u8] { &self.buf }
+    pub fn as_bytes(&self) -> &[u8] { self.buf }
 
     /// Write a single byte to this buffer.
     #[inline]
