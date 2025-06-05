@@ -164,7 +164,7 @@ impl PacketEncode for LoginS2CPlayPacket<'_> {
         self.entity_id.predict_size()
         + 1
         + VarInt::<u32>::MAX_BYTES
-        + (VarInt::<u32>::MAX_BYTES * self.dimensions.len())
+        + self.dimensions.iter().map(|dimension| dimension.predict_size()).sum::<usize>()
         + VarInt::<u32>::MAX_BYTES
         + VarInt::<u32>::MAX_BYTES
         + VarInt::<u32>::MAX_BYTES

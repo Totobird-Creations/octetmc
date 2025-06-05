@@ -2,7 +2,7 @@ use super::error::{ ConnPeerResult, ConnPeerError };
 use super::state::{ ConnPeerState, ConfigPlay };
 use super::comms::ConnPeerComms;
 use crate::player::{ Player, PlayerId };
-use crate::player::login::PlayerLoginEvent;
+use crate::player::login::PlayerLoggingInEvent;
 use crate::util::future::timeout;
 use crate::util::CratePrivateNew;
 use octetmc_protocol::value::profile::{ PlayerProfile, PlayerProfileSkin };
@@ -184,7 +184,7 @@ pub(super) async fn handle_login_process(
     let (conn_out_sender, conn_in_receiver,) = unsafe { comms.take_mainloop_conn_channels_unchecked() };
     // Add a player to the ECS world.
     let player = AsyncWorld.spawn_bundle(Player::new(conn_out_sender, conn_in_receiver, profile));
-    _ = AsyncWorld.send_event(PlayerLoginEvent { player_id : PlayerId::from(player.id()) });
+    _ = AsyncWorld.send_event(PlayerLoggingInEvent { player_id : PlayerId::from(player.id()) });
 
     // Continue to config_play.
     Ok(PlayerId::crate_private_new(player.id()))

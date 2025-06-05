@@ -1,47 +1,11 @@
-//! Player login request events.
-
-
-use super::{ Player, PlayerId };
+use super::{ PlayerLoggingInEvent, KickPlayer };
+use crate::player::{ Player, PlayerId };
 use octetmc_protocol::value::text::{ Text, TextComponent, TextContent, TextStyle, TextInteract };
 use std::borrow::Cow;
 use bevy_app::{ App, Plugin, Update };
 use bevy_ecs::entity::Entity;
 use bevy_ecs::system::Query;
-use bevy_ecs::event::{ Event, EventReader, EventWriter };
-
-
-/// A player logged in.
-#[derive(Event)]
-pub struct PlayerLoginEvent {
-
-    /// The [`Entity`] ID of the [`Player`] who joined.
-    pub player_id : PlayerId
-
-}
-
-
-/// Kick a player from the server.
-#[derive(Event)]
-pub struct KickPlayer {
-
-    /// The [`Entity`] ID of the [`Player`] to kick.
-    pub player_id : PlayerId,
-
-    /// The message to display to the client.
-    pub reason    : Text<'static, 'static>
-
-}
-
-
-/// Bevy [`Plugin`] which automatically logs players in.
-#[derive(Default)]
-pub struct PlayerAutoLoginPlugin;
-
-impl Plugin for PlayerAutoLoginPlugin {
-    fn build(&self, app : &mut App) {
-        todo!()
-    }
-}
+use bevy_ecs::event::{ EventReader, EventWriter };
 
 
 /// Bevy [`Plugin`] which kicks duplicate players.
@@ -69,7 +33,7 @@ const DEFAULT_DUPE_KICK_MESSAGE : Text<'_, '_> = Text { components : Cow::Borrow
 ]) };
 
 fn kick_dupe_players(
-    mut er_login  : EventReader<PlayerLoginEvent>,
+    mut er_login  : EventReader<PlayerLoggingInEvent>,
     mut ew_kick   : EventWriter<KickPlayer>,
         q_players : Query<(Entity, &Player,)>
 ) {
