@@ -19,7 +19,7 @@ pub mod finish_configuration;
 
 // TODO: reset_chat
 
-// TODO: registry_data
+pub mod registry_data;
 
 // TODO: resource_pack_pop
 
@@ -43,8 +43,10 @@ pub mod finish_configuration;
 packet_encode_group!{
     type State = StateConfig;
     /// `S2CConfig`-type packets.
-    pub enum S2CConfigPackets {
+    pub enum S2CConfigPackets<'l> {
         /// `FinishConfigurationS2CConfigPacket`
-        FinishConfiguration(finish_configuration::FinishConfigurationS2CConfigPacket)
+        FinishConfiguration(finish_configuration::FinishConfigurationS2CConfigPacket),
+        /// `RegistryDataS2CConfigPacket`
+        RegistryData(registry_data::RegistryDataS2CConfigPacket<'l>)
     }
 }

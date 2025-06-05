@@ -76,6 +76,57 @@ pub struct Biome<'l> {
 
 }
 
+impl Biome<'_> {
+
+    /// Minimal biome with as few effects as possible.
+    pub const MINIMAL : Biome<'static> = Biome {
+        id                    : Ident::new("octetmc", "empty"),
+        has_precipitation     : false,
+        termperature          : 0.5,
+        temperature_modifier  : BiomeTemperatureModifier::None,
+        downfall              : 0.5,
+        fog_colour            : Rgb { r : 192, g : 216, b : 255 },
+        water_colour          : Rgb { r :  63, g : 118, b : 228 },
+        water_fog_colour      : Rgb { r :   5, g :   5, b :  51 },
+        sky_colour            : Rgb { r : 123, g : 164, b : 255 },
+        foliage_colour        : None,
+        grass_colour          : None,
+        grass_colour_modifier : BiomeGrassColourModifier::None,
+        particle              : None,
+        ambient_sound         : None,
+        mood_sound            : None,
+        additions_sound       : None,
+        music                 : None
+    };
+
+    /// Vanilla `minecraft:the_void` biome.
+    pub const THE_VOID : Biome<'static> = Biome {
+        id                    : Ident::new_vanilla("the_void"),
+        has_precipitation     : false,
+        termperature          : 0.5,
+        temperature_modifier  : BiomeTemperatureModifier::None,
+        downfall              : 0.5,
+        fog_colour            : Rgb { r : 192, g : 216, b : 255 },
+        water_colour          : Rgb { r :  63, g : 118, b : 228 },
+        water_fog_colour      : Rgb { r :   5, g :   5, b :  51 },
+        sky_colour            : Rgb { r : 123, g : 164, b : 255 },
+        foliage_colour        : None,
+        grass_colour          : None,
+        grass_colour_modifier : BiomeGrassColourModifier::None,
+        particle              : None,
+        ambient_sound         : None,
+        mood_sound            : Some(BiomeMoodSound {
+            sound               : Ident::new_vanilla("ambient.cave"),
+            tick_delay          : 6000,
+            block_search_extent : 8,
+            offset              : 2.0
+        }),
+        additions_sound       : None,
+        music                 : None
+    };
+
+}
+
 
 /// Modifier that affects the resulting temperature.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]

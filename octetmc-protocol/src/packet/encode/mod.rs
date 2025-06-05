@@ -189,6 +189,13 @@ impl EncodeBuf<'_> {
         self.buf.extend_from_slice(bytes.as_ref());
     }
 
+    /// Write a iterator over bytes to this buffer.
+    #[inline]
+    pub fn write_iter<I>(&mut self, iter : I)
+    where
+        I : IntoIterator<Item = u8>
+    { self.buf.extend(iter); }
+
     /// Encode and write a packet part to this buffer.
     #[inline(always)]
     pub fn encode_write<T>(&mut self, packet : T)

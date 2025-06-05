@@ -4,10 +4,14 @@
 use crate::conn;
 use crate::conn::out_message::ConnPeerOutMessage;
 use crate::conn::in_message::ConnPeerInMessage;
+use crate::world::dimension::Dimension;
 use crate::util::CratePrivateNew;
 use crate::util::macros::deref_single;
+use octetmc_protocol::value::ident::Ident;
+use octetmc_protocol::value::game_mode::GameMode;
 use octetmc_protocol::value::profile::PlayerProfile;
 use octetmc_protocol::value::client_info::ClientInfo;
+use octetmc_protocol::packet::config::s2c::registry_data::RegistryEntry;
 use core::ops::Deref;
 use bevy_app::{ Plugin, App, Update };
 use bevy_ecs::entity::Entity;
@@ -81,6 +85,35 @@ impl Player {
 
 }
 
+impl Player {
+
+    /// Overwrites a player's registry.
+    pub fn set_registry(&self, id : Ident<'static>, entries : Vec<RegistryEntry<'static>>) {
+        self.conn_out_sender.force_send(ConnPeerOutMessage::SetRegistry { id, entries }); // TODO: Handle error
+    }
+
+    /// Logs the player in. This can be called **once** per player.
+    ///
+    /// ### Panics
+    /// Panics if called a second time on the same player.
+    pub fn login(&self,
+        is_hardcore        : bool,
+        dimension          : Dimension<'static>,
+        reduced_debug_info : bool,
+        respawn_screens    : bool,
+        game_mode          : GameMode
+    ) {
+        self.conn_out_sender.force_send(ConnPeerOutMessage::Login {
+            is_hardcore,
+            dimension,
+            reduced_debug_info,
+            respawn_screens,
+            game_mode
+        }); // TODO: Handle error
+    }
+
+}
+
 
 /// The current number of players connected to the server.
 ///
@@ -134,7 +167,7 @@ impl Default for OctetPlayerPlugin {
 
 impl Plugin for OctetPlayerPlugin {
     fn build(&self, app : &mut App) {
-        app .add_event::<login::PlayerLoginEvent>()
+        app .add_event::<login::PlayerLoggingInEvent>()
             .add_event::<login::KickPlayer>()
             .add_event::<info::PlayerInfoUpdated>()
             .add_event::<info::PlayerChannelDataReceived>()
@@ -167,7 +200,7 @@ pub mod prelude {
         Player,
         PlayerId,
         login::{
-            PlayerLoginEvent,
+            PlayerLoggingInEvent,
             KickPlayer
         }
     };

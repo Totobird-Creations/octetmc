@@ -26,10 +26,10 @@ fn main() {
 
 
 fn log_joins(
-    mut er_join   : EventReader<PlayerLoginEvent>,
+    mut er_join   : EventReader<PlayerLoggingInEvent>,
         q_players : Query<(&Player,)>
 ) {
-    for PlayerLoginEvent { player_id } in er_join.read() {
+    for PlayerLoggingInEvent { player_id } in er_join.read() {
         if let Ok((player,)) = q_players.get(**player_id) {
             let profile = player.profile();
             println!("{} ({}) joined", profile.name, profile.uuid);

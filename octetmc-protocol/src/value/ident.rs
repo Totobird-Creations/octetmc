@@ -12,6 +12,8 @@ use serde::{
     Serializer as Serer
 };
 
+use super::varint::VarInt;
+
 
 const VANILLA_NAMESPACE : &str = "minecraft";
 
@@ -379,13 +381,17 @@ impl PacketPartDecode for Ident<'_> {
 impl PacketPartEncode for Ident<'_> {
 
     fn predict_size(&self) -> usize {
-        self.nspace.predict_size() + 1 + self.path.predict_size()
+        VarInt::<u32>::MAX_BYTES
+            + self.nspace.len()
+            + 1
+            + self.path.len()
     }
 
     fn encode(&self, buf : &mut EncodeBuf) {
-        buf.encode_write(&self.nspace);
-        buf.encode_write(":");
-        buf.encode_write(&self.path);
+        buf.encode_write(VarInt::<u32>::from((self.nspace.len() + 1 + self.path.len()) as u32));
+        buf.write_n(self.nspace.as_bytes());
+        buf.write(b':');
+        buf.write_n(self.path.as_bytes());
     }
 
 }

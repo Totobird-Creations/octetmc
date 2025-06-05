@@ -10,6 +10,8 @@ pub mod ident;
 
 pub mod text;
 
+pub mod nbt;
+
 pub mod block_pos;
 
 pub mod rgb;
