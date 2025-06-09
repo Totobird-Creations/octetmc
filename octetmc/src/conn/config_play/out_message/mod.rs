@@ -73,7 +73,6 @@ impl ConnPeerOutMessage {
                 id      : Ident::new_vanilla("dimension_type"),
                 entries : Cow::Borrowed(&[dimension.to_registry_entry()]),
             }).await?;
-            // TODO: worldgen/biome registry
 
             unsafe { config::switch_to_play(player_id, comms) }.await?;
             comms.send_packet(&LoginS2CPlayPacket {

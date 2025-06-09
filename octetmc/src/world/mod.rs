@@ -8,8 +8,6 @@ use bevy_ecs::resource::Resource;
 
 pub mod dimension;
 
-pub mod biome;
-
 
 pub(crate) const DEFAULT_VIEW_DISTANCE : NonZeroU8 = unsafe { NonZeroU8::new_unchecked(8) };
 

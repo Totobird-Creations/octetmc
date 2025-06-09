@@ -15,3 +15,6 @@ pub use wolf_variant::*;
 
 mod damage_type;
 pub use damage_type::*;
+
+mod biome;
+pub use biome::*;

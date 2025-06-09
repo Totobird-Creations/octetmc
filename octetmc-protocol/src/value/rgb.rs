@@ -18,6 +18,24 @@ pub struct Rgb {
     pub b : u8
 }
 
+impl Rgb {
+
+    /// Decodes an integer value to an `Rgb` colour.
+    pub const fn from_u32(v : u32) -> Self { Self {
+        r : ((v >> 16) & 0xff) as u8,
+        g : ((v >> 8) & 0xff) as u8,
+        b : (v & 0xff) as u8
+    } }
+
+    /// Encodes an `Rgb` colour to an integer value.
+    pub const fn to_u32(&self) -> u32 {
+        ((self.r as u32) << 16)
+        | ((self.g as u32) << 8)
+        | (self.b as u32)
+    }
+
+}
+
 
 /// A 32-bit ARGB colour.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]

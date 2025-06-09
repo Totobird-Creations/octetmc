@@ -31,3 +31,39 @@ pub struct ItemSlot<'l> {
     pub remove_components : Cow<'l, [ItemComponentType]>
 
 }
+
+
+impl ItemSlot<'_> {
+
+    /// Convert the inner parts of this `ItemSlot` to their owned counterparts, or
+    ///  take ownership if they are already owned. Returns the newly created
+    ///  `ItemSlot<'static>`.
+    #[inline]
+    pub fn into_static_owned(self) -> ItemSlot<'static> {
+        ItemSlot {
+            count             : self.count,
+            item              : self.item,
+            add_components    : Cow::Owned(match (self.add_components) {
+                Cow::Borrowed(v) => v.iter().map(|v| v.to_static_owned()).collect::<Vec<_>>(),
+                Cow::Owned(v)    => v.into_iter().map(|v| v.into_static_owned()).collect::<Vec<_>>(),
+            }),
+            remove_components : Cow::Owned(match (self.remove_components) {
+                Cow::Borrowed(v) => v.iter().map(|v| *v).collect::<Vec<_>>(),
+                Cow::Owned(v)    => v,
+            })
+        }
+    }
+
+    /// Convert the inner parts of this `ItemSlot` to their owned counterparts.
+    ///  Returns the newly created `ItemSlot<'static>`.
+    #[inline]
+    pub fn to_static_owned(&self) -> ItemSlot<'static> {
+        ItemSlot {
+            count             : self.count,
+            item              : self.item,
+            add_components    : Cow::Owned(self.add_components.iter().map(|v| v.to_static_owned()).collect::<Vec<_>>()),
+            remove_components : Cow::Owned(self.remove_components.iter().map(|v| *v).collect::<Vec<_>>())
+        }
+    }
+
+}

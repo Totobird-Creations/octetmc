@@ -1,7 +1,6 @@
 //! World dimension settings.
 
 
-use super::biome::Biome;
 use octetmc_protocol::packet::config::s2c::registry_data::RegistryEntry;
 use octetmc_protocol::value::ident::Ident;
 use octetmc_protocol::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
@@ -64,10 +63,7 @@ pub struct Dimension<'l> {
     /// The world's sea level.
     ///
     /// Default is 64, unless superflat.
-    pub sea_level       : i32,
-
-    /// Biome types which can appear in this world.
-    pub biomes          : Cow<'l, [Biome<'l>]>
+    pub sea_level       : i32
 
 }
 
@@ -88,8 +84,7 @@ impl Dimension<'_> {
         piglin_safe     : true,
         is_superflat    : true,
         hashed_seed     : 0,
-        sea_level       : 64,
-        biomes          : Cow::Borrowed(const { &[Biome::MINIMAL] })
+        sea_level       : 64
     };
 
     /// Vanilla `minecraft:overworld` world with `minecraft:the_void` biome.
@@ -106,8 +101,7 @@ impl Dimension<'_> {
         piglin_safe     : false,
         is_superflat    : true,
         hashed_seed     : 0,
-        sea_level       : 64,
-        biomes          : Cow::Borrowed(const { &[Biome::THE_VOID] })
+        sea_level       : 64
     };
 
 }

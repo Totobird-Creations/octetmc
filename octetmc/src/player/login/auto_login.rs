@@ -1,7 +1,7 @@
 use super::PlayerLoggingInEvent;
 use crate::player::Player;
 use crate::world::dimension::Dimension;
-use crate::registry::{ SimpleVariant, PaintingVariant, WolfSoundVariant, WolfVariant, DamageType };
+use crate::registry::{ SimpleVariant, PaintingVariant, WolfSoundVariant, WolfVariant, DamageType, Biome };
 use octetmc_protocol::value::ident::Ident;
 use octetmc_protocol::value::game_mode::GameMode;
 use std::borrow::Cow;
@@ -55,7 +55,10 @@ pub struct PlayerAutoLoginPlugin {
     pub wolf_variant_registry       : Cow<'static, [WolfVariant<'static>]>,
 
     /// The default damage type registry.
-    pub damage_type_registry        : Cow<'static, [DamageType<'static>]>
+    pub damage_type_registry        : Cow<'static, [DamageType<'static>]>,
+
+    /// The default biome registry.
+    pub biome_registry              : Cow<'static, [Biome<'static>]>
 
 }
 
@@ -74,7 +77,8 @@ impl Default for PlayerAutoLoginPlugin {
         pig_variant_registry        : Cow::Borrowed(const { &[SimpleVariant::MINIMAL] }),
         wolf_sound_variant_registry : Cow::Borrowed(const { &[WolfSoundVariant::MINIMAL] }),
         wolf_variant_registry       : Cow::Borrowed(const { &[WolfVariant::MINIMAL ] }),
-        damage_type_registry        : Cow::Borrowed(DamageType::VANILLA_DAMAGE_TYPES)
+        damage_type_registry        : Cow::Borrowed(DamageType::VANILLA_DAMAGE_TYPES),
+        biome_registry              : Cow::Borrowed(Biome::VANILLA_BIOMES)
     } }
 }
 
@@ -106,6 +110,7 @@ fn login_players(
             player.set_registry(Ident::new_vanilla("wolf_sound_variant"), plugin.wolf_sound_variant_registry .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
             player.set_registry(Ident::new_vanilla("wolf_variant"),       plugin.wolf_variant_registry       .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
             player.set_registry(Ident::new_vanilla("damage_type"),        plugin.damage_type_registry        .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::new_vanilla("worldgen/biome"),     plugin.biome_registry              .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
             player.login(
                 plugin.is_hardcore,
                 plugin.dimension.clone(),
