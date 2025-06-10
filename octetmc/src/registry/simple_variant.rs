@@ -13,16 +13,6 @@ pub struct SimpleVariant<'l> {
     pub asset_id : Ident<'l>
 }
 
-impl SimpleVariant<'_> {
-
-    /// A simple variant for use in minimal registries.
-    pub const MINIMAL : SimpleVariant<'static> = SimpleVariant {
-        id       : Ident::new("octetmc", "empty"),
-        asset_id : Ident::new("octetmc", "empty")
-    };
-
-}
-
 
 impl SimpleVariant<'_> {
 
@@ -59,7 +49,7 @@ impl SimpleVariant<'_> {
             data : Some(Nbt::from(NbtCompound { entries : Cow::Owned(vec![
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("asset_id"),
-                    value : NbtElement::String(Cow::Owned(self.asset_id.to_string())),
+                    value : NbtElement::String(self.asset_id.to_str()),
                 }
             ]) })),
         }

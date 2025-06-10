@@ -455,7 +455,7 @@ impl Biome<'_> {
             let mut sound_entries = vec![
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("sound_id"),
-                    value : NbtElement::String(Cow::Owned(sound.sound.to_string()))
+                    value : NbtElement::String(sound.sound.to_str())
                 }
             ];
             if let Some(range) = sound.range {
@@ -475,7 +475,7 @@ impl Biome<'_> {
                 value : NbtElement::Compound(NbtCompound { entries : Cow::Owned(vec![
                     NbtCompoundEntry {
                         key   : Cow::Borrowed("sound"),
-                        value : NbtElement::String(Cow::Owned(sound.sound.to_string()))
+                        value : NbtElement::String(sound.sound.to_str())
                     },
                     NbtCompoundEntry {
                         key   : Cow::Borrowed("tick_delay"),
@@ -498,7 +498,7 @@ impl Biome<'_> {
                 value : NbtElement::Compound(NbtCompound { entries : Cow::Owned(vec![
                     NbtCompoundEntry {
                         key   : Cow::Borrowed("sound"),
-                        value : NbtElement::String(Cow::Owned(sound.sound.to_string()))
+                        value : NbtElement::String(sound.sound.to_str())
                     },
                     NbtCompoundEntry {
                         key   : Cow::Borrowed("tick_chance"),
@@ -520,7 +520,7 @@ impl Biome<'_> {
                         value : NbtElement::Compound(NbtCompound { entries : Cow::Owned(vec![
                             NbtCompoundEntry {
                                 key   : Cow::Borrowed("sound"),
-                                value : NbtElement::String(Cow::Owned(entry.sound.to_string()))
+                                value : NbtElement::String(entry.sound.to_str())
                             },
                             NbtCompoundEntry {
                                 key   : Cow::Borrowed("min_delay"),

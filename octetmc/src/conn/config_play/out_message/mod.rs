@@ -70,7 +70,7 @@ impl ConnPeerOutMessage {
             unsafe { play::switch_to_config(player_id, comms) }.await?;
 
             comms.send_packet(&RegistryDataS2CConfigPacket {
-                id      : Ident::new_vanilla("dimension_type"),
+                id      : Ident::vanilla_str("dimension_type"),
                 entries : Cow::Borrowed(&[dimension.to_registry_entry()]),
             }).await?;
 

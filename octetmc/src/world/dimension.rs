@@ -72,7 +72,7 @@ impl Dimension<'_> {
 
     /// Minimal dimension with as few effects as possible.
     pub const MINIMAL : Dimension<'static> = Dimension {
-        id              : Ident::new("octetmc", "empty"),
+        id              : Ident::new_str("octetmc", "empty"),
         fixed_time      : Some(6000),
         has_skylight    : true,
         has_ceiling     : false,
@@ -82,23 +82,6 @@ impl Dimension<'_> {
         effects         : DimensionEffects::Overworld,
         ambient_light   : 0.0,
         piglin_safe     : true,
-        is_superflat    : true,
-        hashed_seed     : 0,
-        sea_level       : 64
-    };
-
-    /// Vanilla `minecraft:overworld` world with `minecraft:the_void` biome.
-    pub const OVERWORLD_THE_VOID : Dimension<'static> = Dimension {
-        id              : Ident::new_vanilla("overworld"),
-        fixed_time      : None,
-        has_skylight    : true,
-        has_ceiling     : false,
-        compass_stable  : true,
-        min_section     : -4,
-        height_sections : unsafe { NonZeroU8::new_unchecked(28) },
-        effects         : DimensionEffects::Overworld,
-        ambient_light   : 0.0,
-        piglin_safe     : false,
         is_superflat    : true,
         hashed_seed     : 0,
         sea_level       : 64

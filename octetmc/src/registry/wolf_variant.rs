@@ -17,18 +17,6 @@ pub struct WolfVariant<'l> {
     pub angry_asset_id : Ident<'l>
 }
 
-impl WolfVariant<'_> {
-
-    /// A wolf variant for use in minimal registries.
-    pub const MINIMAL : WolfVariant<'static> = WolfVariant {
-        id             : Ident::new("octetmc", "empty"),
-        wild_asset_id  : Ident::new("octetmc", "empty"),
-        tame_asset_id  : Ident::new("octetmc", "empty"),
-        angry_asset_id : Ident::new("octetmc", "empty")
-    };
-
-}
-
 
 impl WolfVariant<'_> {
 
@@ -72,15 +60,15 @@ impl WolfVariant<'_> {
                     value : NbtElement::Compound(NbtCompound { entries : Cow::Owned(vec![
                         NbtCompoundEntry {
                             key   : Cow::Borrowed("wild"),
-                            value : NbtElement::String(Cow::Owned(self.wild_asset_id.to_string())),
+                            value : NbtElement::String(self.wild_asset_id.to_str()),
                         },
                         NbtCompoundEntry {
                             key   : Cow::Borrowed("tame"),
-                            value : NbtElement::String(Cow::Owned(self.tame_asset_id.to_string())),
+                            value : NbtElement::String(self.tame_asset_id.to_str()),
                         },
                         NbtCompoundEntry {
                             key   : Cow::Borrowed("angry"),
-                            value : NbtElement::String(Cow::Owned(self.angry_asset_id.to_string())),
+                            value : NbtElement::String(self.angry_asset_id.to_str()),
                         }
                     ]) })
                 }

@@ -77,21 +77,18 @@ pub enum C2SConfigPacketDecodeError {
 
     /// A string contained invalid UTF-8.
     InvalidUtf8,
+    /// The identifier has an empty namespace.
 
-    /// The identifier is missing a colon namespace-path separator.
-    NoSeparator,
+    EmptyNspace,
 
-    /// The identifier has a zero=length namespace.
-    ZeroLengthNamespace,
+    /// The identifier namespace contains an invalid character.
+    BadNspaceChar(char),
 
-    /// The namespace contained invalid characters.
-    InvalidNamespaceChar(char),
+    /// The identifier has an empty path part.s
+    EmptyPathPart,
 
-    /// The path contained invalid characters.
-    InvalidPathChar(char),
-
-    /// The path contained a zero-length part.
-    ZeroLengthPathPart,
+    /// The identifier path contains an invalid character.
+    BadPathChar(char),
 
     /// The client declared a locale longer than 16 bytes.
     LocaleTooLong,
@@ -112,11 +109,10 @@ impl From<C2SConfigPacketDecodeError> for Cow<'static, str> {
         C2SConfigPacketDecodeError::IncompleteData           => IncompleteData.into(),
         C2SConfigPacketDecodeError::VarIntTooLong            => VarIntDecodeError::TooLong.into(),
         C2SConfigPacketDecodeError::InvalidUtf8              => StringDecodeError::InvalidUtf8.into(),
-        C2SConfigPacketDecodeError::NoSeparator              => IdentDecodeError::NoSeparator.into(),
-        C2SConfigPacketDecodeError::ZeroLengthNamespace      => IdentDecodeError::ZeroLengthNamespace.into(),
-        C2SConfigPacketDecodeError::InvalidNamespaceChar(v)  => IdentDecodeError::InvalidNamespaceChar(v).into(),
-        C2SConfigPacketDecodeError::InvalidPathChar(v)       => IdentDecodeError::InvalidPathChar(v).into(),
-        C2SConfigPacketDecodeError::ZeroLengthPathPart       => IdentDecodeError::ZeroLengthPathPart.into(),
+        C2SConfigPacketDecodeError::EmptyNspace              => IdentDecodeError::EmptyNspace.into(),
+        C2SConfigPacketDecodeError::BadNspaceChar(ch)        => IdentDecodeError::BadNspaceChar(ch).into(),
+        C2SConfigPacketDecodeError::EmptyPathPart            => IdentDecodeError::EmptyPathPart.into(),
+        C2SConfigPacketDecodeError::BadPathChar(ch)          => IdentDecodeError::BadPathChar(ch).into(),
         C2SConfigPacketDecodeError::LocaleTooLong            => Cow::Borrowed("locale too long"),
         C2SConfigPacketDecodeError::UnknownChatMode(v)       => C2SConfigPacketDecodeError::UnknownChatMode(v).into(),
         C2SConfigPacketDecodeError::UnknownMainHand(v)       => C2SConfigPacketDecodeError::UnknownMainHand(v).into(),
@@ -126,14 +122,13 @@ impl From<C2SConfigPacketDecodeError> for Cow<'static, str> {
 
 impl From<IdentDecodeError> for C2SConfigPacketDecodeError {
     fn from(value : IdentDecodeError) -> Self { match (value) {
-        IdentDecodeError::IncompleteData          => Self::IncompleteData,
-        IdentDecodeError::VarIntTooLong           => Self::VarIntTooLong,
-        IdentDecodeError::InvalidUtf8             => Self::InvalidUtf8,
-        IdentDecodeError::NoSeparator             => Self::NoSeparator,
-        IdentDecodeError::ZeroLengthNamespace     => Self::ZeroLengthNamespace,
-        IdentDecodeError::InvalidNamespaceChar(v) => Self::InvalidNamespaceChar(v),
-        IdentDecodeError::InvalidPathChar(v)      => Self::InvalidPathChar(v),
-        IdentDecodeError::ZeroLengthPathPart      => Self::ZeroLengthPathPart
+        IdentDecodeError::IncompleteData    => Self::IncompleteData,
+        IdentDecodeError::VarIntTooLong     => Self::VarIntTooLong,
+        IdentDecodeError::InvalidUtf8       => Self::InvalidUtf8,
+        IdentDecodeError::EmptyNspace       => Self::EmptyNspace,
+        IdentDecodeError::BadNspaceChar(ch) => Self::BadNspaceChar(ch),
+        IdentDecodeError::EmptyPathPart     => Self::EmptyPathPart,
+        IdentDecodeError::BadPathChar(ch)   => Self::BadPathChar(ch)
     } }
 }
 

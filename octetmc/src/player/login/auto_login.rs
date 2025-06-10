@@ -101,16 +101,16 @@ fn login_players(
     let plugin = &r_plugin.0;
     for login in er_login.read() {
         if let Ok((player,)) = q_players.get(*login.player_id) {
-            player.set_registry(Ident::new_vanilla("cat_variant"),        plugin.cat_variant_registry        .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
-            player.set_registry(Ident::new_vanilla("chicken_variant"),    plugin.chicken_variant_registry    .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
-            player.set_registry(Ident::new_vanilla("cow_variant"),        plugin.cow_variant_registry        .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
-            player.set_registry(Ident::new_vanilla("frog_variant"),       plugin.frog_variant_registry       .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
-            player.set_registry(Ident::new_vanilla("painting_variant"),   plugin.painting_variant_registry   .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
-            player.set_registry(Ident::new_vanilla("pig_variant"),        plugin.pig_variant_registry        .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
-            player.set_registry(Ident::new_vanilla("wolf_sound_variant"), plugin.wolf_sound_variant_registry .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
-            player.set_registry(Ident::new_vanilla("wolf_variant"),       plugin.wolf_variant_registry       .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
-            player.set_registry(Ident::new_vanilla("damage_type"),        plugin.damage_type_registry        .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
-            player.set_registry(Ident::new_vanilla("worldgen/biome"),     plugin.biome_registry              .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::vanilla_str("cat_variant"),        plugin.cat_variant_registry        .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::vanilla_str("chicken_variant"),    plugin.chicken_variant_registry    .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::vanilla_str("cow_variant"),        plugin.cow_variant_registry        .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::vanilla_str("frog_variant"),       plugin.frog_variant_registry       .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::vanilla_str("painting_variant"),   plugin.painting_variant_registry   .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::vanilla_str("pig_variant"),        plugin.pig_variant_registry        .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::vanilla_str("wolf_sound_variant"), plugin.wolf_sound_variant_registry .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::vanilla_str("wolf_variant"),       plugin.wolf_variant_registry       .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::vanilla_str("damage_type"),        plugin.damage_type_registry        .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
+            player.set_registry(Ident::vanilla_str("worldgen/biome"),     plugin.biome_registry              .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
             player.login(
                 plugin.is_hardcore,
                 plugin.dimension.clone(),

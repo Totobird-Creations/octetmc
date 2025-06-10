@@ -17,18 +17,6 @@ pub struct PaintingVariant<'l> {
     pub height   : u8
 }
 
-impl PaintingVariant<'_> {
-
-    /// A painting variant for use in minimal registries.
-    pub const MINIMAL : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::new("octetmc", "empty"),
-        asset_id : Ident::new("octetmc", "empty"),
-        width    : 1,
-        height   : 1
-    };
-
-}
-
 
 impl PaintingVariant<'_> {
 
@@ -69,7 +57,7 @@ impl PaintingVariant<'_> {
             data : Some(Nbt::from(NbtCompound { entries : Cow::Owned(vec![
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("asset_id"),
-                    value : NbtElement::String(Cow::Owned(self.asset_id.to_string())),
+                    value : NbtElement::String(self.asset_id.to_str()),
                 },
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("width"),

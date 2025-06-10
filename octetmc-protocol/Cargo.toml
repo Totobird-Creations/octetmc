@@ -43,3 +43,6 @@ version  = "1.0"
 features = [ "derive" ]
 [dependencies.serde_json]
 version = "1.0"
+
+[dependencies.const_panic]
+version = "0.2"

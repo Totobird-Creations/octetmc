@@ -23,21 +23,6 @@ pub struct WolfSoundVariant<'l> {
     pub growl_sound   : Ident<'l>
 }
 
-impl WolfSoundVariant<'_> {
-
-    /// A wolf sound variant for use in minimal registries.
-    pub const MINIMAL : WolfSoundVariant<'static> = WolfSoundVariant {
-        id            : Ident::new("octetmc", "empty"),
-        hurt_sound    : Ident::new_vanilla("entity.wolf.hurt"),
-        pant_sound    : Ident::new_vanilla("entity.wolf.pant"),
-        whine_sound   : Ident::new_vanilla("entity.wolf.whine"),
-        ambient_sound : Ident::new_vanilla("entity.wolf.ambient"),
-        death_sound   : Ident::new_vanilla("entity.wolf.death"),
-        growl_sound   : Ident::new_vanilla("entity.wolf.growl"),
-    };
-
-}
-
 
 impl WolfSoundVariant<'_> {
 
@@ -84,27 +69,27 @@ impl WolfSoundVariant<'_> {
             data : Some(Nbt::from(NbtCompound { entries : Cow::Owned(vec![
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("hurt_sound"),
-                    value : NbtElement::String(Cow::Owned(self.hurt_sound.to_string())),
+                    value : NbtElement::String(self.hurt_sound.to_str()),
                 },
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("pant_sound"),
-                    value : NbtElement::String(Cow::Owned(self.pant_sound.to_string())),
+                    value : NbtElement::String(self.pant_sound.to_str()),
                 },
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("whine_sound"),
-                    value : NbtElement::String(Cow::Owned(self.whine_sound.to_string())),
+                    value : NbtElement::String(self.whine_sound.to_str()),
                 },
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("ambient_sound"),
-                    value : NbtElement::String(Cow::Owned(self.ambient_sound.to_string())),
+                    value : NbtElement::String(self.ambient_sound.to_str()),
                 },
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("death_sound"),
-                    value : NbtElement::String(Cow::Owned(self.death_sound.to_string())),
+                    value : NbtElement::String(self.death_sound.to_str()),
                 },
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("growl_sound"),
-                    value : NbtElement::String(Cow::Owned(self.growl_sound.to_string())),
+                    value : NbtElement::String(self.growl_sound.to_str()),
                 }
             ]) })),
         }
