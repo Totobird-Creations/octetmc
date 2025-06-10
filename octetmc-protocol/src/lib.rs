@@ -20,6 +20,8 @@ pub mod value;
 
 pub mod packet;
 
+pub mod registry;
+
 
 /// Game versions that this library currently supports.
 pub const GAME_VERSIONS : &[Version] = &[

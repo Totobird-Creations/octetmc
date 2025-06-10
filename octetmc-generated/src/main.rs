@@ -46,9 +46,10 @@ fn main() { smol::block_on(async {
     // run_datagen(&working_dir, &generated_dir, &server_jar_path).await.unwrap();
 
     println!("Building Rust code...");
-    let target_dir = working_dir.parent().unwrap().parent().unwrap().join("octetmc").join("src").join("generated");
+    let target_dir = working_dir.parent().unwrap().parent().unwrap().join("octetmc-protocol/src/registry/.generated");
 
     generate::data::damage_type(&generated_dir, &target_dir.join("data").join("damage_type.rs")).await;
+    generate::data::dimension_type(&generated_dir, &target_dir.join("data").join("dimension_type.rs")).await;
     generate::data::worldgen::biome(&generated_dir, &target_dir.join("data").join("worldgen").join("biome.rs")).await;
 
 }) }

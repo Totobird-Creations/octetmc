@@ -1,8 +1,8 @@
 //! Registry entry values.
 
 
-mod simple_variant;
-pub use simple_variant::*;
+//mod simple_variant;
+//pub use simple_variant::*;
 
 mod painting_variant;
 pub use painting_variant::*;
@@ -18,3 +18,6 @@ pub use damage_type::*;
 
 mod biome;
 pub use biome::*;
+
+mod dimension_type;
+pub use dimension_type::*;

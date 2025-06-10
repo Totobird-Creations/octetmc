@@ -37,7 +37,7 @@ pub async fn damage_type(generated_dir : &Path, target_file : &Path) {
         write!(target,
 "    /// Vanilla `minecraft:{id}` damage type.
     pub const {ident} : DamageType<'static> = DamageType {{
-        id           : Ident::new_vanilla({id:?}),
+        id           : Ident::vanilla_str({id:?}),
         message_id   : Cow::Borrowed({message_id:?}),
         effects      : DamageEffects::{effects:?},
         message_type : DeathMessageType::{message_type:?}
@@ -47,6 +47,7 @@ pub async fn damage_type(generated_dir : &Path, target_file : &Path) {
         all_idents.push(ident);
     }
 
+    let len = all_idents.len();
     write!(target,
 "    /// All vanilla damage types.
     pub const VANILLA_DAMAGE_TYPES : &'static [DamageType<'static>] = &[\n\

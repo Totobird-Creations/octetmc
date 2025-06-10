@@ -11,7 +11,6 @@ mod validate;
 pub use validate::*;
 
 mod constructor;
-pub use constructor::*;
 
 mod serde_endec;
 pub use serde_endec::*;
@@ -141,21 +140,18 @@ impl<'l> Ident<'l> {
 }
 
 
-// impl Display for Ident<'_> {
-//     fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
-//         match (&self.raw) {
-//             RawIdent::Joined { string, .. }   => write!(f, "{string}"),
-//             RawIdent::Split  { nspace, path } => write!(f, "{nspace}:{path}")
-//         }
-//     }
-// }
+impl Display for Ident<'_> {
+    fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
+        match (&self.raw) {
+            RawIdent::Joined { string, .. }   => write!(f, "{string}"),
+            RawIdent::Split  { nspace, path } => write!(f, "{nspace}:{path}")
+        }
+    }
+}
 
 impl Debug for Ident<'_> {
     #[inline]
-    fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result {
-        // write!(f, "\"{self}\"")
-        todo!()
-    }
+    fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result { write!(f, "\"{self}\"") }
 }
 
 

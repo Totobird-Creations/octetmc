@@ -1,6 +1,5 @@
-use super::{ Ident, RawIdent, IdentValidateError, IdentNspaceValidateError, IdentPathValidateError };
+use super::{ Ident, RawIdent, IdentValidateError, IdentPathValidateError };
 use std::borrow::Cow;
-use const_panic::concat_panic as cpanic;
 
 
 impl<'l> Ident<'l> {

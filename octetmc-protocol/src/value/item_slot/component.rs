@@ -350,6 +350,7 @@ pub enum ItemComponent<'l> {
 }
 
 
+#[expect(unused_variables)]
 impl ItemComponent<'_> {
 
     /// Convert the inner parts of this `ItemComponent` to their owned counterparts, or

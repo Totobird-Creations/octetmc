@@ -1,11 +1,8 @@
-//! World biome settings.
-
-
-use octetmc_protocol::value::ident::Ident;
-use octetmc_protocol::value::rgb::Rgb;
-use octetmc_protocol::value::particle::Particle;
-use octetmc_protocol::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
-use octetmc_protocol::packet::config::s2c::registry_data::RegistryEntry;
+use crate::value::ident::Ident;
+use crate::value::rgb::Rgb;
+use crate::value::particle::Particle;
+use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
+use crate::packet::config::s2c::registry_data::RegistryEntry;
 use std::borrow::Cow;
 
 
@@ -79,7 +76,7 @@ pub struct Biome<'l> {
 
 }
 
-include!("../generated/data/worldgen/biome.rs");
+include!(".generated/data/worldgen/biome.rs");
 
 
 impl Biome<'_> {

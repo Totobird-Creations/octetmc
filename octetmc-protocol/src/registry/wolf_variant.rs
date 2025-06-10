@@ -1,6 +1,6 @@
-use octetmc_protocol::value::ident::Ident;
-use octetmc_protocol::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
-use octetmc_protocol::packet::config::s2c::registry_data::RegistryEntry;
+use crate::value::ident::Ident;
+use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
+use crate::packet::config::s2c::registry_data::RegistryEntry;
 use std::borrow::Cow;
 
 

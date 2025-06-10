@@ -72,13 +72,13 @@ pub async fn biome(generated_dir : &Path, target_file : &Path) {
         } );
         let ambient_sound   = ambient_sound.map_or(Cow::Borrowed("None"), |v| Cow::Owned(format!(
 "Some(BiomeAmbientSound {{
-        sound : Ident::parse({v:?}),
+        sound : Ident::parse_str({v:?}),
         range : None
     }})"
         )));
         let mood_sound      = format!(
 "BiomeMoodSound {{
-        sound               : Ident::parse({mood_sound:?}),
+        sound               : Ident::parse_str({mood_sound:?}),
         tick_delay          : {mood_tick_delay},
         block_search_extent : {mood_block_search_extent},
         offset              : {mood_offset:?}
@@ -86,14 +86,14 @@ pub async fn biome(generated_dir : &Path, target_file : &Path) {
         );
         let additions_sound = additions_sound.map_or(Cow::Borrowed("None"), |BiomeAdditionsSound { sound, tick_chance }| Cow::Owned(format!(
 "Some(BiomeAdditionsSound {{
-        sound       : Ident::parse({sound:?}),
+        sound       : Ident::parse_str({sound:?}),
         tick_chance : {tick_chance:?}
     }})"
         )));
         let music           = music.into_iter().map(|BiomeMusic { weight, data : BiomeMusicData { sound, min_delay, max_delay, replace_current_music } }| format!("
             BiomeMusic {{
                 weight                : {weight},
-                sound                 : Ident::parse({sound:?}),
+                sound                 : Ident::parse_str({sound:?}),
                 min_delay             : {min_delay},
                 max_delay             : {max_delay},
                 replace_current_music : {replace_current_music}
@@ -105,7 +105,7 @@ pub async fn biome(generated_dir : &Path, target_file : &Path) {
         write!(target,
 "    /// Vanilla `minecraft:{id}` damage type.
     pub const {ident} : Biome<'static> = Biome {{
-        id                    : Ident::new_vanilla(\"{id}\"),
+        id                    : Ident::vanilla_str(\"{id}\"),
         has_precipitation     : {has_precipitation},
         temperature           : {temperature:?},
         temperature_modifier  : BiomeTemperatureModifier::{temperature_modifier:?},
@@ -129,6 +129,7 @@ pub async fn biome(generated_dir : &Path, target_file : &Path) {
         all_idents.push(ident);
     }
 
+    let len = all_idents.len();
     write!(target,
 "    /// All vanilla biomes.
     pub const VANILLA_BIOMES : &'static [Biome<'static>] = &[\n\
@@ -146,15 +147,20 @@ pub async fn biome(generated_dir : &Path, target_file : &Path) {
 #[derive(Deser, Debug)]
 #[serde(deny_unknown_fields)]
 struct Biome {
+    #[expect(dead_code)]
     #[serde(deserialize_with = "one_or_many")]
     carvers                    : Vec<String>,
     downfall                   : f32,
     effects                    : BiomeEffects,
+    #[expect(dead_code)]
     features                   : Vec<Vec<String>>,
     has_precipitation          : bool,
+    #[expect(dead_code)]
     spawn_costs                : HashMap<String, BiomeSpawnCost>,
+    #[expect(dead_code)]
     spawners                   : BiomeSpawners,
     temperature                : f32,
+    #[expect(dead_code)]
     creature_spawn_probability : Option<f32>,
     #[serde(default)]
     temperature_modifier       : BiomeTemperatureModifier
@@ -168,6 +174,7 @@ struct BiomeEffects {
     mood_sound            : BiomeMoodSound,
     #[serde(default)]
     music                 : Vec<BiomeMusic>,
+    #[expect(dead_code)]
     music_volume          : f32,
     #[serde(rename = "sky_color")]
     sky_colour            : u32,
@@ -177,6 +184,7 @@ struct BiomeEffects {
     water_fog_colour      : u32,
     #[serde(rename = "foliage_color")]
     foliage_colour        : Option<u32>,
+    #[expect(dead_code)]
     #[serde(rename = "dry_foliage_color")]
     dry_foliage_colour    : Option<u32>,
     #[serde(default, rename = "grass_color_modifier")]
@@ -249,32 +257,46 @@ struct BiomeParticleOptions {
 #[derive(Deser, Debug)]
 #[serde(deny_unknown_fields)]
 struct BiomeSpawnCost {
+    #[expect(dead_code)]
     charge        : f32,
+    #[expect(dead_code)]
     energy_budget : f32
 }
 
 #[derive(Deser, Debug)]
 #[serde(deny_unknown_fields)]
 struct BiomeSpawners {
+    #[expect(dead_code)]
     ambient                    : Vec<BiomeSpawner>,
+    #[expect(dead_code)]
     axolotls                   : Vec<BiomeSpawner>,
+    #[expect(dead_code)]
     creature                   : Vec<BiomeSpawner>,
+    #[expect(dead_code)]
     misc                       : Vec<BiomeSpawner>,
+    #[expect(dead_code)]
     monster                    : Vec<BiomeSpawner>,
+    #[expect(dead_code)]
     underground_water_creature : Vec<BiomeSpawner>,
+    #[expect(dead_code)]
     water_ambient              : Vec<BiomeSpawner>,
+    #[expect(dead_code)]
     water_creature             : Vec<BiomeSpawner>
 }
 
 #[derive(Debug, Deser)]
 #[serde(deny_unknown_fields)]
 struct BiomeSpawner {
+    #[expect(dead_code)]
     #[serde(rename = "type")]
     kind      : String,
+    #[expect(dead_code)]
     #[serde(rename = "maxCount")]
     max_count : u8,
+    #[expect(dead_code)]
     #[serde(rename = "minCount")]
     min_count : u8,
+    #[expect(dead_code)]
     weight    : u8
 }
 

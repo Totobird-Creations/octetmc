@@ -67,18 +67,11 @@ impl ConnPeerOutMessage {
 
             let view_distance = AsyncWorld.resource::<MaxViewDistance>().get(|r| **r).unwrap_or(DEFAULT_VIEW_DISTANCE).get();
 
-            unsafe { play::switch_to_config(player_id, comms) }.await?;
-
-            comms.send_packet(&RegistryDataS2CConfigPacket {
-                id      : Ident::vanilla_str("dimension_type"),
-                entries : Cow::Borrowed(&[dimension.to_registry_entry()]),
-            }).await?;
-
             unsafe { config::switch_to_play(player_id, comms) }.await?;
             comms.send_packet(&LoginS2CPlayPacket {
                 entity_id            : 1,
                 is_hardcore,
-                dimensions           : Cow::Borrowed(&[dimension.id.as_ref()]),
+                dimensions           : Cow::Borrowed(&[dimension.kind.id.as_ref()]),
                 max_players          : 1,
                 view_distance,
                 sim_distance         : view_distance,
@@ -86,7 +79,7 @@ impl ConnPeerOutMessage {
                 respawn_screens,
                 limited_crafting     : true,
                 dimension_type       : 0,
-                dimension            : dimension.id.as_ref(),
+                dimension            : dimension.kind.id.as_ref(),
                 hashed_seed          : dimension.hashed_seed,
                 game_mode,
                 previous_game_mode   : None,
