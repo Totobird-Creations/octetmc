@@ -26,6 +26,8 @@ pub struct WolfSoundVariant<'l> {
     pub growl_sound   : Ident<'l>
 }
 
+include!(".generated/data/wolf_sound_variant.rs");
+
 
 impl WolfSoundVariant<'_> {
 

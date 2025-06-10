@@ -4,16 +4,16 @@ use crate::world::dimension::Dimension;
 use octetmc_protocol::value::ident::Ident;
 use octetmc_protocol::value::game_mode::GameMode;
 use octetmc_protocol::registry::{
-    CatVariant,
-    ChickenVariant,
-    CowVariant,
-    FrogVariant,
-    PaintingVariant,
-    PigVariant,
-    WolfSoundVariant,
-    WolfVariant,
-    DamageType,
-    Biome
+    cat_variant::CatVariant,
+    chicken_variant::ChickenVariant,
+    cow_variant::CowVariant,
+    frog_variant::FrogVariant,
+    painting_variant::PaintingVariant,
+    pig_variant::PigVariant,
+    wolf_sound_variant::WolfSoundVariant,
+    wolf_variant::WolfVariant,
+    damage_type::DamageType,
+    worldgen::biome::Biome
 };
 use std::borrow::Cow;
 use bevy_app::{ App, Plugin, Update };

@@ -53,8 +53,8 @@ fn main() { smol::block_on(async {
     generate::data::simple_variant(&generated_dir, &target_dir.join("data").join("frog_variant.rs"), "FrogVariant", "FROG_VARIANT", "frog_variant", "frog variant").await;
     generate::data::painting_variant(&generated_dir, &target_dir.join("data").join("painting_variant.rs")).await;
     generate::data::simple_variant(&generated_dir, &target_dir.join("data").join("pig_variant.rs"), "PigVariant", "PIG_VARIANT", "pig_variant", "pig variant").await;
-    // generate::data::wolf_sound_variant(&generated_dir, &target_dir.join("data").join("wolf_sound_variant.rs")).await;
-    // generate::data::wolf_variant(&generated_dir, &target_dir.join("data").join("wolf_variant.rs")).await;
+    generate::data::wolf_sound_variant(&generated_dir, &target_dir.join("data").join("wolf_sound_variant.rs")).await;
+    generate::data::wolf_variant(&generated_dir, &target_dir.join("data").join("wolf_variant.rs")).await;
     generate::data::worldgen::biome(&generated_dir, &target_dir.join("data").join("worldgen").join("biome.rs")).await;
 
 }) }

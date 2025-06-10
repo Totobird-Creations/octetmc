@@ -1,7 +1,7 @@
 //! The dimension of a world.
 
 
-use octetmc_protocol::registry::DimensionType;
+use octetmc_protocol::registry::dimension_type::DimensionType;
 use core::mem::{ self, MaybeUninit };
 use std::borrow::Cow;
 

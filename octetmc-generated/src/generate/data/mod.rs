@@ -10,8 +10,10 @@ pub use dimension_type::*;
 mod painting_variant;
 pub use painting_variant::*;
 
-// TODO: wolf_sound_variant
+mod wolf_sound_variant;
+pub use wolf_sound_variant::*;
 
-// TODO: wolf_variant
+mod wolf_variant;
+pub use wolf_variant::*;
 
 pub mod worldgen;

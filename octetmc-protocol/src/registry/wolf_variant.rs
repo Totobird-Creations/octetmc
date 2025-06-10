@@ -20,6 +20,8 @@ pub struct WolfVariant<'l> {
     pub angry_asset_id : Ident<'l>
 }
 
+include!(".generated/data/wolf_variant.rs");
+
 
 impl WolfVariant<'_> {
 
