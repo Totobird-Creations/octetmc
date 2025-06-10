@@ -13,6 +13,8 @@ pub mod text;
 pub mod nbt;
 
 pub mod block_pos;
+pub mod dim_block_pos;
+pub mod chunk_pos;
 
 pub mod rgb;
 

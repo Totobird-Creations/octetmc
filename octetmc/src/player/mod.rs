@@ -16,7 +16,7 @@ use core::ops::Deref;
 use bevy_app::{ Plugin, App, Update };
 use bevy_ecs::entity::Entity;
 use bevy_ecs::component::Component;
-use bevy_ecs::system::{ Query, Commands };
+use bevy_ecs::system::{ Query, ParallelCommands };
 use bevy_ecs::resource::Resource;
 use smol::channel;
 
@@ -183,14 +183,14 @@ impl Plugin for OctetPlayerPlugin {
 }
 
 fn tick_player_conns(
-    mut cmds      : Commands,
-        q_players : Query<(Entity, &Player,)>
+    cmds      : ParallelCommands,
+    q_players : Query<(Entity, &Player,)>
 ) {
-    for (entity, player,) in &q_players {
+    q_players.par_iter().for_each(|(entity, player,)| {
         if (player.conn_out_sender.force_send(ConnPeerOutMessage::Tick).is_err()) {
-            cmds.entity(entity).despawn();
+            cmds.command_scope(|mut cmds| cmds.entity(entity).despawn());
         }
-    }
+    });
 }
 
 

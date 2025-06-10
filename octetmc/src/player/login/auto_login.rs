@@ -113,7 +113,7 @@ fn login_players(
         r_plugin  : Res<LoginPlugin>
 ) {
     let plugin = &r_plugin.0;
-    for login in er_login.read() {
+    er_login.par_read().for_each(|login| {
         if let Ok((player,)) = q_players.get(*login.player_id) {
             player.set_registry(Ident::vanilla_str("cat_variant"),        plugin.cat_variant_registry        .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
             player.set_registry(Ident::vanilla_str("chicken_variant"),    plugin.chicken_variant_registry    .iter().map(|entry| entry.to_registry_entry().into_static_owned()).collect());
@@ -134,5 +134,5 @@ fn login_players(
                 plugin.game_mode
             );
         }
-    }
+    });
 }

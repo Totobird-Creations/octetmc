@@ -72,7 +72,7 @@ use crate::packet::encode::packet_encode_group;
 
 // TODO: forget_level_chunk
 
-// TODO: game_event
+pub mod game_event;
 
 // TODO: horse_screen_open
 
@@ -271,6 +271,8 @@ packet_encode_group!{
     type State = StatePlay;
     /// `S2CPlay`-type packets.
     pub enum S2CPlayPackets<'l> {
+        /// `GameEventS2CPlayPacket`
+        GameEvent(game_event::GameEventS2CPlayPacket),
         /// `LoginS2CPlayPacket`
         Login(login::LoginS2CPlayPacket<'l>)
     }
@@ -284,14 +286,16 @@ impl S2CPlayPackets<'_> {
     ///  `S2CPlayPackets<'static>`.
     #[inline]
     pub fn into_static_owned(self) -> S2CPlayPackets<'static> { match (self) {
-        Self::Login (v) => S2CPlayPackets::Login (v.into_static_owned())
+        Self::GameEvent (v) => S2CPlayPackets::GameEvent(v),
+        Self::Login     (v) => S2CPlayPackets::Login (v.into_static_owned())
     } }
 
     /// Convert the inner parts of this packet to their owned counterparts.
     ///  Returns the newly created `S2CPlayPackets<'static>`.
     #[inline]
     pub fn to_static_owned(&self) -> S2CPlayPackets<'static> { match (self) {
-        Self::Login (v) => S2CPlayPackets::Login (v.to_static_owned())
+        Self::GameEvent (v) => S2CPlayPackets::GameEvent(*v),
+        Self::Login     (v) => S2CPlayPackets::Login (v.to_static_owned())
     } }
 
 }

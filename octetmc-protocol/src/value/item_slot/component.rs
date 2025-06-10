@@ -1,7 +1,7 @@
 use super::{ ItemSlot, ItemComponentType };
 use crate::value::ident::Ident;
 use crate::value::text::Text;
-use crate::value::block_pos::DimBlockPos;
+use crate::value::dim_block_pos::DimBlockPos;
 use crate::value::rgb::Rgb;
 use crate::value::sound_event::SoundEvent;
 use std::borrow::Cow;

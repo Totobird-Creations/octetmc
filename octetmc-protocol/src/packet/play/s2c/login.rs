@@ -3,7 +3,7 @@
 
 use crate::value::varint::VarInt;
 use crate::value::ident::Ident;
-use crate::value::block_pos::DimBlockPos;
+use crate::value::dim_block_pos::DimBlockPos;
 use crate::value::game_mode::GameMode;
 use crate::packet::StatePlay;
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };

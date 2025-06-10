@@ -5,6 +5,7 @@ use crate::world::dimension::Dimension;
 use octetmc_protocol::value::ident::Ident;
 use octetmc_protocol::value::game_mode::GameMode;
 use octetmc_protocol::packet::config::s2c::registry_data::{ RegistryDataS2CConfigPacket, RegistryEntry };
+use octetmc_protocol::packet::play::s2c::game_event::GameEventS2CPlayPacket;
 use octetmc_protocol::packet::play::s2c::login::LoginS2CPlayPacket;
 use std::borrow::Cow;
 use bevy_defer::{ AsyncAccess, AsyncWorld };
@@ -68,6 +69,7 @@ impl ConnPeerOutMessage {
             let view_distance = AsyncWorld.resource::<MaxViewDistance>().get(|r| **r).unwrap_or(DEFAULT_VIEW_DISTANCE).get();
 
             unsafe { config::switch_to_play(player_id, comms) }.await?;
+
             comms.send_packet(&LoginS2CPlayPacket {
                 entity_id            : 1,
                 is_hardcore,
@@ -90,6 +92,9 @@ impl ConnPeerOutMessage {
                 sea_level            : dimension.sea_level,
                 enforces_secure_chat : false
             }).await?;
+
+            comms.send_packet(&GameEventS2CPlayPacket::WaitForChunks).await?;
+
             Ok(())
         }
 

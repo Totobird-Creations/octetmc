@@ -2,7 +2,9 @@
 
 
 use crate::util::macros::deref_single;
+use octetmc_protocol::value::chunk_pos::ChunkPos;
 use core::num::NonZeroU8;
+use bevy_ecs::component::Component;
 use bevy_ecs::resource::Resource;
 
 
@@ -18,4 +20,20 @@ deref_single!{
     /// Vanilla clients support values up to 32. This can be set higher, but the client will clamp it.
     #[derive(Resource)]
     pub struct MaxViewDistance(NonZeroU8);
+}
+
+
+deref_single!{
+    /// The centre of a client's loaded area.
+    #[derive(Component)]
+    pub struct ChunkCentre(ChunkPos);
+}
+
+
+deref_single!{
+    /// The client's render distance.
+    ///
+    /// This should not be higher than [`MaxViewDistance`].
+    #[derive(Component)]
+    pub struct ViewDistance(NonZeroU8);
 }
