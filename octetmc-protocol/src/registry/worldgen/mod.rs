@@ -1,2 +1,4 @@
-mod biome;
-pub use biome::*;
+//! `minecraft:worldgen/*` registries.
+
+
+pub mod biome;

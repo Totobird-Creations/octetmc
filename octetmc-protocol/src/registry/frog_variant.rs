@@ -1,4 +1,7 @@
-use super::{ SimpleVariant, simple_variant };
+//! `minecraft:frog_variant` registry.
+
+
+use super::simple_variant::{ SimpleVariant, simple_variant };
 use crate::value::ident::Ident;
 
 

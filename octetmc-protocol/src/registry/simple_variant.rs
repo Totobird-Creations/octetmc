@@ -1,3 +1,6 @@
+//! Simple variant registries.
+
+
 use crate::value::ident::Ident;
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use crate::packet::config::s2c::registry_data::RegistryEntry;
@@ -66,12 +69,12 @@ macro_rules! simple_variant { ( $ident:ident , $name:tt , $id:tt ) => {
 
     #[doc = concat!("A ", $name, " registry entry.")]
     #[derive(Clone, Debug)]
-    pub struct $ident <'l> ( pub $crate::registry::SimpleVariant<'l> );
+    pub struct $ident <'l> ( pub $crate::registry::simple_variant::SimpleVariant<'l> );
 
     include!(concat!(".generated/data/", $id, ".rs"));
 
     impl<'l> core::ops::Deref for $ident<'l> {
-        type Target = $crate::registry::SimpleVariant<'l>;
+        type Target = $crate::registry::simple_variant::SimpleVariant<'l>;
         fn deref(&self) -> &Self::Target { &self.0 }
     }
 

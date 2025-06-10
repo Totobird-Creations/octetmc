@@ -1,3 +1,6 @@
+//! `minecraft:worldgen/biome` registry.
+
+
 use crate::value::ident::Ident;
 use crate::value::rgb::Rgb;
 use crate::value::particle::Particle;

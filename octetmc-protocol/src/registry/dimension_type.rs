@@ -1,3 +1,6 @@
+//! `minecraft:dimension_type` registry.
+
+
 use crate::packet::config::s2c::registry_data::RegistryEntry;
 use crate::value::ident::Ident;
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };

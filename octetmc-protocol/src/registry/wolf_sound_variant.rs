@@ -1,3 +1,6 @@
+//! `minecraft:wolf_sound_variant` registry.
+
+
 use crate::value::ident::Ident;
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use crate::packet::config::s2c::registry_data::RegistryEntry;

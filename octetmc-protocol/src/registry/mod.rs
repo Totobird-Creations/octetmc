@@ -1,38 +1,26 @@
 //! Registry entry values.
 
 
-mod simple_variant;
-pub use simple_variant::*;
+pub mod simple_variant;
 
-mod cat_variant;
-pub use cat_variant::*;
+pub mod cat_variant;
 
-mod chicken_variant;
-pub use chicken_variant::*;
+pub mod chicken_variant;
 
-mod cow_variant;
-pub use cow_variant::*;
+pub mod cow_variant;
 
-mod damage_type;
-pub use damage_type::*;
+pub mod damage_type;
 
-mod dimension_type;
-pub use dimension_type::*;
+pub mod dimension_type;
 
-mod frog_variant;
-pub use frog_variant::*;
+pub mod frog_variant;
 
-mod painting_variant;
-pub use painting_variant::*;
+pub mod painting_variant;
 
-mod pig_variant;
-pub use pig_variant::*;
+pub mod pig_variant;
 
-mod wolf_sound_variant;
-pub use wolf_sound_variant::*;
+pub mod wolf_sound_variant;
 
-mod wolf_variant;
-pub use wolf_variant::*;
+pub mod wolf_variant;
 
-mod worldgen;
-pub use worldgen::*;
+pub mod worldgen;
