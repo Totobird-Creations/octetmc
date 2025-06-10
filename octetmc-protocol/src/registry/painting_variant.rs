@@ -1,6 +1,7 @@
 use crate::value::ident::Ident;
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use crate::packet::config::s2c::registry_data::RegistryEntry;
+use core::num::NonZeroU8;
 use std::borrow::Cow;
 
 
@@ -12,10 +13,12 @@ pub struct PaintingVariant<'l> {
     /// The texture of the painting.
     pub asset_id : Ident<'l>,
     /// The width of the painting in blocks.
-    pub width    : u8,
+    pub width    : NonZeroU8,
     /// The height of the painting in blocks.
-    pub height   : u8
+    pub height   : NonZeroU8
 }
+
+include!(".generated/data/painting_variant.rs");
 
 
 impl PaintingVariant<'_> {
@@ -61,11 +64,11 @@ impl PaintingVariant<'_> {
                 },
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("width"),
-                    value : NbtElement::Int(self.width as i32)
+                    value : NbtElement::Int(self.width.get() as i32)
                 },
                 NbtCompoundEntry {
                     key   : Cow::Borrowed("height"),
-                    value : NbtElement::Int(self.height as i32)
+                    value : NbtElement::Int(self.height.get() as i32)
                 }
             ]) })),
         }
