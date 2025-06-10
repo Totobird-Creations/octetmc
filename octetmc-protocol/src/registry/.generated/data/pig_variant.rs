@@ -1,0 +1,31 @@
+impl PigVariant<'_> {
+
+    /// Vanilla `minecraft:cold` pig variant.
+    pub const COLD : PigVariant<'static> = PigVariant( SimpleVariant {
+        id       : Ident::vanilla_str("cold"),
+        model    : Some(Cow::Borrowed("cold")),
+        asset_id : Ident::parse_str("minecraft:entity/pig/cold_pig")
+    } );
+
+    /// Vanilla `minecraft:warm` pig variant.
+    pub const WARM : PigVariant<'static> = PigVariant( SimpleVariant {
+        id       : Ident::vanilla_str("warm"),
+        model    : None,
+        asset_id : Ident::parse_str("minecraft:entity/pig/warm_pig")
+    } );
+
+    /// Vanilla `minecraft:temperate` pig variant.
+    pub const TEMPERATE : PigVariant<'static> = PigVariant( SimpleVariant {
+        id       : Ident::vanilla_str("temperate"),
+        model    : None,
+        asset_id : Ident::parse_str("minecraft:entity/pig/temperate_pig")
+    } );
+
+    /// All vanilla pig variants.
+    pub const VANILLA_PIG_VARIANTS : &'static [PigVariant<'static>] = &[
+        Self::COLD,
+        Self::WARM,
+        Self::TEMPERATE,
+    ];
+
+}

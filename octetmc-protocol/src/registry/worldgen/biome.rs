@@ -84,7 +84,7 @@ pub struct Biome<'l> {
 
 }
 
-include!(".generated/data/worldgen/biome.rs");
+include!("../.generated/data/worldgen/biome.rs");
 
 
 impl Biome<'_> {

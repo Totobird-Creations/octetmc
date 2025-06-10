@@ -38,11 +38,6 @@ pub struct PlayerAutoLoginPlugin {
     /// The default game mode to log in as.
     pub game_mode                   : GameMode,
 
-    /// The default dimensions.
-    ///
-    /// The player will be spawned in the first dimension.
-    pub dimension_registry          : Cow<'static, [Dimension<'static>]>,
-
     /// The default cat variant registry.
     pub cat_variant_registry        : Cow<'static, [CatVariant<'static>]>,
 
@@ -51,6 +46,14 @@ pub struct PlayerAutoLoginPlugin {
 
     /// The default cow variant registry.
     pub cow_variant_registry        : Cow<'static, [CowVariant<'static>]>,
+
+    /// The default damage type registry.
+    pub damage_type_registry        : Cow<'static, [DamageType<'static>]>,
+
+    /// The default dimensions.
+    ///
+    /// The player will be spawned in the first dimension.
+    pub dimension_registry          : Cow<'static, [Dimension<'static>]>,
 
     /// The default frog variant registry.
     pub frog_variant_registry       : Cow<'static, [FrogVariant<'static>]>,
@@ -67,9 +70,6 @@ pub struct PlayerAutoLoginPlugin {
     /// The default wolf variant registry.
     pub wolf_variant_registry       : Cow<'static, [WolfVariant<'static>]>,
 
-    /// The default damage type registry.
-    pub damage_type_registry        : Cow<'static, [DamageType<'static>]>,
-
     /// The default biome registry.
     pub biome_registry              : Cow<'static, [Biome<'static>]>
 
@@ -84,13 +84,13 @@ impl Default for PlayerAutoLoginPlugin {
         cat_variant_registry        : Cow::Borrowed(CatVariant::VANILLA_CAT_VARIANTS),
         chicken_variant_registry    : Cow::Borrowed(ChickenVariant::VANILLA_CHICKEN_VARIANTS),
         cow_variant_registry        : Cow::Borrowed(CowVariant::VANILLA_COW_VARIANTS),
+        damage_type_registry        : Cow::Borrowed(DamageType::VANILLA_DAMAGE_TYPES),
+        dimension_registry          : Cow::Borrowed(Dimension::VANILLA_SUPERFLAT_DIMENSIONS),
         frog_variant_registry       : Cow::Borrowed(FrogVariant::VANILLA_FROG_VARIANTS),
         painting_variant_registry   : Cow::Borrowed(PaintingVariant::VANILLA_PAINTING_VARIANTS),
         pig_variant_registry        : Cow::Borrowed(PigVariant::VANILLA_PIG_VARIANTS),
         wolf_sound_variant_registry : Cow::Borrowed(WolfSoundVariant::VANILLA_WOLF_SOUND_VARIANTS),
         wolf_variant_registry       : Cow::Borrowed(WolfVariant::VANILLA_WOLF_VARIANTS),
-        damage_type_registry        : Cow::Borrowed(DamageType::VANILLA_DAMAGE_TYPES),
-        dimension_registry          : Cow::Borrowed(Dimension::VANILLA_SUPERFLAT_DIMENSIONS),
         biome_registry              : Cow::Borrowed(Biome::VANILLA_BIOMES)
     } }
 }

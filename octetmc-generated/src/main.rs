@@ -45,9 +45,16 @@ fn main() { smol::block_on(async {
     println!("Building Rust code...");
     let target_dir = working_dir.parent().unwrap().parent().unwrap().join("octetmc-protocol/src/registry/.generated");
 
-    generate::data::painting_variant(&generated_dir, &target_dir.join("data").join("painting_variant.rs")).await;
+    generate::data::simple_variant(&generated_dir, &target_dir.join("data").join("cat_variant.rs"), "CatVariant", "CAT_VARIANT", "cat_variant", "cat variant").await;
+    generate::data::simple_variant(&generated_dir, &target_dir.join("data").join("chicken_variant.rs"), "ChickenVariant", "CHICKEN_VARIANT", "chicken_variant", "chicken variant").await;
+    generate::data::simple_variant(&generated_dir, &target_dir.join("data").join("cow_variant.rs"), "CowVariant", "COW_VARIANT", "cow_variant", "cow variant").await;
     generate::data::damage_type(&generated_dir, &target_dir.join("data").join("damage_type.rs")).await;
     generate::data::dimension_type(&generated_dir, &target_dir.join("data").join("dimension_type.rs")).await;
+    generate::data::simple_variant(&generated_dir, &target_dir.join("data").join("frog_variant.rs"), "FrogVariant", "FROG_VARIANT", "frog_variant", "frog variant").await;
+    generate::data::painting_variant(&generated_dir, &target_dir.join("data").join("painting_variant.rs")).await;
+    generate::data::simple_variant(&generated_dir, &target_dir.join("data").join("pig_variant.rs"), "PigVariant", "PIG_VARIANT", "pig_variant", "pig variant").await;
+    // generate::data::wolf_sound_variant(&generated_dir, &target_dir.join("data").join("wolf_sound_variant.rs")).await;
+    // generate::data::wolf_variant(&generated_dir, &target_dir.join("data").join("wolf_variant.rs")).await;
     generate::data::worldgen::biome(&generated_dir, &target_dir.join("data").join("worldgen").join("biome.rs")).await;
 
 }) }

@@ -9,6 +9,8 @@ use std::borrow::Cow;
 pub struct SimpleVariant<'l> {
     /// The ID of this entry.
     pub id       : Ident<'l>,
+    /// The model of this entry.
+    pub model    : Option<Cow<'l, str>>,
     /// The resource ID of the asset.
     pub asset_id : Ident<'l>
 }
@@ -23,6 +25,7 @@ impl SimpleVariant<'_> {
     pub fn into_static_owned(self) -> SimpleVariant<'static> {
         SimpleVariant {
             id       : self.id.into_static_owned(),
+            model    : self.model.map(|model| Cow::Owned(model.into_owned())),
             asset_id : self.asset_id.into_static_owned()
         }
     }
@@ -33,6 +36,7 @@ impl SimpleVariant<'_> {
     pub fn to_static_owned(&self) -> SimpleVariant<'static> {
         SimpleVariant {
             id       : self.id.to_static_owned(),
+            model    : self.model.as_ref().map(|model| Cow::Owned((**model).to_owned())),
             asset_id : self.asset_id.to_static_owned()
         }
     }
@@ -56,3 +60,24 @@ impl SimpleVariant<'_> {
     }
 
 }
+
+
+macro_rules! simple_variant { ( $ident:ident , $name:tt , $id:tt ) => {
+
+    #[doc = concat!("A ", $name, " registry entry.")]
+    #[derive(Clone, Debug)]
+    pub struct $ident <'l> ( pub $crate::registry::SimpleVariant<'l> );
+
+    include!(concat!(".generated/data/", $id, ".rs"));
+
+    impl<'l> core::ops::Deref for $ident<'l> {
+        type Target = $crate::registry::SimpleVariant<'l>;
+        fn deref(&self) -> &Self::Target { &self.0 }
+    }
+
+    impl<'l> core::ops::DerefMut for $ident<'l> {
+        fn deref_mut(&mut self) -> &mut Self::Target { &mut self.0 }
+    }
+
+} }
+pub(super) use simple_variant;
