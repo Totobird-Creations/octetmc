@@ -48,6 +48,11 @@ pub struct Biome<'l> {
     /// If not specified, the foliage colour is calculated based on biome temperature and downfall.
     pub foliage_colour        : Option<Rgb>,
 
+    /// The tint color of dry foliage.
+    ///
+    /// If not specified, the dry foliage colour is calculated based on biome temperature and downfall.
+    pub dry_foliage_colour    : Option<Rgb>,
+
     /// The tint color of the grass.
     ///
     /// If not specified, the grass colour is calculated based on biome temperature and downfall.
@@ -72,7 +77,10 @@ pub struct Biome<'l> {
     pub additions_sound       : Option<BiomeAdditionsSound<'l>>,
 
     /// Music properties for the biome.
-    pub music                 : Cow<'l, [BiomeMusic<'l>]>
+    pub music                 : Cow<'l, [BiomeMusic<'l>]>,
+
+    /// Volume of music in the biome.
+    pub music_volume          : f32
 
 }
 
@@ -96,6 +104,7 @@ impl Biome<'_> {
             water_fog_colour      : self.water_fog_colour,
             sky_colour            : self.sky_colour,
             foliage_colour        : self.foliage_colour,
+            dry_foliage_colour    : self.dry_foliage_colour,
             grass_colour          : self.grass_colour,
             grass_colour_modifier : self.grass_colour_modifier,
             particle              : self.particle.map(|particle| particle.into_static_owned()),
@@ -105,7 +114,8 @@ impl Biome<'_> {
             music                 : Cow::Owned(match (self.music) {
                 Cow::Borrowed(v) => v.iter().map(|v| v.to_static_owned()).collect::<Vec<_>>(),
                 Cow::Owned(v)    => v.into_iter().map(|v| v.to_static_owned()).collect::<Vec<_>>()
-            })
+            }),
+            music_volume          : self.music_volume
         }
     }
 
@@ -123,13 +133,15 @@ impl Biome<'_> {
             water_fog_colour      : self.water_fog_colour,
             sky_colour            : self.sky_colour,
             foliage_colour        : self.foliage_colour,
+            dry_foliage_colour    : self.dry_foliage_colour,
             grass_colour          : self.grass_colour,
             grass_colour_modifier : self.grass_colour_modifier,
             particle              : self.particle.as_ref().map(|particle| particle.to_static_owned()),
             ambient_sound         : self.ambient_sound.as_ref().map(|sound| sound.to_static_owned()),
             mood_sound            : self.mood_sound.as_ref().map(|sound| sound.to_static_owned()),
             additions_sound       : self.additions_sound.as_ref().map(|sound| sound.to_static_owned()),
-            music                 : Cow::Owned(self.music.iter().map(|v| v.to_static_owned()).collect::<Vec<_>>())
+            music                 : Cow::Owned(self.music.iter().map(|v| v.to_static_owned()).collect::<Vec<_>>()),
+            music_volume          : self.music_volume
         }
     }
 
@@ -439,6 +451,12 @@ impl Biome<'_> {
                 value : NbtElement::Int(colour.to_u32() as i32)
             })
         }
+        if let Some(colour) = &self.dry_foliage_colour {
+            effects_entries.push(NbtCompoundEntry {
+                key   : Cow::Borrowed("dry_foliage_color"),
+                value : NbtElement::Int(colour.to_u32() as i32)
+            })
+        }
         if let Some(colour) = &self.grass_colour {
             effects_entries.push(NbtCompoundEntry {
                 key   : Cow::Borrowed("grass_color"),
@@ -538,8 +556,12 @@ impl Biome<'_> {
             effects_entries.push(NbtCompoundEntry {
                 key   : Cow::Borrowed("music"),
                 value : NbtElement::List(Cow::Owned(music_entries))
-            })
+            });
         }
+        effects_entries.push(NbtCompoundEntry {
+            key   : Cow::Borrowed("music_volume"),
+            value : NbtElement::Float(self.music_volume)
+        });
         RegistryEntry {
             id   : self.id.as_ref(),
             data : Some(Nbt::from(NbtCompound { entries : Cow::Owned(vec![

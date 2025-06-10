@@ -5,6 +5,7 @@ use std::io::Write as _;
 use smol::stream::StreamExt;
 use smol::fs;
 use serde::Deserialize as Deser;
+use serde::de::IgnoredAny;
 use serde_json::from_reader as read_json;
 
 
@@ -69,29 +70,10 @@ pub async fn painting_variant(generated_dir : &Path, target_file : &Path) {
 struct PaintingVariant {
     asset_id : String,
     #[expect(dead_code)]
-    author   : Option<PaintingAuthor>,
+    #[serde(default)]
+    author   : IgnoredAny,
     height   : NonZeroU8,
     #[expect(dead_code)]
-    title    : PaintingTitle,
+    title    : IgnoredAny,
     width    : NonZeroU8
-}
-
-#[derive(Deser, Debug)]
-#[serde(deny_unknown_fields)]
-struct PaintingAuthor {
-    #[expect(dead_code)]
-    #[serde(rename = "color")]
-    colour    : String,
-    #[expect(dead_code)]
-    translate : String
-}
-
-#[derive(Deser, Debug)]
-#[serde(deny_unknown_fields)]
-struct PaintingTitle {
-    #[expect(dead_code)]
-    #[serde(rename = "color")]
-    colour    : String,
-    #[expect(dead_code)]
-    translate : String
 }

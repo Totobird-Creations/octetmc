@@ -8,13 +8,10 @@ use get_server_jar_url::get_server_jar_url;
 mod download_server_jar;
 use download_server_jar::download_server_jar;
 
-mod run_datagen;
-use run_datagen::run_datagen;
+// mod run_datagen;
+// use run_datagen::run_datagen;
 
 mod generate;
-
-
-mod util;
 
 
 fn main() { smol::block_on(async {

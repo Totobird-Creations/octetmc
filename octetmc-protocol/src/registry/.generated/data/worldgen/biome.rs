@@ -12,6 +12,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -24,7 +25,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:the_end` damage type.
@@ -39,6 +41,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(0),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -51,7 +54,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:old_growth_spruce_taiga` damage type.
@@ -66,6 +70,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8233983),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -85,7 +90,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:lukewarm_ocean` damage type.
@@ -100,6 +106,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(267827),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -112,7 +119,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:mangrove_swamp` damage type.
@@ -127,6 +135,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(5077600),
         sky_colour            : Rgb::from_u32(7907327),
         foliage_colour        : Some(Rgb::from_u32(9285927)),
+        dry_foliage_colour    : Some(Rgb::from_u32(8082228)),
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::Swamp,
         particle              : None,
@@ -146,7 +155,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:dark_forest` damage type.
@@ -161,6 +171,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7972607),
         foliage_colour        : None,
+        dry_foliage_colour    : Some(Rgb::from_u32(8082228)),
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::DarkForest,
         particle              : None,
@@ -180,7 +191,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:birch_forest` damage type.
@@ -195,6 +207,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8037887),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -214,7 +227,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:beach` damage type.
@@ -229,6 +243,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7907327),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -241,7 +256,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:basalt_deltas` damage type.
@@ -256,6 +272,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : Some(BiomeParticle {
@@ -284,7 +301,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:snowy_taiga` damage type.
@@ -299,6 +317,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8625919),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -311,7 +330,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:stony_peaks` damage type.
@@ -326,6 +346,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7776511),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -345,7 +366,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:bamboo_jungle` damage type.
@@ -360,6 +382,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7842047),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -379,7 +402,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:lush_caves` damage type.
@@ -394,6 +418,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -413,7 +438,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:snowy_plains` damage type.
@@ -428,6 +454,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8364543),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -440,7 +467,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:sunflower_plains` damage type.
@@ -455,6 +483,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7907327),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -467,7 +496,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:crimson_forest` damage type.
@@ -482,6 +512,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : Some(BiomeParticle {
@@ -510,7 +541,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:taiga` damage type.
@@ -525,6 +557,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8233983),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -537,7 +570,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:dripstone_caves` damage type.
@@ -552,6 +586,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7907327),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -571,7 +606,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:flower_forest` damage type.
@@ -586,6 +622,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7972607),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -605,7 +642,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:savanna` damage type.
@@ -620,6 +658,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -632,7 +671,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:grove` damage type.
@@ -647,6 +687,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8495359),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -666,7 +707,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:nether_wastes` damage type.
@@ -681,6 +723,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -706,7 +749,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:deep_dark` damage type.
@@ -721,6 +765,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7907327),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -740,7 +785,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:mushroom_fields` damage type.
@@ -755,6 +801,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7842047),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -767,7 +814,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:desert` damage type.
@@ -782,6 +830,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -801,7 +850,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:plains` damage type.
@@ -816,6 +866,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7907327),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -828,7 +879,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:old_growth_pine_taiga` damage type.
@@ -843,6 +895,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8168447),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -862,7 +915,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:frozen_ocean` damage type.
@@ -877,6 +931,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8364543),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -889,7 +944,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:frozen_peaks` damage type.
@@ -904,6 +960,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8756735),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -923,7 +980,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:windswept_gravelly_hills` damage type.
@@ -938,6 +996,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8233727),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -950,7 +1009,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:forest` damage type.
@@ -965,6 +1025,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7972607),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -984,7 +1045,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:snowy_beach` damage type.
@@ -999,6 +1061,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8364543),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1011,7 +1074,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:jagged_peaks` damage type.
@@ -1026,6 +1090,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8756735),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1045,7 +1110,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:ice_spikes` damage type.
@@ -1060,6 +1126,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8364543),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1072,7 +1139,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:ocean` damage type.
@@ -1087,6 +1155,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1099,7 +1168,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:soul_sand_valley` damage type.
@@ -1114,6 +1184,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : Some(BiomeParticle {
@@ -1142,7 +1213,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:windswept_savanna` damage type.
@@ -1157,6 +1229,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1169,7 +1242,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:swamp` damage type.
@@ -1184,6 +1258,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(2302743),
         sky_colour            : Rgb::from_u32(7907327),
         foliage_colour        : Some(Rgb::from_u32(6975545)),
+        dry_foliage_colour    : Some(Rgb::from_u32(8082228)),
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::Swamp,
         particle              : None,
@@ -1203,7 +1278,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:deep_frozen_ocean` damage type.
@@ -1218,6 +1294,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1230,7 +1307,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:pale_garden` damage type.
@@ -1245,6 +1323,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(5597568),
         sky_colour            : Rgb::from_u32(12171705),
         foliage_colour        : Some(Rgb::from_u32(8883574)),
+        dry_foliage_colour    : Some(Rgb::from_u32(10528412)),
         grass_colour          : Some(Rgb::from_u32(7832178)),
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1257,7 +1336,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 0.0
     };
 
     /// Vanilla `minecraft:snowy_slopes` damage type.
@@ -1272,6 +1352,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8560639),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1291,7 +1372,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:old_growth_birch_forest` damage type.
@@ -1306,6 +1388,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8037887),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1325,7 +1408,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:the_void` damage type.
@@ -1340,6 +1424,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1352,7 +1437,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:eroded_badlands` damage type.
@@ -1367,6 +1453,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : Some(Rgb::from_u32(10387789)),
+        dry_foliage_colour    : None,
         grass_colour          : Some(Rgb::from_u32(9470285)),
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1386,7 +1473,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:badlands` damage type.
@@ -1401,6 +1489,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : Some(Rgb::from_u32(10387789)),
+        dry_foliage_colour    : None,
         grass_colour          : Some(Rgb::from_u32(9470285)),
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1420,7 +1509,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:end_midlands` damage type.
@@ -1435,6 +1525,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(0),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1447,7 +1538,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:windswept_hills` damage type.
@@ -1462,6 +1554,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8233727),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1474,7 +1567,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:warped_forest` damage type.
@@ -1489,6 +1583,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : Some(BiomeParticle {
@@ -1517,7 +1612,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:windswept_forest` damage type.
@@ -1532,6 +1628,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8233727),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1544,7 +1641,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:river` damage type.
@@ -1559,6 +1657,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1571,7 +1670,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:frozen_river` damage type.
@@ -1586,6 +1686,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8364543),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1598,7 +1699,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:sparse_jungle` damage type.
@@ -1613,6 +1715,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7842047),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1632,7 +1735,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:cold_ocean` damage type.
@@ -1647,6 +1751,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1659,7 +1764,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:jungle` damage type.
@@ -1674,6 +1780,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7842047),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1693,7 +1800,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:wooded_badlands` damage type.
@@ -1708,6 +1816,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : Some(Rgb::from_u32(10387789)),
+        dry_foliage_colour    : None,
         grass_colour          : Some(Rgb::from_u32(9470285)),
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1727,7 +1836,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:deep_lukewarm_ocean` damage type.
@@ -1742,6 +1852,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(267827),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1754,7 +1865,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:small_end_islands` damage type.
@@ -1769,6 +1881,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(0),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1781,7 +1894,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:warm_ocean` damage type.
@@ -1796,6 +1910,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(270131),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1808,7 +1923,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:end_barrens` damage type.
@@ -1823,6 +1939,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(0),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1835,7 +1952,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:savanna_plateau` damage type.
@@ -1850,6 +1968,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(7254527),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1862,7 +1981,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:end_highlands` damage type.
@@ -1877,6 +1997,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(0),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1889,7 +2010,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:cherry_grove` damage type.
@@ -1904,6 +2026,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(6141935),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : Some(Rgb::from_u32(11983713)),
+        dry_foliage_colour    : None,
         grass_colour          : Some(Rgb::from_u32(11983713)),
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1923,7 +2046,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:stony_shore` damage type.
@@ -1938,6 +2062,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8233727),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1950,7 +2075,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:deep_cold_ocean` damage type.
@@ -1965,6 +2091,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -1977,7 +2104,8 @@ impl Biome<'_> {
     }),
         additions_sound       : None,
         music                 : Cow::Borrowed(const { &[
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// Vanilla `minecraft:meadow` damage type.
@@ -1992,6 +2120,7 @@ impl Biome<'_> {
         water_fog_colour      : Rgb::from_u32(329011),
         sky_colour            : Rgb::from_u32(8103167),
         foliage_colour        : None,
+        dry_foliage_colour    : None,
         grass_colour          : None,
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
@@ -2011,7 +2140,8 @@ impl Biome<'_> {
                 max_delay             : 24000,
                 replace_current_music : false
             },
-        ] } )
+        ] } ),
+        music_volume          : 1.0
     };
 
     /// All vanilla biomes.

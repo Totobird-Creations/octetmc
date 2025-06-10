@@ -4,6 +4,7 @@ use std::io::Write as _;
 use smol::stream::StreamExt;
 use smol::fs;
 use serde::Deserialize as Deser;
+use serde::de::IgnoredAny;
 use serde_json::from_reader as read_json;
 
 
@@ -90,31 +91,31 @@ pub async fn dimension_type(generated_dir : &Path, target_file : &Path) {
 struct DimensionType {
     ambient_light                   : f32,
     #[expect(dead_code)]
-    bed_works                       : bool,
+    bed_works                       : IgnoredAny,
     #[expect(dead_code)]
-    coordinate_scale                : f32,
+    coordinate_scale                : IgnoredAny,
     effects                         : DimensionEffects,
     fixed_time                      : Option<u32>,
     has_ceiling                     : bool,
     #[expect(dead_code)]
-    has_raids                       : bool,
+    has_raids                       : IgnoredAny,
     has_skylight                    : bool,
     height                          : u16,
     #[expect(dead_code)]
-    infiniburn                      : String,
+    infiniburn                      : IgnoredAny,
     #[expect(dead_code)]
-    logical_height                  : u16,
+    logical_height                  : IgnoredAny,
     min_y                           : i16,
     #[expect(dead_code)]
-    monster_spawn_block_light_limit : u8,
+    monster_spawn_block_light_limit : IgnoredAny,
     #[expect(dead_code)]
-    monster_spawn_light_level       : MonsterSpawnLightLevel,
+    monster_spawn_light_level       : IgnoredAny,
     natural                         : bool,
     piglin_safe                     : bool,
     #[expect(dead_code)]
-    respawn_anchor_works            : bool,
+    respawn_anchor_works            : IgnoredAny,
     #[expect(dead_code)]
-    ultrawarm                       : bool
+    ultrawarm                       : IgnoredAny
 }
 
 #[derive(Deser, Debug)]
@@ -126,25 +127,4 @@ enum DimensionEffects {
     Nether,
     #[serde(rename = "minecraft:the_end")]
     End
-}
-
-#[derive(Deser, Debug)]
-#[serde(deny_unknown_fields, untagged)]
-enum MonsterSpawnLightLevel {
-    #[expect(dead_code)]
-    Direct(u8),
-    #[expect(dead_code)]
-    Typed(TypedMonsterSpawnLightLevel)
-}
-
-#[derive(Deser, Debug)]
-#[serde(deny_unknown_fields, tag = "type")]
-enum TypedMonsterSpawnLightLevel {
-    #[serde(rename = "minecraft:uniform")]
-    Uniform {
-        #[expect(dead_code)]
-        max_inclusive : u8,
-        #[expect(dead_code)]
-        min_inclusive : u8
-    }
 }

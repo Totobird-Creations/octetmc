@@ -4,6 +4,7 @@ use std::io::Write as _;
 use smol::stream::StreamExt;
 use smol::fs;
 use serde::Deserialize as Deser;
+use serde::de::IgnoredAny;
 use serde_json::from_reader as read_json;
 
 
@@ -47,7 +48,6 @@ pub async fn damage_type(generated_dir : &Path, target_file : &Path) {
         all_idents.push(ident);
     }
 
-    let len = all_idents.len();
     write!(target,
 "    /// All vanilla damage types.
     pub const VANILLA_DAMAGE_TYPES : &'static [DamageType<'static>] = &[\n\
@@ -67,24 +67,13 @@ pub async fn damage_type(generated_dir : &Path, target_file : &Path) {
 struct DamageType {
     message_id   : String,
     #[expect(dead_code)]
-    exhaustion   : f32,
+    exhaustion   : IgnoredAny,
     #[expect(dead_code)]
-    scaling      : DamageScaling,
+    scaling      : IgnoredAny,
     #[serde(default)]
     effects      : DamageEffects,
     #[serde(default, rename = "death_message_type")]
     message_type : DeathMessageType
-}
-
-#[derive(Deser, Debug)]
-#[serde(deny_unknown_fields)]
-enum DamageScaling {
-    #[serde(rename = "never")]
-    Never,
-    #[serde(rename = "always")]
-    Always,
-    #[serde(rename = "when_caused_by_living_non_player")]
-    WhenCausedByLivingNonPlayer
 }
 
 #[derive(Deser, Debug, Default)]
