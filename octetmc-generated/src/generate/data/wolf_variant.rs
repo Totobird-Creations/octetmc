@@ -39,10 +39,10 @@ pub async fn wolf_variant(generated_dir : &Path, target_file : &Path) {
         write!(target,
 "    /// Vanilla `minecraft:{id}` wolf variant.
     pub const {ident} : WolfVariant<'static> = WolfVariant {{
-        id             : Ident::vanilla_str({id:?}),
-        wild_asset_id  : Ident::parse_str({wild_asset_id:?}),
-        tame_asset_id  : Ident::parse_str({tame_asset_id:?}),
-        angry_asset_id : Ident::parse_str({angry_asset_id:?})
+        id             : ident![{id}],
+        wild_asset_id  : ident![{wild_asset_id}],
+        tame_asset_id  : ident![{tame_asset_id}],
+        angry_asset_id : ident![{angry_asset_id}]
     }};\n\n"
         ).unwrap();
 

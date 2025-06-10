@@ -41,8 +41,8 @@ pub async fn painting_variant(generated_dir : &Path, target_file : &Path) {
         write!(target,
 "    /// Vanilla `minecraft:{id}` painting variant.
     pub const {ident} : PaintingVariant<'static> = PaintingVariant {{
-        id       : Ident::vanilla_str({id:?}),
-        asset_id : Ident::parse_str({asset_id:?}),
+        id       : ident![{id}],
+        asset_id : ident![{asset_id}],
         width    : unsafe {{ NonZeroU8::new_unchecked({width}) }},
         height   : unsafe {{ NonZeroU8::new_unchecked({height}) }}
     }};\n\n"

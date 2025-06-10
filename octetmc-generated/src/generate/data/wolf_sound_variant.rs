@@ -39,13 +39,13 @@ pub async fn wolf_sound_variant(generated_dir : &Path, target_file : &Path) {
         write!(target,
 "    /// Vanilla `minecraft:{id}` wolf sound variant.
     pub const {ident} : WolfSoundVariant<'static> = WolfSoundVariant {{
-        id             : Ident::vanilla_str({id:?}),
-        ambient_sound  : Ident::parse_str({ambient_sound:?}),
-        death_sound    : Ident::parse_str({death_sound:?}),
-        growl_sound    : Ident::parse_str({growl_sound:?}),
-        hurt_sound     : Ident::parse_str({hurt_sound:?}),
-        pant_sound     : Ident::parse_str({pant_sound:?}),
-        whine_sound    : Ident::parse_str({whine_sound:?})
+        id             : ident![{id}],
+        ambient_sound  : ident![{ambient_sound}],
+        death_sound    : ident![{death_sound}],
+        growl_sound    : ident![{growl_sound}],
+        hurt_sound     : ident![{hurt_sound}],
+        pant_sound     : ident![{pant_sound}],
+        whine_sound    : ident![{whine_sound}]
     }};\n\n"
         ).unwrap();
 

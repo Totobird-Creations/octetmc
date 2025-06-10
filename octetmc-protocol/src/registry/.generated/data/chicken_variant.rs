@@ -2,23 +2,23 @@ impl ChickenVariant<'_> {
 
     /// Vanilla `minecraft:temperate` chicken variant.
     pub const TEMPERATE : ChickenVariant<'static> = ChickenVariant( SimpleVariant {
-        id       : Ident::vanilla_str("temperate"),
+        id       : ident![temperate],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/chicken/temperate_chicken")
+        asset_id : ident![minecraft:entity/chicken/temperate_chicken]
     } );
 
     /// Vanilla `minecraft:cold` chicken variant.
     pub const COLD : ChickenVariant<'static> = ChickenVariant( SimpleVariant {
-        id       : Ident::vanilla_str("cold"),
+        id       : ident![cold],
         model    : Some(Cow::Borrowed("cold")),
-        asset_id : Ident::parse_str("minecraft:entity/chicken/cold_chicken")
+        asset_id : ident![minecraft:entity/chicken/cold_chicken]
     } );
 
     /// Vanilla `minecraft:warm` chicken variant.
     pub const WARM : ChickenVariant<'static> = ChickenVariant( SimpleVariant {
-        id       : Ident::vanilla_str("warm"),
+        id       : ident![warm],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/chicken/warm_chicken")
+        asset_id : ident![minecraft:entity/chicken/warm_chicken]
     } );
 
     /// All vanilla chicken variants.

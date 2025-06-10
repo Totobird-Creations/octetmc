@@ -2,23 +2,23 @@ impl CowVariant<'_> {
 
     /// Vanilla `minecraft:temperate` cow variant.
     pub const TEMPERATE : CowVariant<'static> = CowVariant( SimpleVariant {
-        id       : Ident::vanilla_str("temperate"),
+        id       : ident![temperate],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cow/temperate_cow")
+        asset_id : ident![minecraft:entity/cow/temperate_cow]
     } );
 
     /// Vanilla `minecraft:cold` cow variant.
     pub const COLD : CowVariant<'static> = CowVariant( SimpleVariant {
-        id       : Ident::vanilla_str("cold"),
+        id       : ident![cold],
         model    : Some(Cow::Borrowed("cold")),
-        asset_id : Ident::parse_str("minecraft:entity/cow/cold_cow")
+        asset_id : ident![minecraft:entity/cow/cold_cow]
     } );
 
     /// Vanilla `minecraft:warm` cow variant.
     pub const WARM : CowVariant<'static> = CowVariant( SimpleVariant {
-        id       : Ident::vanilla_str("warm"),
+        id       : ident![warm],
         model    : Some(Cow::Borrowed("warm")),
-        asset_id : Ident::parse_str("minecraft:entity/cow/warm_cow")
+        asset_id : ident![minecraft:entity/cow/warm_cow]
     } );
 
     /// All vanilla cow variants.

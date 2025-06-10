@@ -29,6 +29,9 @@ __mc-1_21_5-or_earlier = [  ]
 unused_parens = "allow"
 
 
+[dependencies.octetmc-macros]
+path = "../octetmc-macros"
+
 [dependencies.semver]
 version = "1.0"
 
@@ -44,5 +47,5 @@ features = [ "derive" ]
 [dependencies.serde_json]
 version = "1.0"
 
-[dependencies.const_panic]
-version = "0.2"
+[dependencies.compile-fmt]
+version = "0.1"

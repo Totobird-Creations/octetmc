@@ -56,7 +56,7 @@ pub async fn dimension_type(generated_dir : &Path, target_file : &Path) {
         write!(target,
 "    /// Vanilla `minecraft:{id}` dimension type.
     pub const {ident} : DimensionType<'static> = DimensionType {{
-        id              : Ident::vanilla_str({id:?}),
+        id              : ident![{id}],
         fixed_time      : {fixed_time:?},
         has_skylight    : {has_skylight},
         has_ceiling     : {has_ceiling},

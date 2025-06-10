@@ -72,13 +72,13 @@ pub async fn biome(generated_dir : &Path, target_file : &Path) {
         } );
         let ambient_sound   = ambient_sound.map_or(Cow::Borrowed("None"), |v| Cow::Owned(format!(
 "Some(BiomeAmbientSound {{
-        sound : Ident::parse_str({v:?}),
+        sound : ident![{v}],
         range : None
     }})"
         )));
         let mood_sound      = format!(
 "BiomeMoodSound {{
-        sound               : Ident::parse_str({mood_sound:?}),
+        sound               : ident![{mood_sound}],
         tick_delay          : {mood_tick_delay},
         block_search_extent : {mood_block_search_extent},
         offset              : {mood_offset:?}
@@ -86,14 +86,14 @@ pub async fn biome(generated_dir : &Path, target_file : &Path) {
         );
         let additions_sound = additions_sound.map_or(Cow::Borrowed("None"), |BiomeAdditionsSound { sound, tick_chance }| Cow::Owned(format!(
 "Some(BiomeAdditionsSound {{
-        sound       : Ident::parse_str({sound:?}),
+        sound       : ident![{sound}],
         tick_chance : {tick_chance:?}
     }})"
         )));
         let music           = music.into_iter().map(|BiomeMusic { weight, data : BiomeMusicData { sound, min_delay, max_delay, replace_current_music } }| format!("
             BiomeMusic {{
                 weight                : {weight},
-                sound                 : Ident::parse_str({sound:?}),
+                sound                 : ident![{sound}],
                 min_delay             : {min_delay},
                 max_delay             : {max_delay},
                 replace_current_music : {replace_current_music}
@@ -105,7 +105,7 @@ pub async fn biome(generated_dir : &Path, target_file : &Path) {
         write!(target,
 "    /// Vanilla `minecraft:{id}` damage type.
     pub const {ident} : Biome<'static> = Biome {{
-        id                    : Ident::vanilla_str(\"{id}\"),
+        id                    : ident![{id}],
         has_precipitation     : {has_precipitation},
         temperature           : {temperature:?},
         temperature_modifier  : BiomeTemperatureModifier::{temperature_modifier:?},

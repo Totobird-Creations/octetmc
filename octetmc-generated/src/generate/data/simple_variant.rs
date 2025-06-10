@@ -38,9 +38,9 @@ pub async fn simple_variant(generated_dir : &Path, target_file : &Path, ty : &st
         write!(target,
 "    /// Vanilla `minecraft:{id}` {name}.
     pub const {ident} : {ty}<'static> = {ty}( SimpleVariant {{
-        id       : Ident::vanilla_str({id:?}),
+        id       : ident![{id}],
         model    : {model},
-        asset_id : Ident::parse_str({asset_id:?})
+        asset_id : ident![{asset_id}]
     }} );\n\n"
         ).unwrap();
 

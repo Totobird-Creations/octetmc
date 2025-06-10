@@ -17,6 +17,8 @@ pub use serde_endec::*;
 
 mod static_owned;
 
+pub use octetmc_macros::ident;
+
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:Identifier>
 #[derive(Clone)]

@@ -2,79 +2,79 @@ impl CatVariant<'_> {
 
     /// Vanilla `minecraft:all_black` cat variant.
     pub const ALL_BLACK : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("all_black"),
+        id       : ident![all_black],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/all_black")
+        asset_id : ident![minecraft:entity/cat/all_black]
     } );
 
     /// Vanilla `minecraft:ragdoll` cat variant.
     pub const RAGDOLL : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("ragdoll"),
+        id       : ident![ragdoll],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/ragdoll")
+        asset_id : ident![minecraft:entity/cat/ragdoll]
     } );
 
     /// Vanilla `minecraft:white` cat variant.
     pub const WHITE : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("white"),
+        id       : ident![white],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/white")
+        asset_id : ident![minecraft:entity/cat/white]
     } );
 
     /// Vanilla `minecraft:black` cat variant.
     pub const BLACK : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("black"),
+        id       : ident![black],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/black")
+        asset_id : ident![minecraft:entity/cat/black]
     } );
 
     /// Vanilla `minecraft:calico` cat variant.
     pub const CALICO : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("calico"),
+        id       : ident![calico],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/calico")
+        asset_id : ident![minecraft:entity/cat/calico]
     } );
 
     /// Vanilla `minecraft:persian` cat variant.
     pub const PERSIAN : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("persian"),
+        id       : ident![persian],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/persian")
+        asset_id : ident![minecraft:entity/cat/persian]
     } );
 
     /// Vanilla `minecraft:british_shorthair` cat variant.
     pub const BRITISH_SHORTHAIR : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("british_shorthair"),
+        id       : ident![british_shorthair],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/british_shorthair")
+        asset_id : ident![minecraft:entity/cat/british_shorthair]
     } );
 
     /// Vanilla `minecraft:red` cat variant.
     pub const RED : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("red"),
+        id       : ident![red],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/red")
+        asset_id : ident![minecraft:entity/cat/red]
     } );
 
     /// Vanilla `minecraft:jellie` cat variant.
     pub const JELLIE : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("jellie"),
+        id       : ident![jellie],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/jellie")
+        asset_id : ident![minecraft:entity/cat/jellie]
     } );
 
     /// Vanilla `minecraft:tabby` cat variant.
     pub const TABBY : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("tabby"),
+        id       : ident![tabby],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/tabby")
+        asset_id : ident![minecraft:entity/cat/tabby]
     } );
 
     /// Vanilla `minecraft:siamese` cat variant.
     pub const SIAMESE : CatVariant<'static> = CatVariant( SimpleVariant {
-        id       : Ident::vanilla_str("siamese"),
+        id       : ident![siamese],
         model    : None,
-        asset_id : Ident::parse_str("minecraft:entity/cat/siamese")
+        asset_id : ident![minecraft:entity/cat/siamese]
     } );
 
     /// All vanilla cat variants.

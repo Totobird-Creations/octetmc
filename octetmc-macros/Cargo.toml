@@ -1,0 +1,35 @@
+[package]
+name         = "octetmc-macros"
+version      = "0.1.0"
+authors      = ["Totobird <https://github.com/Totobird-Creations>"]
+description  = "Async Minecraft server protocol library (macros)"
+license      = "LGPL-3.0-only"
+
+readme       = "README.md"
+repository   = "https://github.com/Totobird-Creations/octetmc"
+
+keywords     = [ "octetmc", "minecraft", "macros" ]
+categories   = [ "games" ]
+
+edition      = "2024"
+rust-version = "1.87"
+
+
+[lib]
+proc-macro = true
+
+
+[lints.rust]
+unused_parens = "allow"
+
+
+[dependencies.syn]
+version          = "2.0"
+default-features = false
+features         = [ "parsing" ]
+
+[dependencies.proc-macro-crate]
+version = "3.3"
+
+[dependencies.quote]
+version = "1.0"

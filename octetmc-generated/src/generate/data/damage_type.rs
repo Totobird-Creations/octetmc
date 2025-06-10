@@ -38,7 +38,7 @@ pub async fn damage_type(generated_dir : &Path, target_file : &Path) {
         write!(target,
 "    /// Vanilla `minecraft:{id}` damage type.
     pub const {ident} : DamageType<'static> = DamageType {{
-        id           : Ident::vanilla_str({id:?}),
+        id           : ident![{id}],
         message_id   : Cow::Borrowed({message_id:?}),
         effects      : DamageEffects::{effects:?},
         message_type : DeathMessageType::{message_type:?}

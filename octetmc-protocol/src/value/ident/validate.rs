@@ -1,5 +1,9 @@
 use super::Ident;
-use const_panic::concat_panic as cpanic;
+use compile_fmt::{
+    compile_panic as cpanic,
+    clip as cclip,
+    fmt as cfmt
+};
 
 
 impl Ident<'_> {
@@ -131,8 +135,8 @@ impl IdentNspaceValidateError {
     #[inline]
     #[track_caller]
     const fn panic(&self, call : &'static str) -> &'static str { match (self) {
-        Self::Empty       => cpanic!("called `Ident::", call, "` with empty namespace"),
-        Self::BadChar(ch) => cpanic!("called `Ident::", call, "` with invalid character `", ch, "` in namespace"),
+        Self::Empty       => cpanic!("called `Ident::", call => cclip(32, "…"), "` with empty namespace"),
+        Self::BadChar(ch) => cpanic!("called `Ident::", call => cclip(32, "…"), "` with invalid character `", *ch => cfmt::<char>(), "` in namespace"),
     } }
 
     #[inline(always)]
@@ -161,8 +165,8 @@ impl IdentPathValidateError {
     #[inline]
     #[track_caller]
     pub(super) const fn panic(&self, call : &'static str) -> &'static str { match (self) {
-        Self::EmptyPart   => cpanic!("called `Ident::", call, "` with empty path part"),
-        Self::BadChar(ch) => cpanic!("called `Ident::", call, "` with invalid character `", ch, "` in path part"),
+        Self::EmptyPart   => cpanic!("called `Ident::", call => cclip(32, "…"), "` with empty path part"),
+        Self::BadChar(ch) => cpanic!("called `Ident::", call => cclip(32, "…"), "` with invalid character `", *ch => cfmt::<char>(), "` in path part"),
     } }
 
     #[inline(always)]
