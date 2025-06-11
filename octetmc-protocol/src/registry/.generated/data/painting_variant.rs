@@ -2,400 +2,400 @@ impl PaintingVariant<'_> {
 
     /// Vanilla `minecraft:creebet` painting variant.
     pub const CREEBET : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("creebet"),
-        asset_id : Ident::parse_str("minecraft:creebet"),
+        id       : ident![creebet],
+        asset_id : ident![minecraft:creebet],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:alban` painting variant.
     pub const ALBAN : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("alban"),
-        asset_id : Ident::parse_str("minecraft:alban"),
+        id       : ident![alban],
+        asset_id : ident![minecraft:alban],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:fire` painting variant.
     pub const FIRE : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("fire"),
-        asset_id : Ident::parse_str("minecraft:fire"),
+        id       : ident![fire],
+        asset_id : ident![minecraft:fire],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:fighters` painting variant.
     pub const FIGHTERS : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("fighters"),
-        asset_id : Ident::parse_str("minecraft:fighters"),
+        id       : ident![fighters],
+        asset_id : ident![minecraft:fighters],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:cotan` painting variant.
     pub const COTAN : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("cotan"),
-        asset_id : Ident::parse_str("minecraft:cotan"),
+        id       : ident![cotan],
+        asset_id : ident![minecraft:cotan],
         width    : unsafe { NonZeroU8::new_unchecked(3) },
         height   : unsafe { NonZeroU8::new_unchecked(3) }
     };
 
     /// Vanilla `minecraft:wanderer` painting variant.
     pub const WANDERER : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("wanderer"),
-        asset_id : Ident::parse_str("minecraft:wanderer"),
+        id       : ident![wanderer],
+        asset_id : ident![minecraft:wanderer],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:aztec` painting variant.
     pub const AZTEC : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("aztec"),
-        asset_id : Ident::parse_str("minecraft:aztec"),
+        id       : ident![aztec],
+        asset_id : ident![minecraft:aztec],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:humble` painting variant.
     pub const HUMBLE : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("humble"),
-        asset_id : Ident::parse_str("minecraft:humble"),
+        id       : ident![humble],
+        asset_id : ident![minecraft:humble],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:fern` painting variant.
     pub const FERN : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("fern"),
-        asset_id : Ident::parse_str("minecraft:fern"),
+        id       : ident![fern],
+        asset_id : ident![minecraft:fern],
         width    : unsafe { NonZeroU8::new_unchecked(3) },
         height   : unsafe { NonZeroU8::new_unchecked(3) }
     };
 
     /// Vanilla `minecraft:courbet` painting variant.
     pub const COURBET : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("courbet"),
-        asset_id : Ident::parse_str("minecraft:courbet"),
+        id       : ident![courbet],
+        asset_id : ident![minecraft:courbet],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:owlemons` painting variant.
     pub const OWLEMONS : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("owlemons"),
-        asset_id : Ident::parse_str("minecraft:owlemons"),
+        id       : ident![owlemons],
+        asset_id : ident![minecraft:owlemons],
         width    : unsafe { NonZeroU8::new_unchecked(3) },
         height   : unsafe { NonZeroU8::new_unchecked(3) }
     };
 
     /// Vanilla `minecraft:cavebird` painting variant.
     pub const CAVEBIRD : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("cavebird"),
-        asset_id : Ident::parse_str("minecraft:cavebird"),
+        id       : ident![cavebird],
+        asset_id : ident![minecraft:cavebird],
         width    : unsafe { NonZeroU8::new_unchecked(3) },
         height   : unsafe { NonZeroU8::new_unchecked(3) }
     };
 
     /// Vanilla `minecraft:pond` painting variant.
     pub const POND : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("pond"),
-        asset_id : Ident::parse_str("minecraft:pond"),
+        id       : ident![pond],
+        asset_id : ident![minecraft:pond],
         width    : unsafe { NonZeroU8::new_unchecked(3) },
         height   : unsafe { NonZeroU8::new_unchecked(4) }
     };
 
     /// Vanilla `minecraft:finding` painting variant.
     pub const FINDING : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("finding"),
-        asset_id : Ident::parse_str("minecraft:finding"),
+        id       : ident![finding],
+        asset_id : ident![minecraft:finding],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:sunflowers` painting variant.
     pub const SUNFLOWERS : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("sunflowers"),
-        asset_id : Ident::parse_str("minecraft:sunflowers"),
+        id       : ident![sunflowers],
+        asset_id : ident![minecraft:sunflowers],
         width    : unsafe { NonZeroU8::new_unchecked(3) },
         height   : unsafe { NonZeroU8::new_unchecked(3) }
     };
 
     /// Vanilla `minecraft:baroque` painting variant.
     pub const BAROQUE : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("baroque"),
-        asset_id : Ident::parse_str("minecraft:baroque"),
+        id       : ident![baroque],
+        asset_id : ident![minecraft:baroque],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:wind` painting variant.
     pub const WIND : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("wind"),
-        asset_id : Ident::parse_str("minecraft:wind"),
+        id       : ident![wind],
+        asset_id : ident![minecraft:wind],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:void` painting variant.
     pub const VOID : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("void"),
-        asset_id : Ident::parse_str("minecraft:void"),
+        id       : ident![void],
+        asset_id : ident![minecraft:void],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:earth` painting variant.
     pub const EARTH : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("earth"),
-        asset_id : Ident::parse_str("minecraft:earth"),
+        id       : ident![earth],
+        asset_id : ident![minecraft:earth],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:water` painting variant.
     pub const WATER : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("water"),
-        asset_id : Ident::parse_str("minecraft:water"),
+        id       : ident![water],
+        asset_id : ident![minecraft:water],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:kebab` painting variant.
     pub const KEBAB : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("kebab"),
-        asset_id : Ident::parse_str("minecraft:kebab"),
+        id       : ident![kebab],
+        asset_id : ident![minecraft:kebab],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:orb` painting variant.
     pub const ORB : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("orb"),
-        asset_id : Ident::parse_str("minecraft:orb"),
+        id       : ident![orb],
+        asset_id : ident![minecraft:orb],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(4) }
     };
 
     /// Vanilla `minecraft:stage` painting variant.
     pub const STAGE : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("stage"),
-        asset_id : Ident::parse_str("minecraft:stage"),
+        id       : ident![stage],
+        asset_id : ident![minecraft:stage],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:skull_and_roses` painting variant.
     pub const SKULL_AND_ROSES : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("skull_and_roses"),
-        asset_id : Ident::parse_str("minecraft:skull_and_roses"),
+        id       : ident![skull_and_roses],
+        asset_id : ident![minecraft:skull_and_roses],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:unpacked` painting variant.
     pub const UNPACKED : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("unpacked"),
-        asset_id : Ident::parse_str("minecraft:unpacked"),
+        id       : ident![unpacked],
+        asset_id : ident![minecraft:unpacked],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(4) }
     };
 
     /// Vanilla `minecraft:sunset` painting variant.
     pub const SUNSET : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("sunset"),
-        asset_id : Ident::parse_str("minecraft:sunset"),
+        id       : ident![sunset],
+        asset_id : ident![minecraft:sunset],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:plant` painting variant.
     pub const PLANT : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("plant"),
-        asset_id : Ident::parse_str("minecraft:plant"),
+        id       : ident![plant],
+        asset_id : ident![minecraft:plant],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:aztec2` painting variant.
     pub const AZTEC2 : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("aztec2"),
-        asset_id : Ident::parse_str("minecraft:aztec2"),
+        id       : ident![aztec2],
+        asset_id : ident![minecraft:aztec2],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:burning_skull` painting variant.
     pub const BURNING_SKULL : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("burning_skull"),
-        asset_id : Ident::parse_str("minecraft:burning_skull"),
+        id       : ident![burning_skull],
+        asset_id : ident![minecraft:burning_skull],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(4) }
     };
 
     /// Vanilla `minecraft:tides` painting variant.
     pub const TIDES : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("tides"),
-        asset_id : Ident::parse_str("minecraft:tides"),
+        id       : ident![tides],
+        asset_id : ident![minecraft:tides],
         width    : unsafe { NonZeroU8::new_unchecked(3) },
         height   : unsafe { NonZeroU8::new_unchecked(3) }
     };
 
     /// Vanilla `minecraft:passage` painting variant.
     pub const PASSAGE : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("passage"),
-        asset_id : Ident::parse_str("minecraft:passage"),
+        id       : ident![passage],
+        asset_id : ident![minecraft:passage],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:wither` painting variant.
     pub const WITHER : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("wither"),
-        asset_id : Ident::parse_str("minecraft:wither"),
+        id       : ident![wither],
+        asset_id : ident![minecraft:wither],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:pigscene` painting variant.
     pub const PIGSCENE : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("pigscene"),
-        asset_id : Ident::parse_str("minecraft:pigscene"),
+        id       : ident![pigscene],
+        asset_id : ident![minecraft:pigscene],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(4) }
     };
 
     /// Vanilla `minecraft:skeleton` painting variant.
     pub const SKELETON : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("skeleton"),
-        asset_id : Ident::parse_str("minecraft:skeleton"),
+        id       : ident![skeleton],
+        asset_id : ident![minecraft:skeleton],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(3) }
     };
 
     /// Vanilla `minecraft:meditative` painting variant.
     pub const MEDITATIVE : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("meditative"),
-        asset_id : Ident::parse_str("minecraft:meditative"),
+        id       : ident![meditative],
+        asset_id : ident![minecraft:meditative],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:pointer` painting variant.
     pub const POINTER : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("pointer"),
-        asset_id : Ident::parse_str("minecraft:pointer"),
+        id       : ident![pointer],
+        asset_id : ident![minecraft:pointer],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(4) }
     };
 
     /// Vanilla `minecraft:bouquet` painting variant.
     pub const BOUQUET : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("bouquet"),
-        asset_id : Ident::parse_str("minecraft:bouquet"),
+        id       : ident![bouquet],
+        asset_id : ident![minecraft:bouquet],
         width    : unsafe { NonZeroU8::new_unchecked(3) },
         height   : unsafe { NonZeroU8::new_unchecked(3) }
     };
 
     /// Vanilla `minecraft:graham` painting variant.
     pub const GRAHAM : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("graham"),
-        asset_id : Ident::parse_str("minecraft:graham"),
+        id       : ident![graham],
+        asset_id : ident![minecraft:graham],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:prairie_ride` painting variant.
     pub const PRAIRIE_RIDE : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("prairie_ride"),
-        asset_id : Ident::parse_str("minecraft:prairie_ride"),
+        id       : ident![prairie_ride],
+        asset_id : ident![minecraft:prairie_ride],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:lowmist` painting variant.
     pub const LOWMIST : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("lowmist"),
-        asset_id : Ident::parse_str("minecraft:lowmist"),
+        id       : ident![lowmist],
+        asset_id : ident![minecraft:lowmist],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:match` painting variant.
     pub const MATCH : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("match"),
-        asset_id : Ident::parse_str("minecraft:match"),
+        id       : ident![match],
+        asset_id : ident![minecraft:match],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:pool` painting variant.
     pub const POOL : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("pool"),
-        asset_id : Ident::parse_str("minecraft:pool"),
+        id       : ident![pool],
+        asset_id : ident![minecraft:pool],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:backyard` painting variant.
     pub const BACKYARD : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("backyard"),
-        asset_id : Ident::parse_str("minecraft:backyard"),
+        id       : ident![backyard],
+        asset_id : ident![minecraft:backyard],
         width    : unsafe { NonZeroU8::new_unchecked(3) },
         height   : unsafe { NonZeroU8::new_unchecked(4) }
     };
 
     /// Vanilla `minecraft:endboss` painting variant.
     pub const ENDBOSS : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("endboss"),
-        asset_id : Ident::parse_str("minecraft:endboss"),
+        id       : ident![endboss],
+        asset_id : ident![minecraft:endboss],
         width    : unsafe { NonZeroU8::new_unchecked(3) },
         height   : unsafe { NonZeroU8::new_unchecked(3) }
     };
 
     /// Vanilla `minecraft:bust` painting variant.
     pub const BUST : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("bust"),
-        asset_id : Ident::parse_str("minecraft:bust"),
+        id       : ident![bust],
+        asset_id : ident![minecraft:bust],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:changing` painting variant.
     pub const CHANGING : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("changing"),
-        asset_id : Ident::parse_str("minecraft:changing"),
+        id       : ident![changing],
+        asset_id : ident![minecraft:changing],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(2) }
     };
 
     /// Vanilla `minecraft:donkey_kong` painting variant.
     pub const DONKEY_KONG : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("donkey_kong"),
-        asset_id : Ident::parse_str("minecraft:donkey_kong"),
+        id       : ident![donkey_kong],
+        asset_id : ident![minecraft:donkey_kong],
         width    : unsafe { NonZeroU8::new_unchecked(4) },
         height   : unsafe { NonZeroU8::new_unchecked(3) }
     };
 
     /// Vanilla `minecraft:sea` painting variant.
     pub const SEA : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("sea"),
-        asset_id : Ident::parse_str("minecraft:sea"),
+        id       : ident![sea],
+        asset_id : ident![minecraft:sea],
         width    : unsafe { NonZeroU8::new_unchecked(2) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:wasteland` painting variant.
     pub const WASTELAND : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("wasteland"),
-        asset_id : Ident::parse_str("minecraft:wasteland"),
+        id       : ident![wasteland],
+        asset_id : ident![minecraft:wasteland],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };
 
     /// Vanilla `minecraft:bomb` painting variant.
     pub const BOMB : PaintingVariant<'static> = PaintingVariant {
-        id       : Ident::vanilla_str("bomb"),
-        asset_id : Ident::parse_str("minecraft:bomb"),
+        id       : ident![bomb],
+        asset_id : ident![minecraft:bomb],
         width    : unsafe { NonZeroU8::new_unchecked(1) },
         height   : unsafe { NonZeroU8::new_unchecked(1) }
     };

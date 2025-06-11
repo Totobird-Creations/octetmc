@@ -2,7 +2,7 @@
 
 
 use crate::packet::config::s2c::registry_data::RegistryEntry;
-use crate::value::ident::Ident;
+use crate::value::ident::{ Ident, ident };
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use core::num::NonZeroU8;
 use std::borrow::Cow;

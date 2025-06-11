@@ -24,3 +24,6 @@ pub mod wolf_sound_variant;
 pub mod wolf_variant;
 
 pub mod worldgen;
+
+
+pub mod block;

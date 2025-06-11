@@ -2,7 +2,7 @@ impl DimensionType<'_> {
 
     /// Vanilla `minecraft:overworld_caves` dimension type.
     pub const OVERWORLD_CAVES : DimensionType<'static> = DimensionType {
-        id              : Ident::vanilla_str("overworld_caves"),
+        id              : ident![overworld_caves],
         fixed_time      : None,
         has_skylight    : true,
         has_ceiling     : true,
@@ -16,7 +16,7 @@ impl DimensionType<'_> {
 
     /// Vanilla `minecraft:the_nether` dimension type.
     pub const THE_NETHER : DimensionType<'static> = DimensionType {
-        id              : Ident::vanilla_str("the_nether"),
+        id              : ident![the_nether],
         fixed_time      : Some(18000),
         has_skylight    : false,
         has_ceiling     : true,
@@ -30,7 +30,7 @@ impl DimensionType<'_> {
 
     /// Vanilla `minecraft:overworld` dimension type.
     pub const OVERWORLD : DimensionType<'static> = DimensionType {
-        id              : Ident::vanilla_str("overworld"),
+        id              : ident![overworld],
         fixed_time      : None,
         has_skylight    : true,
         has_ceiling     : false,
@@ -44,7 +44,7 @@ impl DimensionType<'_> {
 
     /// Vanilla `minecraft:the_end` dimension type.
     pub const THE_END : DimensionType<'static> = DimensionType {
-        id              : Ident::vanilla_str("the_end"),
+        id              : ident![the_end],
         fixed_time      : Some(6000),
         has_skylight    : false,
         has_ceiling     : false,

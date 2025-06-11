@@ -1,7 +1,7 @@
 //! `minecraft:damage_type` registry.
 
 
-use crate::value::ident::Ident;
+use crate::value::ident::{ Ident, ident };
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use crate::packet::config::s2c::registry_data::RegistryEntry;
 use std::borrow::Cow;

@@ -2,7 +2,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:deep_ocean` damage type.
     pub const DEEP_OCEAN : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("deep_ocean"),
+        id                    : ident![deep_ocean],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -18,7 +18,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -31,7 +31,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:the_end` damage type.
     pub const THE_END : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("the_end"),
+        id                    : ident![the_end],
         has_precipitation     : false,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -47,7 +47,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -60,7 +60,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:old_growth_spruce_taiga` damage type.
     pub const OLD_GROWTH_SPRUCE_TAIGA : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("old_growth_spruce_taiga"),
+        id                    : ident![old_growth_spruce_taiga],
         has_precipitation     : true,
         temperature           : 0.25,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -76,7 +76,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -85,7 +85,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.old_growth_taiga"),
+                sound                 : ident![minecraft:music.overworld.old_growth_taiga],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -96,7 +96,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:lukewarm_ocean` damage type.
     pub const LUKEWARM_OCEAN : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("lukewarm_ocean"),
+        id                    : ident![lukewarm_ocean],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -112,7 +112,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -125,7 +125,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:mangrove_swamp` damage type.
     pub const MANGROVE_SWAMP : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("mangrove_swamp"),
+        id                    : ident![mangrove_swamp],
         has_precipitation     : true,
         temperature           : 0.8,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -141,7 +141,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -150,7 +150,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.swamp"),
+                sound                 : ident![minecraft:music.overworld.swamp],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -161,7 +161,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:dark_forest` damage type.
     pub const DARK_FOREST : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("dark_forest"),
+        id                    : ident![dark_forest],
         has_precipitation     : true,
         temperature           : 0.7,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -177,7 +177,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -186,7 +186,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.forest"),
+                sound                 : ident![minecraft:music.overworld.forest],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -197,7 +197,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:birch_forest` damage type.
     pub const BIRCH_FOREST : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("birch_forest"),
+        id                    : ident![birch_forest],
         has_precipitation     : true,
         temperature           : 0.6,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -213,7 +213,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -222,7 +222,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.forest"),
+                sound                 : ident![minecraft:music.overworld.forest],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -233,7 +233,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:beach` damage type.
     pub const BEACH : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("beach"),
+        id                    : ident![beach],
         has_precipitation     : true,
         temperature           : 0.8,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -249,7 +249,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -262,7 +262,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:basalt_deltas` damage type.
     pub const BASALT_DELTAS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("basalt_deltas"),
+        id                    : ident![basalt_deltas],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -280,23 +280,23 @@ impl Biome<'_> {
             probability : 0.118093334
         }),
         ambient_sound         : Some(BiomeAmbientSound {
-        sound : Ident::parse_str("minecraft:ambient.basalt_deltas.loop"),
+        sound : ident![minecraft:ambient.basalt_deltas.loop],
         range : None
     }),
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.basalt_deltas.mood"),
+        sound               : ident![minecraft:ambient.basalt_deltas.mood],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
     }),
         additions_sound       : Some(BiomeAdditionsSound {
-        sound       : Ident::parse_str("minecraft:ambient.basalt_deltas.additions"),
+        sound       : ident![minecraft:ambient.basalt_deltas.additions],
         tick_chance : 0.0111
     }),
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.nether.basalt_deltas"),
+                sound                 : ident![minecraft:music.nether.basalt_deltas],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -307,7 +307,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:snowy_taiga` damage type.
     pub const SNOWY_TAIGA : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("snowy_taiga"),
+        id                    : ident![snowy_taiga],
         has_precipitation     : true,
         temperature           : -0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -323,7 +323,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -336,7 +336,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:stony_peaks` damage type.
     pub const STONY_PEAKS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("stony_peaks"),
+        id                    : ident![stony_peaks],
         has_precipitation     : true,
         temperature           : 1.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -352,7 +352,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -361,7 +361,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.stony_peaks"),
+                sound                 : ident![minecraft:music.overworld.stony_peaks],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -372,7 +372,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:bamboo_jungle` damage type.
     pub const BAMBOO_JUNGLE : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("bamboo_jungle"),
+        id                    : ident![bamboo_jungle],
         has_precipitation     : true,
         temperature           : 0.95,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -388,7 +388,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -397,7 +397,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.bamboo_jungle"),
+                sound                 : ident![minecraft:music.overworld.bamboo_jungle],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -408,7 +408,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:lush_caves` damage type.
     pub const LUSH_CAVES : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("lush_caves"),
+        id                    : ident![lush_caves],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -424,7 +424,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -433,7 +433,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.lush_caves"),
+                sound                 : ident![minecraft:music.overworld.lush_caves],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -444,7 +444,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:snowy_plains` damage type.
     pub const SNOWY_PLAINS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("snowy_plains"),
+        id                    : ident![snowy_plains],
         has_precipitation     : true,
         temperature           : 0.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -460,7 +460,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -473,7 +473,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:sunflower_plains` damage type.
     pub const SUNFLOWER_PLAINS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("sunflower_plains"),
+        id                    : ident![sunflower_plains],
         has_precipitation     : true,
         temperature           : 0.8,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -489,7 +489,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -502,7 +502,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:crimson_forest` damage type.
     pub const CRIMSON_FOREST : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("crimson_forest"),
+        id                    : ident![crimson_forest],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -520,23 +520,23 @@ impl Biome<'_> {
             probability : 0.025
         }),
         ambient_sound         : Some(BiomeAmbientSound {
-        sound : Ident::parse_str("minecraft:ambient.crimson_forest.loop"),
+        sound : ident![minecraft:ambient.crimson_forest.loop],
         range : None
     }),
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.crimson_forest.mood"),
+        sound               : ident![minecraft:ambient.crimson_forest.mood],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
     }),
         additions_sound       : Some(BiomeAdditionsSound {
-        sound       : Ident::parse_str("minecraft:ambient.crimson_forest.additions"),
+        sound       : ident![minecraft:ambient.crimson_forest.additions],
         tick_chance : 0.0111
     }),
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.nether.crimson_forest"),
+                sound                 : ident![minecraft:music.nether.crimson_forest],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -547,7 +547,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:taiga` damage type.
     pub const TAIGA : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("taiga"),
+        id                    : ident![taiga],
         has_precipitation     : true,
         temperature           : 0.25,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -563,7 +563,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -576,7 +576,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:dripstone_caves` damage type.
     pub const DRIPSTONE_CAVES : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("dripstone_caves"),
+        id                    : ident![dripstone_caves],
         has_precipitation     : true,
         temperature           : 0.8,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -592,7 +592,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -601,7 +601,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.dripstone_caves"),
+                sound                 : ident![minecraft:music.overworld.dripstone_caves],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -612,7 +612,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:flower_forest` damage type.
     pub const FLOWER_FOREST : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("flower_forest"),
+        id                    : ident![flower_forest],
         has_precipitation     : true,
         temperature           : 0.7,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -628,7 +628,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -637,7 +637,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.flower_forest"),
+                sound                 : ident![minecraft:music.overworld.flower_forest],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -648,7 +648,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:savanna` damage type.
     pub const SAVANNA : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("savanna"),
+        id                    : ident![savanna],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -664,7 +664,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -677,7 +677,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:grove` damage type.
     pub const GROVE : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("grove"),
+        id                    : ident![grove],
         has_precipitation     : true,
         temperature           : -0.2,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -693,7 +693,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -702,7 +702,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.grove"),
+                sound                 : ident![minecraft:music.overworld.grove],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -713,7 +713,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:nether_wastes` damage type.
     pub const NETHER_WASTES : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("nether_wastes"),
+        id                    : ident![nether_wastes],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -728,23 +728,23 @@ impl Biome<'_> {
         grass_colour_modifier : BiomeGrassColourModifier::None,
         particle              : None,
         ambient_sound         : Some(BiomeAmbientSound {
-        sound : Ident::parse_str("minecraft:ambient.nether_wastes.loop"),
+        sound : ident![minecraft:ambient.nether_wastes.loop],
         range : None
     }),
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.nether_wastes.mood"),
+        sound               : ident![minecraft:ambient.nether_wastes.mood],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
     }),
         additions_sound       : Some(BiomeAdditionsSound {
-        sound       : Ident::parse_str("minecraft:ambient.nether_wastes.additions"),
+        sound       : ident![minecraft:ambient.nether_wastes.additions],
         tick_chance : 0.0111
     }),
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.nether.nether_wastes"),
+                sound                 : ident![minecraft:music.nether.nether_wastes],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -755,7 +755,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:deep_dark` damage type.
     pub const DEEP_DARK : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("deep_dark"),
+        id                    : ident![deep_dark],
         has_precipitation     : true,
         temperature           : 0.8,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -771,7 +771,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -780,7 +780,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.deep_dark"),
+                sound                 : ident![minecraft:music.overworld.deep_dark],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -791,7 +791,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:mushroom_fields` damage type.
     pub const MUSHROOM_FIELDS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("mushroom_fields"),
+        id                    : ident![mushroom_fields],
         has_precipitation     : true,
         temperature           : 0.9,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -807,7 +807,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -820,7 +820,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:desert` damage type.
     pub const DESERT : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("desert"),
+        id                    : ident![desert],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -836,7 +836,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -845,7 +845,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.desert"),
+                sound                 : ident![minecraft:music.overworld.desert],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -856,7 +856,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:plains` damage type.
     pub const PLAINS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("plains"),
+        id                    : ident![plains],
         has_precipitation     : true,
         temperature           : 0.8,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -872,7 +872,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -885,7 +885,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:old_growth_pine_taiga` damage type.
     pub const OLD_GROWTH_PINE_TAIGA : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("old_growth_pine_taiga"),
+        id                    : ident![old_growth_pine_taiga],
         has_precipitation     : true,
         temperature           : 0.3,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -901,7 +901,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -910,7 +910,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.old_growth_taiga"),
+                sound                 : ident![minecraft:music.overworld.old_growth_taiga],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -921,7 +921,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:frozen_ocean` damage type.
     pub const FROZEN_OCEAN : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("frozen_ocean"),
+        id                    : ident![frozen_ocean],
         has_precipitation     : true,
         temperature           : 0.0,
         temperature_modifier  : BiomeTemperatureModifier::Frozen,
@@ -937,7 +937,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -950,7 +950,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:frozen_peaks` damage type.
     pub const FROZEN_PEAKS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("frozen_peaks"),
+        id                    : ident![frozen_peaks],
         has_precipitation     : true,
         temperature           : -0.7,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -966,7 +966,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -975,7 +975,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.frozen_peaks"),
+                sound                 : ident![minecraft:music.overworld.frozen_peaks],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -986,7 +986,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:windswept_gravelly_hills` damage type.
     pub const WINDSWEPT_GRAVELLY_HILLS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("windswept_gravelly_hills"),
+        id                    : ident![windswept_gravelly_hills],
         has_precipitation     : true,
         temperature           : 0.2,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1002,7 +1002,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1015,7 +1015,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:forest` damage type.
     pub const FOREST : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("forest"),
+        id                    : ident![forest],
         has_precipitation     : true,
         temperature           : 0.7,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1031,7 +1031,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1040,7 +1040,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.forest"),
+                sound                 : ident![minecraft:music.overworld.forest],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1051,7 +1051,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:snowy_beach` damage type.
     pub const SNOWY_BEACH : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("snowy_beach"),
+        id                    : ident![snowy_beach],
         has_precipitation     : true,
         temperature           : 0.05,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1067,7 +1067,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1080,7 +1080,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:jagged_peaks` damage type.
     pub const JAGGED_PEAKS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("jagged_peaks"),
+        id                    : ident![jagged_peaks],
         has_precipitation     : true,
         temperature           : -0.7,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1096,7 +1096,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1105,7 +1105,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.jagged_peaks"),
+                sound                 : ident![minecraft:music.overworld.jagged_peaks],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1116,7 +1116,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:ice_spikes` damage type.
     pub const ICE_SPIKES : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("ice_spikes"),
+        id                    : ident![ice_spikes],
         has_precipitation     : true,
         temperature           : 0.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1132,7 +1132,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1145,7 +1145,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:ocean` damage type.
     pub const OCEAN : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("ocean"),
+        id                    : ident![ocean],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1161,7 +1161,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1174,7 +1174,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:soul_sand_valley` damage type.
     pub const SOUL_SAND_VALLEY : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("soul_sand_valley"),
+        id                    : ident![soul_sand_valley],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1192,23 +1192,23 @@ impl Biome<'_> {
             probability : 0.00625
         }),
         ambient_sound         : Some(BiomeAmbientSound {
-        sound : Ident::parse_str("minecraft:ambient.soul_sand_valley.loop"),
+        sound : ident![minecraft:ambient.soul_sand_valley.loop],
         range : None
     }),
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.soul_sand_valley.mood"),
+        sound               : ident![minecraft:ambient.soul_sand_valley.mood],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
     }),
         additions_sound       : Some(BiomeAdditionsSound {
-        sound       : Ident::parse_str("minecraft:ambient.soul_sand_valley.additions"),
+        sound       : ident![minecraft:ambient.soul_sand_valley.additions],
         tick_chance : 0.0111
     }),
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.nether.soul_sand_valley"),
+                sound                 : ident![minecraft:music.nether.soul_sand_valley],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1219,7 +1219,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:windswept_savanna` damage type.
     pub const WINDSWEPT_SAVANNA : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("windswept_savanna"),
+        id                    : ident![windswept_savanna],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1235,7 +1235,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1248,7 +1248,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:swamp` damage type.
     pub const SWAMP : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("swamp"),
+        id                    : ident![swamp],
         has_precipitation     : true,
         temperature           : 0.8,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1264,7 +1264,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1273,7 +1273,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.swamp"),
+                sound                 : ident![minecraft:music.overworld.swamp],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1284,7 +1284,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:deep_frozen_ocean` damage type.
     pub const DEEP_FROZEN_OCEAN : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("deep_frozen_ocean"),
+        id                    : ident![deep_frozen_ocean],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::Frozen,
@@ -1300,7 +1300,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1313,7 +1313,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:pale_garden` damage type.
     pub const PALE_GARDEN : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("pale_garden"),
+        id                    : ident![pale_garden],
         has_precipitation     : true,
         temperature           : 0.7,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1329,7 +1329,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1342,7 +1342,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:snowy_slopes` damage type.
     pub const SNOWY_SLOPES : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("snowy_slopes"),
+        id                    : ident![snowy_slopes],
         has_precipitation     : true,
         temperature           : -0.3,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1358,7 +1358,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1367,7 +1367,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.snowy_slopes"),
+                sound                 : ident![minecraft:music.overworld.snowy_slopes],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1378,7 +1378,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:old_growth_birch_forest` damage type.
     pub const OLD_GROWTH_BIRCH_FOREST : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("old_growth_birch_forest"),
+        id                    : ident![old_growth_birch_forest],
         has_precipitation     : true,
         temperature           : 0.6,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1394,7 +1394,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1403,7 +1403,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.forest"),
+                sound                 : ident![minecraft:music.overworld.forest],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1414,7 +1414,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:the_void` damage type.
     pub const THE_VOID : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("the_void"),
+        id                    : ident![the_void],
         has_precipitation     : false,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1430,7 +1430,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1443,7 +1443,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:eroded_badlands` damage type.
     pub const ERODED_BADLANDS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("eroded_badlands"),
+        id                    : ident![eroded_badlands],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1459,7 +1459,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1468,7 +1468,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.badlands"),
+                sound                 : ident![minecraft:music.overworld.badlands],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1479,7 +1479,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:badlands` damage type.
     pub const BADLANDS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("badlands"),
+        id                    : ident![badlands],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1495,7 +1495,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1504,7 +1504,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.badlands"),
+                sound                 : ident![minecraft:music.overworld.badlands],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1515,7 +1515,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:end_midlands` damage type.
     pub const END_MIDLANDS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("end_midlands"),
+        id                    : ident![end_midlands],
         has_precipitation     : false,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1531,7 +1531,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1544,7 +1544,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:windswept_hills` damage type.
     pub const WINDSWEPT_HILLS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("windswept_hills"),
+        id                    : ident![windswept_hills],
         has_precipitation     : true,
         temperature           : 0.2,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1560,7 +1560,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1573,7 +1573,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:warped_forest` damage type.
     pub const WARPED_FOREST : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("warped_forest"),
+        id                    : ident![warped_forest],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1591,23 +1591,23 @@ impl Biome<'_> {
             probability : 0.01428
         }),
         ambient_sound         : Some(BiomeAmbientSound {
-        sound : Ident::parse_str("minecraft:ambient.warped_forest.loop"),
+        sound : ident![minecraft:ambient.warped_forest.loop],
         range : None
     }),
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.warped_forest.mood"),
+        sound               : ident![minecraft:ambient.warped_forest.mood],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
     }),
         additions_sound       : Some(BiomeAdditionsSound {
-        sound       : Ident::parse_str("minecraft:ambient.warped_forest.additions"),
+        sound       : ident![minecraft:ambient.warped_forest.additions],
         tick_chance : 0.0111
     }),
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.nether.warped_forest"),
+                sound                 : ident![minecraft:music.nether.warped_forest],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1618,7 +1618,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:windswept_forest` damage type.
     pub const WINDSWEPT_FOREST : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("windswept_forest"),
+        id                    : ident![windswept_forest],
         has_precipitation     : true,
         temperature           : 0.2,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1634,7 +1634,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1647,7 +1647,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:river` damage type.
     pub const RIVER : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("river"),
+        id                    : ident![river],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1663,7 +1663,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1676,7 +1676,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:frozen_river` damage type.
     pub const FROZEN_RIVER : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("frozen_river"),
+        id                    : ident![frozen_river],
         has_precipitation     : true,
         temperature           : 0.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1692,7 +1692,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1705,7 +1705,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:sparse_jungle` damage type.
     pub const SPARSE_JUNGLE : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("sparse_jungle"),
+        id                    : ident![sparse_jungle],
         has_precipitation     : true,
         temperature           : 0.95,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1721,7 +1721,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1730,7 +1730,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.sparse_jungle"),
+                sound                 : ident![minecraft:music.overworld.sparse_jungle],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1741,7 +1741,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:cold_ocean` damage type.
     pub const COLD_OCEAN : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("cold_ocean"),
+        id                    : ident![cold_ocean],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1757,7 +1757,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1770,7 +1770,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:jungle` damage type.
     pub const JUNGLE : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("jungle"),
+        id                    : ident![jungle],
         has_precipitation     : true,
         temperature           : 0.95,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1786,7 +1786,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1795,7 +1795,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.jungle"),
+                sound                 : ident![minecraft:music.overworld.jungle],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1806,7 +1806,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:wooded_badlands` damage type.
     pub const WOODED_BADLANDS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("wooded_badlands"),
+        id                    : ident![wooded_badlands],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1822,7 +1822,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1831,7 +1831,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.badlands"),
+                sound                 : ident![minecraft:music.overworld.badlands],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -1842,7 +1842,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:deep_lukewarm_ocean` damage type.
     pub const DEEP_LUKEWARM_OCEAN : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("deep_lukewarm_ocean"),
+        id                    : ident![deep_lukewarm_ocean],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1858,7 +1858,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1871,7 +1871,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:small_end_islands` damage type.
     pub const SMALL_END_ISLANDS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("small_end_islands"),
+        id                    : ident![small_end_islands],
         has_precipitation     : false,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1887,7 +1887,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1900,7 +1900,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:warm_ocean` damage type.
     pub const WARM_OCEAN : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("warm_ocean"),
+        id                    : ident![warm_ocean],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1916,7 +1916,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1929,7 +1929,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:end_barrens` damage type.
     pub const END_BARRENS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("end_barrens"),
+        id                    : ident![end_barrens],
         has_precipitation     : false,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1945,7 +1945,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1958,7 +1958,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:savanna_plateau` damage type.
     pub const SAVANNA_PLATEAU : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("savanna_plateau"),
+        id                    : ident![savanna_plateau],
         has_precipitation     : false,
         temperature           : 2.0,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -1974,7 +1974,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -1987,7 +1987,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:end_highlands` damage type.
     pub const END_HIGHLANDS : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("end_highlands"),
+        id                    : ident![end_highlands],
         has_precipitation     : false,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -2003,7 +2003,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -2016,7 +2016,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:cherry_grove` damage type.
     pub const CHERRY_GROVE : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("cherry_grove"),
+        id                    : ident![cherry_grove],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -2032,7 +2032,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -2041,7 +2041,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.cherry_grove"),
+                sound                 : ident![minecraft:music.overworld.cherry_grove],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false
@@ -2052,7 +2052,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:stony_shore` damage type.
     pub const STONY_SHORE : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("stony_shore"),
+        id                    : ident![stony_shore],
         has_precipitation     : true,
         temperature           : 0.2,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -2068,7 +2068,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -2081,7 +2081,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:deep_cold_ocean` damage type.
     pub const DEEP_COLD_OCEAN : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("deep_cold_ocean"),
+        id                    : ident![deep_cold_ocean],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -2097,7 +2097,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -2110,7 +2110,7 @@ impl Biome<'_> {
 
     /// Vanilla `minecraft:meadow` damage type.
     pub const MEADOW : Biome<'static> = Biome {
-        id                    : Ident::vanilla_str("meadow"),
+        id                    : ident![meadow],
         has_precipitation     : true,
         temperature           : 0.5,
         temperature_modifier  : BiomeTemperatureModifier::None,
@@ -2126,7 +2126,7 @@ impl Biome<'_> {
         particle              : None,
         ambient_sound         : None,
         mood_sound            : Some(BiomeMoodSound {
-        sound               : Ident::parse_str("minecraft:ambient.cave"),
+        sound               : ident![minecraft:ambient.cave],
         tick_delay          : 6000,
         block_search_extent : 8,
         offset              : 2.0
@@ -2135,7 +2135,7 @@ impl Biome<'_> {
         music                 : Cow::Borrowed(const { &[
             BiomeMusic {
                 weight                : 1,
-                sound                 : Ident::parse_str("minecraft:music.overworld.meadow"),
+                sound                 : ident![minecraft:music.overworld.meadow],
                 min_delay             : 12000,
                 max_delay             : 24000,
                 replace_current_music : false

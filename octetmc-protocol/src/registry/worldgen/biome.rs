@@ -1,7 +1,7 @@
 //! `minecraft:worldgen/biome` registry.
 
 
-use crate::value::ident::Ident;
+use crate::value::ident::{ Ident, ident };
 use crate::value::rgb::Rgb;
 use crate::value::particle::Particle;
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };

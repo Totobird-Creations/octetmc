@@ -57,4 +57,6 @@ fn main() { smol::block_on(async {
     generate::data::wolf_variant(&generated_dir, &target_dir.join("data").join("wolf_variant.rs")).await;
     generate::data::worldgen::biome(&generated_dir, &target_dir.join("data").join("worldgen").join("biome.rs")).await;
 
+    generate::blocks(&generated_dir, &target_dir.join("blocks.rs")).await;
+
 }) }

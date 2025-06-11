@@ -43,6 +43,8 @@ impl Parse for IdentTokens {
         loop {
             let lookahead = input.lookahead1();
             if (lookahead.peek(Ident)
+                || lookahead.peek(Token![match])
+                || lookahead.peek(Token![loop])
                 || lookahead.peek(LitInt)
                 || lookahead.peek(LitFloat)
                 || lookahead.peek(LitBool)
@@ -62,6 +64,10 @@ impl Parse for IdentTokens {
 
 enum IdentToken {
     Ident(Ident),
+    #[expect(dead_code)]
+    Match(Token![match]),
+    #[expect(dead_code)]
+    Loop(Token![loop]),
     Int(LitInt),
     Float(LitFloat),
     Bool(LitBool),
@@ -80,6 +86,8 @@ enum IdentToken {
 impl fmt::Display for IdentToken {
     fn fmt(&self, f : &mut fmt::Formatter<'_>) -> fmt::Result { match (self) {
         Self::Ident(ident) => write!(f, "{}", ident.to_string()),
+        Self::Match(_)     => write!(f, "match"),
+        Self::Loop(_)      => write!(f, "loop"),
         Self::Int(int)     => write!(f, "{}{}", int.base10_digits(), int.suffix()),
         Self::Float(float) => write!(f, "{}{}", float.base10_digits(), float.suffix()),
         Self::Bool(bool)   => write!(f, "{}", bool.value),
@@ -96,6 +104,10 @@ impl Parse for IdentToken {
         let lookahead = input.lookahead1();
         if (lookahead.peek(Ident)) {
             Ok(Self::Ident(input.parse()?))
+        } else if (lookahead.peek(Token![match])) {
+            Ok(Self::Match(input.parse()?))
+        } else if (lookahead.peek(Token![loop])) {
+            Ok(Self::Loop(input.parse()?))
         } else if (lookahead.peek(LitInt)) {
             Ok(Self::Int(input.parse()?))
         } else if (lookahead.peek(LitFloat)) {
