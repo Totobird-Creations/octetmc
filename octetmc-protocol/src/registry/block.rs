@@ -7,7 +7,7 @@ use crate::value::block_state::BlockState;
 include!(".generated/blocks.rs");
 
 
-/// A block type with states.
+/// A block type with properties.
 pub trait Block
 where
     Self       : Into<BlockState> + Default,
@@ -18,3 +18,7 @@ where
     const DEFAULT_STATE : Self;
 
 }
+
+
+/// A block property.
+pub trait BlockProperty { }

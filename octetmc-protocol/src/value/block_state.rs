@@ -3,6 +3,7 @@
 
 /// A block state, including material and properties.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[repr(C)]
 pub struct BlockState {
     id : u32
 }

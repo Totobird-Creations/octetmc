@@ -91,6 +91,7 @@ pub async fn blocks(generated_dir : &Path, target_file : &Path) {
                     writeln!(target, "        {variant},").unwrap();
                 }
                 writeln!(target, "    }}").unwrap();
+                writeln!(target, "    impl BlockProperty for {ty} {{ }}").unwrap();
             }
 
         }

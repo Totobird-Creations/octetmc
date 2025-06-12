@@ -15,6 +15,15 @@ edition      = "2024"
 rust-version = "1.87"
 
 
+[package.metadata.docs.rs]
+rustc-args   = ["--cfg", "docsrs_dep"]
+rustdoc-args = [
+    "--cfg", "docsrs_dep",
+    "--html-after-content", "docs-rs/trait-tags.html",
+]
+all-features = true
+
+
 [features]
 
 mc-1_21_5 = [
