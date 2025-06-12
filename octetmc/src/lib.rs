@@ -41,6 +41,7 @@ impl Plugin for DefaultAsyncPlugin {
 }
 
 plugin_group! {
+    /// Out-of-the-box server.
     #[derive(Debug)]
     pub struct OctetDefaultPlugins {
         bevy_app:::ScheduleRunnerPlugin,

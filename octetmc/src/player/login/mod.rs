@@ -17,7 +17,7 @@ pub use kick_dupes::*;
 #[derive(Event)]
 pub struct PlayerLoggingInEvent {
 
-    /// The [`Entity`] ID of the [`Player`] who joined.
+    /// The [`Entity`](bevy_ecs::entity::Entity) ID of the [`Player`](super::Player) who joined.
     pub player_id : PlayerId
 
 }
@@ -27,7 +27,7 @@ pub struct PlayerLoggingInEvent {
 #[derive(Event)]
 pub struct KickPlayer {
 
-    /// The [`Entity`] ID of the [`Player`] to kick.
+    /// The [`Entity`](bevy_ecs::entity::Entity) ID of the [`Player`](super::Player) to kick.
     pub player_id : PlayerId,
 
     /// The message to display to the client.
