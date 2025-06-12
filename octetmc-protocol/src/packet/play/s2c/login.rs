@@ -5,7 +5,7 @@ use crate::value::varint::VarInt;
 use crate::value::ident::Ident;
 use crate::value::dim_block_pos::DimBlockPos;
 use crate::value::game_mode::GameMode;
-use crate::packet::StatePlay;
+use crate::packet::{ Packet, StatePlay };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 use std::borrow::Cow;
 
@@ -90,6 +90,11 @@ pub struct LoginS2CPlayPacket<'l> {
     pub enforces_secure_chat : bool
 
 }
+
+
+impl crate::Sealed for LoginS2CPlayPacket<'_> { }
+
+impl Packet for LoginS2CPlayPacket<'_> { }
 
 
 impl LoginS2CPlayPacket<'_> {

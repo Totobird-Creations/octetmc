@@ -91,6 +91,7 @@ pub async fn blocks(generated_dir : &Path, target_file : &Path) {
                     writeln!(target, "        {variant},").unwrap();
                 }
                 writeln!(target, "    }}").unwrap();
+                writeln!(target, "    impl crate::Sealed for {ty} {{ }}").unwrap();
                 writeln!(target, "    impl BlockProperty for {ty} {{ }}").unwrap();
             }
 
@@ -146,6 +147,8 @@ pub async fn blocks(generated_dir : &Path, target_file : &Path) {
         writeln!(target, "            Self::DEFAULT_STATE").unwrap();
         writeln!(target, "        }}").unwrap();
         writeln!(target, "    }}").unwrap();
+
+        writeln!(target, "    impl crate::Sealed for {ident} {{ }}").unwrap();
 
         writeln!(target).unwrap();
         writeln!(target, "    impl Block for {ident} {{").unwrap();

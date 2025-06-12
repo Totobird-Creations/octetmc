@@ -33,3 +33,6 @@ pub const LATEST_GAME_VERSION : &Version = &Version::new(1, 21, 5);
 
 /// The protocol version that this library currently supports.
 pub const PROTOCOL_VERSION : u32 = 770;
+
+
+trait Sealed { }

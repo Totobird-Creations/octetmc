@@ -1,7 +1,7 @@
 //! `0x01` `pong_response`
 
 
-use crate::packet::StateStatus;
+use crate::packet::{ Packet, StateStatus };
 use crate::packet::encode::{ EncodeBuf, PacketEncode };
 
 
@@ -13,6 +13,11 @@ pub struct PongResponseS2CStatusPacket {
     pub timestamp : u64
 
 }
+
+
+impl crate::Sealed for PongResponseS2CStatusPacket { }
+
+impl Packet for PongResponseS2CStatusPacket { }
 
 
 impl PacketEncode for PongResponseS2CStatusPacket {

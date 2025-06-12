@@ -103,7 +103,7 @@ pub(crate) use packet_encode_group;
 
 
 /// Packet encoder, excluding packet ID.
-pub trait PacketEncode {
+pub trait PacketEncode : super::Packet {
     /// The state in which this packet can be used.
     type State : AsPacketState;
 

@@ -2,7 +2,7 @@
 
 
 use crate::value::client_info::{ ClientInfo, ClientInfoDecodeError };
-use crate::packet::StateConfig;
+use crate::packet::{ Packet, StateConfig };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 
 
@@ -34,6 +34,11 @@ impl ClientInformationC2SConfigPacket<'_> {
     }
 
 }
+
+
+impl crate::Sealed for ClientInformationC2SConfigPacket<'_> { }
+
+impl Packet for ClientInformationC2SConfigPacket<'_> { }
 
 
 impl PacketDecode for ClientInformationC2SConfigPacket<'_> {

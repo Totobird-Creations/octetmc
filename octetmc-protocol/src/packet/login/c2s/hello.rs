@@ -1,7 +1,7 @@
 //! `0x00` `hello`
 
 
-use crate::packet::StateLogin;
+use crate::packet::{ Packet, StateLogin };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use crate::packet::decode::str::StringDecodeError;
 use std::borrow::Cow;
@@ -23,6 +23,11 @@ pub struct HelloC2SLoginPacket<'l> {
     pub uuid     : Uuid
 
 }
+
+
+impl crate::Sealed for HelloC2SLoginPacket<'_> { }
+
+impl Packet for HelloC2SLoginPacket<'_> { }
 
 
 impl HelloC2SLoginPacket<'_> {

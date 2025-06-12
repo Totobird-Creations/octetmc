@@ -2,7 +2,7 @@
 
 
 use crate::value::varint::VarInt;
-use crate::packet::StateLogin;
+use crate::packet::{ Packet, StateLogin };
 use crate::packet::encode::{ EncodeBuf, PacketEncode };
 
 
@@ -18,6 +18,11 @@ pub struct LoginCompressionS2CLoginPacket {
     pub threshold : u32
 
 }
+
+
+impl crate::Sealed for LoginCompressionS2CLoginPacket { }
+
+impl Packet for LoginCompressionS2CLoginPacket { }
 
 
 impl PacketEncode for LoginCompressionS2CLoginPacket {

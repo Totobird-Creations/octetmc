@@ -74,6 +74,10 @@ macro_rules! packet_decode_group { (
         )*
     }
 
+    impl $( < $lt , > )? $crate::Sealed for $ident $( < $lt , > )? { }
+
+    impl $( < $lt , > )? $crate::packet::PacketGroup for $ident $( < $lt , > )? { }
+
     impl $( < $lt , > )? $crate::packet::decode::PacketPrefixedDecode for $ident $( < $lt , > )? {
         type State = $state;
 
@@ -118,7 +122,7 @@ pub(crate) use packet_decode_group_output;
 
 
 /// Packet decoder, excluding packet ID.
-pub trait PacketDecode : Sized {
+pub trait PacketDecode : super::Packet + Sized {
     /// The state in which this packet can be used.
     type State : AsPacketState;
 

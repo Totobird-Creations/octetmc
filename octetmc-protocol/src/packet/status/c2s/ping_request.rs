@@ -1,7 +1,7 @@
 //! `0x01` `ping_request`
 
 
-use crate::packet::StateStatus;
+use crate::packet::{ Packet, StateStatus };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
 
 
@@ -13,6 +13,11 @@ pub struct PingRequestC2SStatusPacket {
     pub timestamp : u64
 
 }
+
+
+impl crate::Sealed for PingRequestC2SStatusPacket { }
+
+impl Packet for PingRequestC2SStatusPacket { }
 
 
 impl PacketDecode for PingRequestC2SStatusPacket {

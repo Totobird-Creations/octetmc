@@ -2,7 +2,7 @@
 
 
 use crate::value::text::Text;
-use crate::packet::StateStatus;
+use crate::packet::{ Packet, StateStatus };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 use std::borrow::Cow;
 use uuid::Uuid;
@@ -65,7 +65,7 @@ pub struct StatusResponseS2CStatusPacket<'l, 'k> {
 }
 
 
-impl<'l, 'k> StatusResponseS2CStatusPacket<'l, 'k> {
+impl StatusResponseS2CStatusPacket<'_, '_> {
 
     /// Convert the inner parts of this packet to their owned counterparts, or
     ///  take ownership if they are already owned. Returns the newly created
@@ -216,6 +216,11 @@ impl<'l> StatusPlayersSampleEntry<'l> {
     }
 
 }
+
+
+impl crate::Sealed for StatusResponseS2CStatusPacket<'_, '_> { }
+
+impl Packet for StatusResponseS2CStatusPacket<'_, '_> { }
 
 
 impl PacketEncode for StatusResponseS2CStatusPacket<'_, '_> {

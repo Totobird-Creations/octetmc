@@ -163,3 +163,8 @@ impl DimensionType<'_> {
     }
 
 }
+
+
+impl crate::Sealed for DimensionType<'_> { }
+
+impl super::RegistryType for DimensionType<'_> { }

@@ -2,7 +2,7 @@
 
 
 use crate::value::profile::PlayerProfile;
-use crate::packet::StateLogin;
+use crate::packet::{ Packet, StateLogin};
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 
 
@@ -18,7 +18,12 @@ pub struct LoginFinishedS2CLoginPacket<'l> {
 }
 
 
-impl<'l> LoginFinishedS2CLoginPacket<'l> {
+impl crate::Sealed for LoginFinishedS2CLoginPacket<'_> { }
+
+impl Packet for LoginFinishedS2CLoginPacket<'_> { }
+
+
+impl LoginFinishedS2CLoginPacket<'_> {
 
     /// Convert the inner parts of this packet to their owned counterparts, or
     ///  take ownership if they are already owned. Returns the newly created

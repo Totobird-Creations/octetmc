@@ -82,3 +82,8 @@ impl WolfVariant<'_> {
     }
 
 }
+
+
+impl crate::Sealed for WolfVariant<'_> { }
+
+impl super::RegistryType for WolfVariant<'_> { }

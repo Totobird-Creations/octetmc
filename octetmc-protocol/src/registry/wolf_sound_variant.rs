@@ -101,3 +101,8 @@ impl WolfSoundVariant<'_> {
     }
 
 }
+
+
+impl crate::Sealed for WolfSoundVariant<'_> { }
+
+impl super::RegistryType for WolfSoundVariant<'_> { }

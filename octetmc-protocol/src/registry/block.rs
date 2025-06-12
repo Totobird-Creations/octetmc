@@ -8,9 +8,10 @@ include!(".generated/blocks.rs");
 
 
 /// A block type with properties.
+#[expect(private_bounds)]
 pub trait Block
 where
-    Self       : Into<BlockState> + Default,
+    Self       : Into<BlockState> + Default + crate::Sealed,
     BlockState : From<Self>
 {
 
@@ -21,4 +22,5 @@ where
 
 
 /// A block property.
-pub trait BlockProperty { }
+#[expect(private_bounds)]
+pub trait BlockProperty : crate::Sealed { }

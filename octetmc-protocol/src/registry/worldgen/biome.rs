@@ -596,3 +596,8 @@ impl Biome<'_> {
     }
 
 }
+
+
+impl crate::Sealed for Biome<'_> { }
+
+impl super::RegistryType for Biome<'_> { }

@@ -2,7 +2,7 @@
 
 
 use crate::value::game_mode::GameMode;
-use crate::packet::StatePlay;
+use crate::packet::{ Packet, StatePlay };
 use crate::packet::encode::{ PacketEncode, EncodeBuf };
 
 
@@ -97,6 +97,11 @@ pub enum DemoEvent {
     DemoOver
 
 }
+
+
+impl crate::Sealed for GameEventS2CPlayPacket { }
+
+impl Packet for GameEventS2CPlayPacket { }
 
 
 impl PacketEncode for GameEventS2CPlayPacket {

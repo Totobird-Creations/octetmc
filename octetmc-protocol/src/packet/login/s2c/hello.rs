@@ -2,7 +2,7 @@
 
 
 use crate::value::varint::VarInt;
-use crate::packet::StateLogin;
+use crate::packet::{ Packet, StateLogin };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 use std::borrow::Cow;
 
@@ -26,6 +26,11 @@ pub struct HelloS2CLoginPacket<'l> {
     pub mojauth_enabled : bool
 
 }
+
+
+impl crate::Sealed for HelloS2CLoginPacket<'_> { }
+
+impl Packet for HelloS2CLoginPacket<'_> { }
 
 
 impl HelloS2CLoginPacket<'_> {

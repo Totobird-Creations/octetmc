@@ -42,6 +42,15 @@ pub enum PacketState {
 }
 
 
+/// A packet.
+#[expect(private_bounds)]
+pub trait Packet : crate::Sealed { }
+
+/// A packet group.
+#[expect(private_bounds)]
+pub trait PacketGroup : crate::Sealed { }
+
+
 /// The state that a packet is sent in.
 ///
 /// This is used by the en/decode traits to restrict where they can be used.

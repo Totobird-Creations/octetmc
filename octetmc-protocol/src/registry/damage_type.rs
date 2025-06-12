@@ -129,3 +129,8 @@ impl DamageType<'_> {
     }
 
 }
+
+
+impl crate::Sealed for DamageType<'_> { }
+
+impl super::RegistryType for DamageType<'_> { }

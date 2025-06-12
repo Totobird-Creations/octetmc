@@ -9,8 +9,12 @@
     // Traits that we want to show as tags.
     // Order determines sort order of items in listings.
     const octetTraits = [
+        'AsPacketState',
         'Block',
-        'BlockProperty'
+        'BlockProperty',
+        'Packet',
+        'PacketGroup',
+        'RegistryType'
     ];
 
     // Find all traits that are implemented by the current type.
@@ -123,12 +127,25 @@
         background-color: var(--tag-color);
     }
 
+    .aspacketstate-tag {
+        --tag-color: oklch(50% 27% 28);
+    }
+
     .block-tag {
         --tag-color: oklch(50% 27% 135);
     }
 
     .blockproperty-tag {
         --tag-color: oklch(50% 27% 162);
+    }
+
+    .packet-tag,
+    .packetgroup-tag {
+        --tag-color: oklch(50% 27% 78);
+    }
+
+    .registrytype-tag {
+        --tag-color: oklch(50% 27% 280);
     }
 
 </style>

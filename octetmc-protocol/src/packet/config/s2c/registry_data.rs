@@ -4,7 +4,7 @@
 use crate::value::varint::VarInt;
 use crate::value::ident::Ident;
 use crate::value::nbt::Nbt;
-use crate::packet::StateConfig;
+use crate::packet::{ Packet, StateConfig };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 use std::borrow::Cow;
 
@@ -20,6 +20,11 @@ pub struct RegistryDataS2CConfigPacket<'l> {
     pub entries : Cow<'l, [RegistryEntry<'l>]>
 
 }
+
+
+impl crate::Sealed for RegistryDataS2CConfigPacket<'_> { }
+
+impl Packet for RegistryDataS2CConfigPacket<'_> { }
 
 
 impl RegistryDataS2CConfigPacket<'_> {

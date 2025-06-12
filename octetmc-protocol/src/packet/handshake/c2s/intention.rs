@@ -2,7 +2,7 @@
 
 
 use crate::value::varint::{ VarInt, VarIntDecodeError };
-use crate::packet::{ StateHandshake };
+use crate::packet::{ Packet, StateHandshake };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
 use crate::packet::decode::str::StringDecodeError;
 use std::borrow::Cow;
@@ -27,6 +27,11 @@ pub struct IntentionC2SHandshakePacket<'l> {
     pub intention : Intention
 
 }
+
+
+impl crate::Sealed for IntentionC2SHandshakePacket<'_> { }
+
+impl Packet for IntentionC2SHandshakePacket<'_> { }
 
 
 impl<'l> IntentionC2SHandshakePacket<'l> {

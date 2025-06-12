@@ -1,13 +1,18 @@
 //! `0x00` `status_request`
 
 
-use crate::packet::StateStatus;
+use crate::packet::{ Packet, StateStatus };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status_Request>
 #[derive(Debug, Clone)]
 pub struct StatusRequestC2SStatusPacket;
+
+
+impl crate::Sealed for StatusRequestC2SStatusPacket { }
+
+impl Packet for StatusRequestC2SStatusPacket { }
 
 
 impl PacketDecode for StatusRequestC2SStatusPacket {

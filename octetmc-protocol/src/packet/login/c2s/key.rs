@@ -2,7 +2,7 @@
 
 
 use crate::value::varint::VarInt;
-use crate::packet::StateLogin;
+use crate::packet::{ Packet, StateLogin };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use crate::packet::decode::str::StringDecodeError;
 use std::borrow::Cow;
@@ -20,6 +20,11 @@ pub struct KeyC2SLoginPacket<'l> {
     pub verify_token : Cow<'l, [u8]>
 
 }
+
+
+impl crate::Sealed for KeyC2SLoginPacket<'_> { }
+
+impl Packet for KeyC2SLoginPacket<'_> { }
 
 
 impl KeyC2SLoginPacket<'_> {

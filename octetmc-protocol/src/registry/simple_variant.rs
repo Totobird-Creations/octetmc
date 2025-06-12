@@ -65,6 +65,11 @@ impl SimpleVariant<'_> {
 }
 
 
+impl crate::Sealed for SimpleVariant<'_> { }
+
+impl super::RegistryType for SimpleVariant<'_> { }
+
+
 macro_rules! simple_variant { ( $ident:ident , $name:tt , $id:tt ) => {
 
     #[doc = concat!("A ", $name, " registry entry.")]
@@ -78,9 +83,14 @@ macro_rules! simple_variant { ( $ident:ident , $name:tt , $id:tt ) => {
         fn deref(&self) -> &Self::Target { &self.0 }
     }
 
-    impl<'l> core::ops::DerefMut for $ident<'l> {
+    impl core::ops::DerefMut for $ident<'_> {
         fn deref_mut(&mut self) -> &mut Self::Target { &mut self.0 }
     }
+
+
+    impl crate::Sealed for $ident<'_> { }
+
+    impl super::RegistryType for $ident<'_> { }
 
 } }
 pub(super) use simple_variant;

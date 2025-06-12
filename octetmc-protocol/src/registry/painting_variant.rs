@@ -78,3 +78,8 @@ impl PaintingVariant<'_> {
     }
 
 }
+
+
+impl crate::Sealed for PaintingVariant<'_> { }
+
+impl super::RegistryType for PaintingVariant<'_> { }

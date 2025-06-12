@@ -3,7 +3,7 @@
 
 use crate::value::ident::{ Ident, IdentDecodeError };
 use crate::value::channel_data::ChannelData;
-use crate::packet::StateConfig;
+use crate::packet::{ Packet, StateConfig };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use std::borrow::Cow;
 
@@ -36,6 +36,11 @@ impl CustomPayloadC2SConfigPacket<'_> {
     }
 
 }
+
+
+impl crate::Sealed for CustomPayloadC2SConfigPacket<'_> { }
+
+impl Packet for CustomPayloadC2SConfigPacket<'_> { }
 
 
 impl PacketDecode for CustomPayloadC2SConfigPacket<'_> {

@@ -1,13 +1,18 @@
 //! `0x03` `finish_configuration`
 
 
-use crate::packet::StateConfig;
+use crate::packet::{ Packet, StateConfig };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Acknowledge_Finish_Configuration>
 #[derive(Debug, Clone, Copy)]
 pub struct FinishConfigurationC2SConfigPacket;
+
+
+impl crate::Sealed for FinishConfigurationC2SConfigPacket { }
+
+impl Packet for FinishConfigurationC2SConfigPacket { }
 
 
 impl PacketDecode for FinishConfigurationC2SConfigPacket {
