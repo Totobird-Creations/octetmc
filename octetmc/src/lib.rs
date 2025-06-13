@@ -54,7 +54,8 @@ plugin_group! {
         player:::OctetPlayerPlugin,
         player::login:::PlayerAutoLoginPlugin,
         player::login:::PlayerKickDupesPlugin,
-        world:::OctetWorldPlugin
+        world:::OctetWorldPlugin,
+        world::generator:::OctetAutoChunksPlugin
     }
 }
 

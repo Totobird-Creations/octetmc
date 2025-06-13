@@ -1,5 +1,7 @@
 use octetmc::prelude::*;
 use octetmc::conn::OctetConnPlugin;
+use octetmc::world::generator::OctetAutoChunksPlugin;
+use octetmc::world::generator::SuperflatGenerator;
 use core::net::{ SocketAddr, SocketAddrV4, Ipv4Addr };
 use bevy_app::{ App, PluginGroup, Update };
 use bevy_ecs::system::Query;
@@ -19,6 +21,7 @@ fn main() {
                 mojauth_enabled : true,
                 ..default()
             })
+            .set(OctetAutoChunksPlugin::new(SuperflatGenerator::default()))
         )
         .add_systems(Update, log_joins)
         .run();

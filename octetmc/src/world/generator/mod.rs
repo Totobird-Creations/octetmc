@@ -3,6 +3,7 @@
 
 use octetmc_protocol::value::chunk_pos::ChunkPos;
 use octetmc_protocol::value::block_state::BlockState;
+use bevy_app::{ App, Plugin };
 
 
 mod void;
@@ -10,6 +11,35 @@ pub use void::*;
 
 mod superflat;
 pub use superflat::*;
+
+
+/// Bevy [`Plugin`] for automatically loading player chunks using a generator.
+pub struct OctetAutoChunksPlugin {
+    generator : Box<dyn WorldGenerator + Send + Sync>
+}
+
+impl OctetAutoChunksPlugin {
+
+    /// Create a new `OctetAutoChunksPlugin` from a generator.
+    pub fn new<G>(generator : G) -> Self
+    where
+        G : WorldGenerator + Send + Sync + 'static
+    { Self { generator : Box::new(generator) } }
+
+}
+
+impl Default for OctetAutoChunksPlugin {
+    #[inline]
+    fn default() -> Self { Self {
+        generator : Box::new(VoidGenerator)
+    } }
+}
+
+impl Plugin for OctetAutoChunksPlugin {
+    fn build(&self, app : &mut App) {
+        todo!()
+    }
+}
 
 
 /// An automatic world generator.
