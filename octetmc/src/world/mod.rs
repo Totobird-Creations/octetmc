@@ -88,7 +88,6 @@ fn update_view_distances(
             if let Some(info) = player.info() {
                 let new_dist = info.view_distance.min(**r_max_dist);
                 if (maybe_dist.is_none_or(|dist| new_dist != **dist)) {
-                    println!("set radius {}", new_dist);
                     pcmds.command_scope(|mut cmds| { cmds.entity(entity).insert(ViewDistance::from(new_dist)); });
                     player.send_out_message(ConnPeerOutMessage::SendPlayPacket { packet : S2CPlayPackets::SetChunkCacheRadius(SetChunkCacheRadiusS2CPlayPacket {
                         view_dist : new_dist
@@ -107,7 +106,6 @@ fn update_chunk_centre(
     q_players.par_iter().for_each(|(entity, player, pos, chunk_centre,)| {
         let new_chunk = ChunkPos::from(*pos);
         if (chunk_centre.is_none_or(|chunk| **chunk != new_chunk)) {
-            println!("set centre {:?}", new_chunk);
             pcmds.command_scope(|mut cmds| { cmds.entity(entity).insert(ChunkCentre::from(new_chunk)); });
             player.send_out_message(ConnPeerOutMessage::SendPlayPacket { packet : S2CPlayPackets::SetChunkCacheCentre(SetChunkCacheCentreS2CPlayPacket {
                 chunk : new_chunk
