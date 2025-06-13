@@ -53,7 +53,8 @@ plugin_group! {
         conn:::OctetConnPlugin,
         player:::OctetPlayerPlugin,
         player::login:::PlayerAutoLoginPlugin,
-        player::login:::PlayerKickDupesPlugin
+        player::login:::PlayerKickDupesPlugin,
+        world:::OctetWorldPlugin
     }
 }
 

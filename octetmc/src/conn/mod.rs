@@ -27,6 +27,7 @@ mod login;
 
 mod config_play;
 pub(crate) use config_play::{ out_message, in_message };
+pub use config_play::{ ConnInConfig, ConnInPlay };
 
 
 /// Enables the connection listener and client manager on install.

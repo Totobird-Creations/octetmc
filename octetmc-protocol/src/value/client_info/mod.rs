@@ -4,6 +4,7 @@
 use crate::value::varint::VarIntDecodeError;
 use crate::packet::decode::{ PacketPartDecode, DecodeBuf, DecodeBufHead, IncompleteData };
 use crate::packet::decode::str::StringDecodeError;
+use core::num::NonZeroU8;
 use std::borrow::Cow;
 
 
@@ -30,7 +31,7 @@ pub struct ClientInfo<'l> {
     pub locale                : Cow<'l, str>,
 
     /// Client-side render distance, in chunks.
-    pub view_distance         : u8,
+    pub view_distance         : NonZeroU8,
 
     /// What kinds of messages the player will see in chat.
     ///
@@ -111,7 +112,7 @@ impl PacketPartDecode for ClientInfo<'_> {
         if (locale.len() > 16) { return Err(ClientInfoDecodeError::LocaleTooLong); }
         Ok(Self::Output {
             locale                : Cow::Borrowed(locale),
-            view_distance         : buf.read(head)?,
+            view_distance         : NonZeroU8::new(buf.read(head)?).ok_or(ClientInfoDecodeError::ZeroViewDist)?,
             chat_mode             : buf.read_decode::<ClientChatMode>(head)?,
             chat_colours          : buf.read_decode::<bool>(head)?,
             skin_parts            : buf.read_decode::<PlayerSkinParts>(head)?,
@@ -140,6 +141,9 @@ pub enum ClientInfoDecodeError {
     /// The client declared a locale longer than 16 bytes.
     LocaleTooLong,
 
+    /// View distance is zero.
+    ZeroViewDist,
+
     /// The client declared an unknown chat mode.
     UnknownChatMode(u32),
 
@@ -157,6 +161,7 @@ impl From<ClientInfoDecodeError> for Cow<'static, str> {
         ClientInfoDecodeError::VarIntTooLong            => VarIntDecodeError::TooLong.into(),
         ClientInfoDecodeError::InvalidUtf8              => StringDecodeError::InvalidUtf8.into(),
         ClientInfoDecodeError::LocaleTooLong            => Cow::Borrowed("locale too long"),
+        ClientInfoDecodeError::ZeroViewDist             => Cow::Borrowed("view distance is zero"),
         ClientInfoDecodeError::UnknownChatMode(v)       => ChatModeDecodeError::UnknownChatMode(v).into(),
         ClientInfoDecodeError::UnknownMainHand(v)       => MainHandDecodeError::UnknownMainHand(v).into(),
         ClientInfoDecodeError::UnknownParticleStatus(v) => ParticleStatusDecodeError::UnknownParticleStatus(v).into()

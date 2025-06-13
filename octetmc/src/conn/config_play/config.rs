@@ -1,4 +1,4 @@
-use super::{ ConfigPlay, ConnPeerComms, ConnPeerResult };
+use super::{ ConfigPlay, ConnPeerComms, ConnPeerResult, ConnInPlay };
 use super::in_message::ConnPeerInMessage;
 use super::action::ConnPeerAction;
 use crate::player::PlayerId;
@@ -6,6 +6,14 @@ use octetmc_protocol::packet::config::c2s::C2SConfigPackets;
 use octetmc_protocol::packet::config::c2s::client_information::ClientInformationC2SConfigPacket;
 use octetmc_protocol::packet::config::c2s::custom_payload::CustomPayloadC2SConfigPacket;
 use octetmc_protocol::packet::config::s2c::finish_configuration::FinishConfigurationS2CConfigPacket;
+use bevy_ecs::component::Component;
+use bevy_defer::AsyncWorld;
+
+
+/// A Bevy ECS marker component indicating that a player is currently in the config state.
+#[derive(Component)]
+#[component(storage = "SparseSet")]
+pub struct ConnInConfig;
 
 
 pub(in super::super) async unsafe fn switch_to_play(player_id : PlayerId, comms : &mut ConnPeerComms) -> ConnPeerResult {
@@ -17,6 +25,9 @@ pub(in super::super) async unsafe fn switch_to_play(player_id : PlayerId, comms 
             while let ConfigPlay::Config { .. } = unsafe { comms.state_assume_config_play() } {
                 handle_config_packet(player_id, comms.read_packet::<C2SConfigPackets>().await?).await?.handle(comms).await?;
             }
+            let entity = AsyncWorld.entity(*player_id);
+            _ = entity.remove::<ConnInConfig>();
+            _ = entity.insert(ConnInPlay);
             Ok(())
         },
 

@@ -6,7 +6,7 @@ use crate::packet::encode::{ EncodeBuf, PacketEncode };
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Pong_Response_(status)>
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct PongResponseS2CStatusPacket {
 
     /// The timestamp the client sent in `PingRequestS2CStatusPacket`.

@@ -4,6 +4,12 @@
 //! TODO: Top-level documentation
 //!
 //!
+//! ### Concepts
+//!
+//! #### Character
+//! "`Character`s" are what Minecraft calls entities. octetmc-protocol calls them characters because "Entity" is a commonly used name in ECS libraries.
+//!  Players, mobs, markers, displays, etc are all characters.
+//!
 //! ---
 //!
 //! Some documentation is copied from the [`Minecraft Wiki`](https://minecraft.wiki/w/Java_Edition_protocol), (formerly [wiki.vg](https://minecraft.wiki/w/Minecraft_Wiki:Projects/wiki.vg_merge)).

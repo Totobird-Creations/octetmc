@@ -6,7 +6,7 @@ use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteD
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status_Request>
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct StatusRequestC2SStatusPacket;
 
 

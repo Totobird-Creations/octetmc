@@ -29,7 +29,8 @@ unused_parens = "allow"
 
 
 [dependencies.octetmc-protocol]
-path = "../octetmc-protocol"
+path     = "../octetmc-protocol"
+features = [ "bevy_ecs" ]
 
 # Async
 [dependencies.smol]

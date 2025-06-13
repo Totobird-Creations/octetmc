@@ -1,11 +1,13 @@
 use super::error::{ ConnPeerResult, ConnPeerError };
 use super::state::{ ConnPeerState, ConfigPlay };
 use super::comms::ConnPeerComms;
+use super::ConnInConfig;
 use crate::player::{ Player, PlayerId };
 use crate::player::login::PlayerLoggingInEvent;
 use crate::util::future::timeout;
 use crate::util::CratePrivateNew;
 use octetmc_protocol::value::profile::{ PlayerProfile, PlayerProfileSkin };
+use octetmc_protocol::value::character_pos::CharacterPos;
 use octetmc_protocol::packet::login::c2s::hello::HelloC2SLoginPacket;
 use octetmc_protocol::packet::login::c2s::key::KeyC2SLoginPacket;
 use octetmc_protocol::packet::login::c2s::login_acknowledged::LoginAcknowledgedC2SLoginPacket;
@@ -183,7 +185,11 @@ pub(super) async fn handle_login_process(
     // SAFETY: take_conn_sender_unchecked has not been called before.
     let (conn_out_sender, conn_in_receiver,) = unsafe { comms.take_mainloop_conn_channels_unchecked() };
     // Add a player to the ECS world.
-    let player = AsyncWorld.spawn_bundle(Player::new(conn_out_sender, conn_in_receiver, profile));
+    let player = AsyncWorld.spawn_bundle((
+        Player::new(conn_out_sender, conn_in_receiver, profile),
+        CharacterPos::ZERO,
+        ConnInConfig
+    ));
     _ = AsyncWorld.send_event(PlayerLoggingInEvent { player_id : PlayerId::from(player.id()) });
 
     // Continue to config_play.

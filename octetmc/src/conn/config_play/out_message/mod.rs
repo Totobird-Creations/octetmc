@@ -5,6 +5,7 @@ use crate::world::dimension::Dimension;
 use octetmc_protocol::value::ident::Ident;
 use octetmc_protocol::value::game_mode::GameMode;
 use octetmc_protocol::packet::config::s2c::registry_data::{ RegistryDataS2CConfigPacket, RegistryEntry };
+use octetmc_protocol::packet::play::s2c::S2CPlayPackets;
 use octetmc_protocol::packet::play::s2c::game_event::GameEventS2CPlayPacket;
 use octetmc_protocol::packet::play::s2c::login::LoginS2CPlayPacket;
 use std::borrow::Cow;
@@ -25,6 +26,10 @@ pub(crate) enum ConnPeerOutMessage {
         reduced_debug_info : bool,
         respawn_screens    : bool,
         game_mode          : GameMode
+    },
+
+    SendPlayPacket {
+        packet : S2CPlayPackets<'static>
     }
 
 }
@@ -95,6 +100,13 @@ impl ConnPeerOutMessage {
 
             comms.send_packet(&GameEventS2CPlayPacket::WaitForChunks).await?;
 
+            Ok(())
+        },
+
+
+        Self::SendPlayPacket { packet } => {
+            unsafe { config::switch_to_play(player_id, comms) }.await?;
+            comms.send_packet(&packet).await?;
             Ok(())
         }
 

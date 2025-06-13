@@ -178,9 +178,9 @@ pub mod login;
 
 // TODO: set_camera
 
-// TODO: set_chunk_cache_centre
+pub mod set_chunk_cache_centre;
 
-// TODO: set_chunk_cache_radius
+pub mod set_chunk_cache_radius;
 
 // TODO: set_cursor_item
 
@@ -274,7 +274,11 @@ packet_encode_group!{
         /// `GameEventS2CPlayPacket`
         GameEvent(game_event::GameEventS2CPlayPacket),
         /// `LoginS2CPlayPacket`
-        Login(login::LoginS2CPlayPacket<'l>)
+        Login(login::LoginS2CPlayPacket<'l>),
+        /// `SetChunkCacheCentre`
+        SetChunkCacheCentre(set_chunk_cache_centre::SetChunkCacheCentreS2CPlayPacket),
+        /// `SetChunkCacheRadius`
+        SetChunkCacheRadius(set_chunk_cache_radius::SetChunkCacheRadiusS2CPlayPacket)
     }
 }
 
@@ -286,16 +290,20 @@ impl S2CPlayPackets<'_> {
     ///  `S2CPlayPackets<'static>`.
     #[inline]
     pub fn into_static_owned(self) -> S2CPlayPackets<'static> { match (self) {
-        Self::GameEvent (v) => S2CPlayPackets::GameEvent(v),
-        Self::Login     (v) => S2CPlayPackets::Login (v.into_static_owned())
+        Self::GameEvent           (v) => S2CPlayPackets::GameEvent(v),
+        Self::Login               (v) => S2CPlayPackets::Login (v.into_static_owned()),
+        Self::SetChunkCacheCentre (v) => S2CPlayPackets::SetChunkCacheCentre(v),
+        Self::SetChunkCacheRadius (v) => S2CPlayPackets::SetChunkCacheRadius(v)
     } }
 
     /// Convert the inner parts of this packet to their owned counterparts.
     ///  Returns the newly created `S2CPlayPackets<'static>`.
     #[inline]
     pub fn to_static_owned(&self) -> S2CPlayPackets<'static> { match (self) {
-        Self::GameEvent (v) => S2CPlayPackets::GameEvent(*v),
-        Self::Login     (v) => S2CPlayPackets::Login (v.to_static_owned())
+        Self::GameEvent           (v) => S2CPlayPackets::GameEvent(*v),
+        Self::Login               (v) => S2CPlayPackets::Login (v.to_static_owned()),
+        Self::SetChunkCacheCentre (v) => S2CPlayPackets::SetChunkCacheCentre(*v),
+        Self::SetChunkCacheRadius (v) => S2CPlayPackets::SetChunkCacheRadius(*v)
     } }
 
 }

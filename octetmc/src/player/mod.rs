@@ -4,6 +4,7 @@
 use crate::conn;
 use crate::conn::out_message::ConnPeerOutMessage;
 use crate::conn::in_message::ConnPeerInMessage;
+pub use crate::conn::{ ConnInConfig, ConnInPlay };
 use crate::world::dimension::Dimension;
 use crate::util::CratePrivateNew;
 use crate::util::macros::deref_single;
@@ -83,13 +84,18 @@ impl Player {
     #[inline]
     pub(crate) fn set_brand(&mut self, brand : String) { self.brand = Some(brand); }
 
+
+    pub(crate) fn send_out_message(&self, message : ConnPeerOutMessage) {
+        self.conn_out_sender.force_send(message); // TODO: Handle error.
+    }
+
 }
 
 impl Player {
 
     /// Overwrites a player's registry.
     pub fn set_registry(&self, id : Ident<'static>, entries : Vec<RegistryEntry<'static>>) {
-        self.conn_out_sender.force_send(ConnPeerOutMessage::SetRegistry { id, entries }); // TODO: Handle error
+        self.send_out_message(ConnPeerOutMessage::SetRegistry { id, entries });
     }
 
     /// Logs the player in. This can be called **once** per player.
@@ -102,15 +108,13 @@ impl Player {
         reduced_debug_info : bool,
         respawn_screens    : bool,
         game_mode          : GameMode
-    ) {
-        self.conn_out_sender.force_send(ConnPeerOutMessage::Login {
-            is_hardcore,
-            dimension,
-            reduced_debug_info,
-            respawn_screens,
-            game_mode
-        }); // TODO: Handle error
-    }
+    ) { self.send_out_message(ConnPeerOutMessage::Login {
+        is_hardcore,
+        dimension,
+        reduced_debug_info,
+        respawn_screens,
+        game_mode
+    }); }
 
 }
 
@@ -183,12 +187,12 @@ impl Plugin for OctetPlayerPlugin {
 }
 
 fn tick_player_conns(
-    cmds      : ParallelCommands,
+    pcmds     : ParallelCommands,
     q_players : Query<(Entity, &Player,)>
 ) {
     q_players.par_iter().for_each(|(entity, player,)| {
         if (player.conn_out_sender.force_send(ConnPeerOutMessage::Tick).is_err()) {
-            cmds.command_scope(|mut cmds| cmds.entity(entity).despawn());
+            pcmds.command_scope(|mut cmds| cmds.entity(entity).despawn());
         }
     });
 }

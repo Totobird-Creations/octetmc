@@ -1,7 +1,9 @@
 //! Positions of blocks in worlds.
 
 
+use super::character_pos::CharacterPos;
 use crate::packet::encode::{ PacketPartEncode, EncodeBuf };
+use saturating_cast::SaturatingCast;
 
 
 /// A block position in a world.
@@ -16,7 +18,7 @@ pub struct BlockPos {
     /// Y coordinate.
     ///
     /// Positive is up, negative is down.
-    pub y : i16,
+    pub y : i32,
 
     /// Z coordinate.
     ///
@@ -24,6 +26,20 @@ pub struct BlockPos {
     pub z : i32
 
 }
+
+impl BlockPos {
+    /// BlockPos with all coordinates set to `0`.
+    pub const ZERO : Self = Self { x : 0, y : 0, z : 0 };
+}
+
+impl From<CharacterPos> for BlockPos {
+    fn from(value : CharacterPos) -> Self { Self {
+        x : (value.x as i64).saturating_cast::<i32>(),
+        y : (value.y as i64).saturating_cast::<i32>(),
+        z : (value.z as i64).saturating_cast::<i32>()
+    } }
+}
+
 
 impl PacketPartEncode for BlockPos {
 

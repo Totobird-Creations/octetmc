@@ -26,6 +26,8 @@ all-features = true
 
 [features]
 
+bevy_ecs = [ "dep:bevy_ecs" ]
+
 mc-1_21_5 = [
     "__mc-1_21_5-or_later",
     "__mc-1_21_5-or_earlier",
@@ -58,3 +60,12 @@ version = "1.0"
 
 [dependencies.compile-fmt]
 version = "0.1"
+
+[dependencies.saturating_cast]
+version = "0.1"
+
+
+[dependencies.bevy_ecs]
+version          = "0.16"
+optional         = true
+default-features = false

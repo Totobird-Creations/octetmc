@@ -6,7 +6,7 @@ use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteD
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Ping_Request_(status)>
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct PingRequestC2SStatusPacket {
 
     /// May be any number, but vanilla clients will use the timestamp in milliseconds.

@@ -8,8 +8,10 @@ use bevy_defer::AsyncWorld;
 
 
 pub(super) mod config;
+pub use config::ConnInConfig;
 
 pub(super) mod play;
+pub use play::ConnInPlay;
 
 pub(crate) mod out_message;
 pub(crate) mod in_message;

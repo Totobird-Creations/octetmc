@@ -93,6 +93,9 @@ pub enum C2SConfigPacketDecodeError {
     /// The client declared a locale longer than 16 bytes.
     LocaleTooLong,
 
+    /// View distance is zero.
+    ZeroViewDist,
+
     /// The client declared an unknown chat mode.
     UnknownChatMode(u32),
 
@@ -113,7 +116,8 @@ impl From<C2SConfigPacketDecodeError> for Cow<'static, str> {
         C2SConfigPacketDecodeError::BadNspaceChar(ch)        => IdentDecodeError::BadNspaceChar(ch).into(),
         C2SConfigPacketDecodeError::EmptyPathPart            => IdentDecodeError::EmptyPathPart.into(),
         C2SConfigPacketDecodeError::BadPathChar(ch)          => IdentDecodeError::BadPathChar(ch).into(),
-        C2SConfigPacketDecodeError::LocaleTooLong            => Cow::Borrowed("locale too long"),
+        C2SConfigPacketDecodeError::LocaleTooLong            => ClientInfoDecodeError::LocaleTooLong.into(),
+        C2SConfigPacketDecodeError::ZeroViewDist             => ClientInfoDecodeError::ZeroViewDist.into(),
         C2SConfigPacketDecodeError::UnknownChatMode(v)       => C2SConfigPacketDecodeError::UnknownChatMode(v).into(),
         C2SConfigPacketDecodeError::UnknownMainHand(v)       => C2SConfigPacketDecodeError::UnknownMainHand(v).into(),
         C2SConfigPacketDecodeError::UnknownParticleStatus(v) => C2SConfigPacketDecodeError::UnknownParticleStatus(v).into()
@@ -138,6 +142,7 @@ impl From<ClientInfoDecodeError> for C2SConfigPacketDecodeError {
         ClientInfoDecodeError::VarIntTooLong            => Self::VarIntTooLong,
         ClientInfoDecodeError::InvalidUtf8              => Self::InvalidUtf8,
         ClientInfoDecodeError::LocaleTooLong            => Self::LocaleTooLong,
+        ClientInfoDecodeError::ZeroViewDist             => Self::ZeroViewDist,
         ClientInfoDecodeError::UnknownChatMode(v)       => Self::UnknownChatMode(v),
         ClientInfoDecodeError::UnknownMainHand(v)       => Self::UnknownMainHand(v),
         ClientInfoDecodeError::UnknownParticleStatus(v) => Self::UnknownParticleStatus(v)
