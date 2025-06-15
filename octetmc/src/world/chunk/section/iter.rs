@@ -7,13 +7,26 @@ impl ChunkSection {
 
     /// Returns an iterator over the 4096 blocks in this
     #[inline]
-    pub fn iter_blocks(&self) -> ChunkSectionIterator { ChunkSectionIterator {
-        section        : self,
-        data_ptr       : BitPtr::new_on_byte(self.data.as_ptr()),
-        run_len        : 0,
-        run_palette_id : 0,
-        consumed       : 0
-    } }
+    pub fn iter_blocks(&self) -> ChunkSectionIterator {
+        if (self.run_bits == 0) {
+            // Single-block optimisation.
+            ChunkSectionIterator {
+                section        : self,
+                data_ptr       : bitptr::null(),
+                run_len        : 4096,
+                run_palette_id : 0,
+                consumed       : 0
+            }
+        } else {
+            ChunkSectionIterator {
+                section        : self,
+                data_ptr       : BitPtr::new_on_byte((unsafe { self.data.assume_init_ref() }).as_ptr()),
+                run_len        : 0,
+                run_palette_id : 0,
+                consumed       : 0
+            }
+        }
+    }
 
 }
 

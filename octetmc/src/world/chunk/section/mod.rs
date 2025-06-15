@@ -4,6 +4,7 @@
 use octetmc_protocol::value::chunk_section_pos::ChunkSectionPos;
 use octetmc_protocol::value::block_state::BlockState;
 use octetmc_protocol::registry::block::air::Air;
+use core::mem::MaybeUninit;
 use std::collections::HashSet;
 use bevy_ecs::component::Component;
 use bitptr::{ BitPtr, BitPtrMut };
@@ -19,7 +20,7 @@ pub use iter::*;
 pub struct ChunkSection {
     palette  : Vec<BlockState>,
     run_bits : u8,
-    data     : Box<[u8]>
+    data     : MaybeUninit<Box<[u8]>>
 }
 
 impl From<[BlockState; 4096]> for ChunkSection {
@@ -49,14 +50,20 @@ impl From<[BlockState; 4096]> for ChunkSection {
         }
         let runs = unsafe { runs.get_unchecked(0..run_i) };
 
+        // Single-block optimisation.
         if (runs.len() == 1) {
             let run = unsafe { runs.get_unchecked(0) };
             debug_assert_eq!(run.0, 4096);
-            // TODO: Single-run optimisation.
+            return Self {
+                palette  : vec![ run.1 ],
+                run_bits : 0,
+                data     : MaybeUninit::uninit()
+            };
         }
 
         let max_run              = unsafe { runs.iter().map(|(len, _,)| *len).max().unwrap_unchecked() } as usize;
         let run_bits             = min_bits(max_run);
+        debug_assert_ne!(run_bits, 0);
         let run_ignored_bits     = (size_of::<RunLen>() * 8) - run_bits;
         let palette              = runs.iter().map(|(_, block,)| *block).collect::<HashSet<_>>().into_iter().collect::<Vec<_>>();
         let palette_bits         = min_bits(palette.len());
@@ -79,7 +86,16 @@ impl From<[BlockState; 4096]> for ChunkSection {
         Self {
             palette,
             run_bits : run_bits as u8,
-            data     : unsafe { data.assume_init() }
+            data     : MaybeUninit::new(unsafe { data.assume_init() })
+        }
+    }
+}
+
+impl Drop for ChunkSection {
+    #[inline]
+    fn drop(&mut self) {
+        if (self.run_bits != 0) {
+            unsafe { self.data.assume_init_drop(); }
         }
     }
 }
@@ -99,9 +115,10 @@ mod tests {
     use super::*;
     use octetmc_protocol::registry::block::blue_carpet::BlueCarpet;
     use octetmc_protocol::registry::block::clay::Clay;
+    use octetmc_protocol::registry::block::lapis_ore::LapisOre;
 
     #[test]
-    fn chunk_section_from_array() {
+    fn chunk_section_from_array_and_iter() {
         let air         = Air.to_block_state();
         let blue_carpet = BlueCarpet.to_block_state();
         let clay        = Clay.to_block_state();
@@ -124,8 +141,21 @@ mod tests {
             else { panic!("more than 4096 entries in section iterator"); }
         }
 
-        todo!("{} {} {}", size_of::<ChunkSection>(), section.palette.capacity(), section.data.len());
+    }
 
+    #[test]
+    fn single_block_optimisation() {
+        let lapis = LapisOre.to_block_state();
+
+        let section = ChunkSection::from([lapis; 4096]);
+        assert_eq!(section.palette.len(), 1);
+        assert!(section.palette.contains(&lapis));
+        assert_eq!(section.run_bits, 0);
+
+        for (i, block,) in section.iter_blocks().enumerate() {
+            if (i < 4096) { assert_eq!(block, lapis); }
+            else { panic!("more than 4096 entries in section iterator"); }
+        }
     }
 
 }
