@@ -36,7 +36,7 @@ pub struct ChunkSectionIterator<'l> {
     section        : &'l ChunkSection,
     data_ptr       : BitPtr,
     run_len        : u16,
-    run_palette_id : u8,
+    run_palette_id : u16,
     consumed       : u16
 }
 
@@ -61,12 +61,12 @@ impl Iterator for ChunkSectionIterator<'_> {
             let     next_run_len     = u16::from_be(next_run_len);
 
             // Read the next run palette id.
-            let mut next_run_palette_id         = 0u8;
-            let     next_run_palette_id_ignored = (size_of::<u8>() * 8) - palette_id_bits;
+            let mut next_run_palette_id         = 0u16;
+            let     next_run_palette_id_ignored = (size_of::<u16>() * 8) - palette_id_bits;
             let     next_run_palette_id_ptr     = unsafe { BitPtrMut::new_with_offset((&mut next_run_palette_id) as *mut _ as *mut _, next_run_palette_id_ignored as isize) };
             unsafe { bitptr::copy_nonoverlapping(self.data_ptr, next_run_palette_id_ptr, palette_id_bits); }
             self.data_ptr = unsafe { self.data_ptr.bit_offset(palette_id_bits as isize) };
-            let     next_run_palette_id     = u8::from_be(next_run_palette_id);
+            let     next_run_palette_id     = u16::from_be(next_run_palette_id);
 
             self.run_len        = next_run_len - 1;
             self.run_palette_id = next_run_palette_id;

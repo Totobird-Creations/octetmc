@@ -113,12 +113,15 @@ const fn min_bits(x : usize) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use octetmc_protocol::registry::block::stone::Stone;
     use octetmc_protocol::registry::block::blue_carpet::BlueCarpet;
     use octetmc_protocol::registry::block::clay::Clay;
     use octetmc_protocol::registry::block::lapis_ore::LapisOre;
+    use core::array;
+
 
     #[test]
-    fn chunk_section_from_array_and_iter() {
+    fn from_array_and_iter() {
         let air         = Air.to_block_state();
         let blue_carpet = BlueCarpet.to_block_state();
         let clay        = Clay.to_block_state();
@@ -140,8 +143,8 @@ mod tests {
             else if (i < 4096) { assert_eq!(block, clay); }
             else { panic!("more than 4096 entries in section iterator"); }
         }
-
     }
+
 
     #[test]
     fn single_block_optimisation() {
@@ -156,6 +159,43 @@ mod tests {
             if (i < 4096) { assert_eq!(block, lapis); }
             else { panic!("more than 4096 entries in section iterator"); }
         }
+
     }
+
+
+    #[test]
+    fn all_unique_blocks() {
+
+        let section = ChunkSection::from(array::from_fn(|i| BlockState::from_raw_id(i as u32)));
+        assert_eq!(section.palette.len(), 4096);
+        assert_eq!(section.run_bits, 1);
+
+        for (i, block,) in section.iter_blocks().enumerate() {
+            if (i < 4096) { assert_eq!(block, BlockState::from_raw_id(i as u32)); }
+            else { panic!("more than 4096 entries in section iterator"); }
+        }
+
+    }
+
+
+    #[test]
+    fn long_run() {
+        let air   = Air.to_block_state();
+        let stone = Stone.to_block_state();
+
+        let section = ChunkSection::from(array::from_fn(|i| {
+            if (i < 4095) { stone } else { air }
+        }));
+        assert_eq!(section.palette.len(), 2);
+        assert_eq!(section.run_bits, 12);
+
+        for (i, block,) in section.iter_blocks().enumerate() {
+            if (i < 4095) { assert_eq!(block, stone); }
+            else if (i == 4095) { assert_eq!(block, air); }
+            else { panic!("more than 4096 entries in section iterator"); }
+        }
+
+    }
+
 
 }
