@@ -24,6 +24,8 @@ pub mod dimension;
 
 pub mod generator;
 
+pub mod chunk;
+
 
 pub(crate) const DEFAULT_VIEW_DISTANCE : NonZeroU8 = unsafe { NonZeroU8::new_unchecked(12) };
 

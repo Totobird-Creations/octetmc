@@ -2,7 +2,7 @@
 
 
 /// A character position in a world.
-#[derive(Clone, Copy, PartialEq, PartialOrd, Debug)]
+#[derive(Clone, Copy, PartialEq, PartialOrd, Debug, Default)]
 #[cfg_attr(feature = "bevy_ecs", derive(bevy_ecs::component::Component))]
 pub struct CharacterPos {
 
@@ -40,6 +40,6 @@ pub struct CharacterPos {
 }
 
 impl CharacterPos {
-    /// CharacterPos with all coordinates set to `0.0`.
+    /// `CharacterPos` with all coordinates set to `0.0`.
     pub const ZERO : Self = Self { x : 0.0, y : 0.0, z : 0.0, pitch : 0.0, yaw : 0.0 };
 }

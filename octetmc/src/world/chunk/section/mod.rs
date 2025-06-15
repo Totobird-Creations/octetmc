@@ -1,0 +1,131 @@
+//! 16x16x16 regions in player worlds.
+
+
+use octetmc_protocol::value::chunk_section_pos::ChunkSectionPos;
+use octetmc_protocol::value::block_state::BlockState;
+use octetmc_protocol::registry::block::air::Air;
+use std::collections::HashSet;
+use bevy_ecs::component::Component;
+use bitptr::{ BitPtr, BitPtrMut };
+
+
+mod iter;
+pub use iter::*;
+
+
+/// A 16x16x16 region in a player's world.
+#[derive(Component)]
+#[require(ChunkSectionPos)]
+pub struct ChunkSection {
+    palette  : Vec<BlockState>,
+    run_bits : u8,
+    data     : Box<[u8]>
+}
+
+impl From<[BlockState; 4096]> for ChunkSection {
+    fn from(blocks : [BlockState; 4096]) -> Self {
+        type RunLen = u32;
+
+        // Split by runs.
+        let mut runs    = [(0 as RunLen, Air.to_block_state()); 4096];
+        let mut run_i   = 0;
+        let mut block_i = 0;
+        while (block_i < blocks.len()) {
+            let     block     = blocks[block_i];
+            let mut run       = unsafe { runs.get_unchecked_mut(run_i) };
+            let     run_empty = run.0 == 0;
+            if (run_empty) {
+                run.1 = block;
+            } else if (run.1 != block) {
+                run_i += 1;
+                run   = unsafe { runs.get_unchecked_mut(run_i) };
+                run.1 = block;
+            }
+            run.0   += 1;
+            block_i += 1;
+        }
+        if (unsafe { runs.get_unchecked(run_i) }.0 > 0) {
+            run_i += 1;
+        }
+        let runs = unsafe { runs.get_unchecked(0..run_i) };
+
+        if (runs.len() == 1) {
+            let run = unsafe { runs.get_unchecked(0) };
+            debug_assert_eq!(run.0, 4096);
+            // TODO: Single-run optimisation.
+        }
+
+        let max_run              = unsafe { runs.iter().map(|(len, _,)| *len).max().unwrap_unchecked() } as usize;
+        let run_bits             = min_bits(max_run);
+        let run_ignored_bits     = (size_of::<RunLen>() * 8) - run_bits;
+        let palette              = runs.iter().map(|(_, block,)| *block).collect::<HashSet<_>>().into_iter().collect::<Vec<_>>();
+        let palette_bits         = min_bits(palette.len());
+        let palette_ignored_bits = (size_of::<usize>() * 8) - palette_bits;
+
+        // Pack into `data` vector.
+        let mut data     = Box::<[u8]>::new_uninit_slice(((run_bits + palette_bits) * runs.len()).div_ceil(8));
+        let mut data_ptr = BitPtrMut::new_on_byte(data.as_mut_ptr() as *mut _);
+        for (run_len, block,) in runs {
+            let run_len     = run_len.to_be();
+            let run_len_ptr = unsafe { BitPtr::new_with_offset(&run_len as *const _ as *const _, run_ignored_bits as isize) };
+            unsafe { bitptr::copy_nonoverlapping(run_len_ptr, data_ptr, run_bits); }
+            data_ptr = unsafe { data_ptr.bit_offset(run_bits as isize) };
+            let palette_id     = (unsafe { palette.iter().position(|p| p.id() == block.id()).unwrap_unchecked() }).to_be();
+            let palette_id_ptr = unsafe { BitPtr::new_with_offset(&palette_id as *const _ as *const _, palette_ignored_bits as isize) };
+            unsafe { bitptr::copy_nonoverlapping(palette_id_ptr, data_ptr, palette_bits); }
+            data_ptr = unsafe { data_ptr.bit_offset(palette_bits as isize) };
+        }
+
+        Self {
+            palette,
+            run_bits : run_bits as u8,
+            data     : unsafe { data.assume_init() }
+        }
+    }
+}
+
+
+#[inline]
+const fn min_bits(x : usize) -> usize {
+    match (x.checked_ilog2()) {
+        Some(s) => (s + 1) as usize,
+        None    => 0
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use octetmc_protocol::registry::block::blue_carpet::BlueCarpet;
+    use octetmc_protocol::registry::block::clay::Clay;
+
+    #[test]
+    fn chunk_section_from_array() {
+        let air         = Air.to_block_state();
+        let blue_carpet = BlueCarpet.to_block_state();
+        let clay        = Clay.to_block_state();
+
+        let mut blocks = [air; 4096];
+        blocks[0..2048].copy_from_slice(&[blue_carpet; 2048]);
+        blocks[3072..4096].copy_from_slice(&[clay; 1024]);
+
+        let section = ChunkSection::from(blocks);
+        assert_eq!(section.palette.len(), 3);
+        assert!(section.palette.contains(&air));
+        assert!(section.palette.contains(&blue_carpet));
+        assert!(section.palette.contains(&clay));
+        assert_eq!(section.run_bits, 12);
+
+        for (i, block,) in section.iter_blocks().enumerate() {
+            if (i < 2048) { assert_eq!(block, blue_carpet); }
+            else if (i < 3072) { assert_eq!(block, air); }
+            else if (i < 4096) { assert_eq!(block, clay); }
+            else { panic!("more than 4096 entries in section iterator"); }
+        }
+
+        todo!("{} {} {}", size_of::<ChunkSection>(), section.palette.capacity(), section.data.len());
+
+    }
+
+}

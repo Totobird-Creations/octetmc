@@ -92,3 +92,7 @@ version = "1.0"
 version          = "1.17"
 default-features = false
 features         = [ "v3" ]
+
+# Chunk Section Compression
+[dependencies.bitptr]
+version = "0.1"

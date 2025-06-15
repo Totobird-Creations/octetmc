@@ -7,7 +7,7 @@ use saturating_cast::SaturatingCast;
 
 
 /// A block position in a world.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Default)]
 pub struct BlockPos {
 
     /// X coordinate.
@@ -28,7 +28,7 @@ pub struct BlockPos {
 }
 
 impl BlockPos {
-    /// BlockPos with all coordinates set to `0`.
+    /// `BlockPos` with all coordinates set to `0`.
     pub const ZERO : Self = Self { x : 0, y : 0, z : 0 };
 }
 

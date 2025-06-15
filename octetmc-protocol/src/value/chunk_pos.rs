@@ -2,11 +2,13 @@
 
 
 use super::block_pos::BlockPos;
+use super::chunk_section_pos::ChunkSectionPos;
 use super::character_pos::CharacterPos;
 
 
 /// A chunk position in a world.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Default)]
+#[cfg_attr(feature = "bevy_ecs", derive(bevy_ecs::component::Component))]
 pub struct ChunkPos {
 
     /// X coordinate.
@@ -22,7 +24,7 @@ pub struct ChunkPos {
 }
 
 impl ChunkPos {
-    /// ChunkPos with all coordinates set to `0`.
+    /// `ChunkPos` with all coordinates set to `0`.
     pub const ZERO : Self = Self { x : 0, z : 0 };
 }
 
@@ -30,6 +32,13 @@ impl From<BlockPos> for ChunkPos {
     fn from(value : BlockPos) -> Self { Self {
         x : value.x.div_euclid(16),
         z : value.z.div_euclid(16)
+    } }
+}
+
+impl From<ChunkSectionPos> for ChunkPos {
+    fn from(value : ChunkSectionPos) -> Self { Self {
+        x : value.x,
+        z : value.z
     } }
 }
 
