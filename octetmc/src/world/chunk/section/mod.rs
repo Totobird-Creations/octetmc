@@ -13,6 +13,9 @@ use bitptr::{ BitPtr, BitPtrMut };
 mod iter;
 pub use iter::*;
 
+mod edit;
+pub use edit::*;
+
 
 /// A 16x16x16 region in a player's world.
 #[derive(Component)]
@@ -21,6 +24,19 @@ pub struct ChunkSection {
     palette  : Vec<BlockState>,
     run_bits : u8,
     data     : MaybeUninit<Box<[u8]>>
+}
+
+impl ChunkSection {
+
+    /// Convert this `ChunkSection` to a linear block array.
+    pub fn into_array(&self) -> [BlockState; 4096] {
+        let mut arr = [Air.to_block_state(); 4096];
+        for (i, block,) in self.iter_blocks().enumerate() {
+            *(unsafe { arr.get_unchecked_mut(i) }) = block;
+        }
+        arr
+    }
+
 }
 
 impl From<[BlockState; 4096]> for ChunkSection {
