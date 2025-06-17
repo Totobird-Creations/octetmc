@@ -6,6 +6,7 @@ use crate::conn::out_message::ConnPeerOutMessage;
 use crate::conn::in_message::ConnPeerInMessage;
 pub use crate::conn::{ ConnInConfig, ConnInPlay };
 use crate::world::dimension::Dimension;
+use crate::world::chunk::PlayerChunks;
 use crate::util::CratePrivateNew;
 use crate::util::macros::deref_single;
 use octetmc_protocol::value::ident::Ident;
@@ -27,8 +28,17 @@ pub mod login;
 pub mod info;
 
 
+deref_single!{
+    /// An [`Entity`] wrapper, intended for [`Player`]s.
+    #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Component)]
+    pub struct PlayerId(Entity);
+    From;
+}
+
+
 /// A player connected to the server.
 #[derive(Component)]
+#[require(PlayerChunks)]
 pub struct Player {
 
     conn_out_sender  : channel::Sender<ConnPeerOutMessage>,
@@ -139,14 +149,6 @@ deref_single!{
     /// The max player count is displayed in the server list.
     #[derive(Resource)]
     pub struct MaxPlayerCount(u32);
-}
-
-
-deref_single!{
-    /// An [`Entity`] wrapper, intended for [`Player`]s.
-    #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
-    pub struct PlayerId(Entity);
-    From;
 }
 
 

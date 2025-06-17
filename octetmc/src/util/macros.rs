@@ -58,6 +58,12 @@ macro_rules! deref_single { (
         }
     }, { } }
 
+    $( $crate::util::macros::macro_deref_single_if_has_default!{ { $impls }, {
+        impl Default for $ident {
+            fn default() -> Self { $crate::util::CratePrivateNew::crate_private_new({ $( $( $implinner )* )? }) }
+        }
+    }, { } } )*
+
 } }
 pub(crate) use deref_single;
 
@@ -77,8 +83,15 @@ macro_rules! macro_deref_single_if_has_dirty {
 pub(crate) use macro_deref_single_if_has_dirty;
 
 macro_rules! macro_deref_single_if_has_from {
-    ( { From $( , $ident:ident )* $(,)? }, { $( $true:tt )* }, { $( $_:tt )* } $(,)? )    => { $( $true )* };
+    ( { From $( , $ident:ident )* $(,)? }, { $( $true:tt )* }, { $( $_:tt )* } $(,)? )         => { $( $true )* };
     ( { $_:ident $( , $ident:ident )* $(,)? }, { $( $true:tt )* }, { $( $false:tt )* } $(,)? ) => { $crate::util::macros::macro_deref_single_if_has_from!{ { $( $ident , )* }, { $( $true )* }, { $( $false )* }, } };
     ( { $(,)? }, { $( $_:tt )* }, { $( $false:tt )* } $(,)? )                                  => { $( $false )* };
 }
 pub(crate) use macro_deref_single_if_has_from;
+
+macro_rules! macro_deref_single_if_has_default {
+    ( { Default $( , $ident:ident )* $(,)? }, { $( $true:tt )* }, { $( $_:tt )* } $(,)? )      => { $( $true )* };
+    ( { $_:ident $( , $ident:ident )* $(,)? }, { $( $true:tt )* }, { $( $false:tt )* } $(,)? ) => { $crate::util::macros::macro_deref_single_if_has_default!{ { $( $ident , )* }, { $( $true )* }, { $( $false )* }, } };
+    ( { $(,)? }, { $( $_:tt )* }, { $( $false:tt )* } $(,)? )                                  => { $( $false )* };
+}
+pub(crate) use macro_deref_single_if_has_default;

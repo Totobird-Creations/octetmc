@@ -7,6 +7,8 @@ pub mod dirty;
 
 pub(crate) mod macros;
 
+pub mod ecs;
+
 
 pub(crate) enum Never { }
 

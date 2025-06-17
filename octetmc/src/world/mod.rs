@@ -73,13 +73,17 @@ impl Default for OctetWorldPlugin {
 impl Plugin for OctetWorldPlugin {
     fn build(&self, app : &mut App) {
         app .insert_resource(MaxViewDistance::from(self.max_view_distance))
-            .add_systems(Update, update_view_distances)
-            .add_systems(Update, update_chunk_centre);
+            .insert_resource(chunk::ChunkLoadOrder::default())
+            .add_systems(Update, chunk::cache_chunk_load_order)
+            .add_systems(Update, update_view_distance)
+            .add_systems(Update, update_chunk_centre)
+            .add_systems(Update, chunk::manage_chunks)
+            .add_systems(Update, chunk::check_sections);
     }
 }
 
 
-fn update_view_distances(
+fn update_view_distance(
         pcmds      : ParallelCommands,
         q_players  : Query<(Entity, &Player, Option<&ViewDistance>,), (With<ConnInPlay>,)>,
         r_max_dist : Res<MaxViewDistance>,

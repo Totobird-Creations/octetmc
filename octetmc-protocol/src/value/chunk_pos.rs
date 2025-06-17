@@ -4,6 +4,7 @@
 use super::block_pos::BlockPos;
 use super::chunk_section_pos::ChunkSectionPos;
 use super::character_pos::CharacterPos;
+use core::ops::Add;
 
 
 /// A chunk position in a world.
@@ -46,5 +47,13 @@ impl From<CharacterPos> for ChunkPos {
     #[inline]
     fn from(value : CharacterPos) -> Self {
         BlockPos::from(value).into()
+    }
+}
+
+
+impl Add for ChunkPos {
+    type Output = Self;
+    fn add(self, rhs : Self) -> Self::Output {
+        Self { x : self.x + rhs.x, z : self.z + rhs.z }
     }
 }

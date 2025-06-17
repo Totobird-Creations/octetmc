@@ -4,10 +4,11 @@
 use octetmc_protocol::registry::dimension_type::DimensionType;
 use core::mem::{ self, MaybeUninit };
 use std::borrow::Cow;
+use bevy_ecs::component::Component;
 
 
 /// The dimension of a world.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Component)]
 pub struct Dimension<'l> {
 
     /// The type of dimension.

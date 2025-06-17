@@ -1,11 +1,13 @@
 //! 16x16x16 regions in player worlds.
 
 
+use crate::util::macros::deref_single;
 use octetmc_protocol::value::chunk_section_pos::ChunkSectionPos;
 use octetmc_protocol::value::block_state::BlockState;
 use octetmc_protocol::registry::block::air::Air;
 use core::mem::MaybeUninit;
 use std::collections::HashSet;
+use bevy_ecs::entity::Entity;
 use bevy_ecs::component::Component;
 use bitptr::{ BitPtr, BitPtrMut };
 
@@ -15,6 +17,14 @@ pub use iter::*;
 
 mod edit;
 pub use edit::*;
+
+
+deref_single!{
+    /// An [`Entity`] wrapper, intended for [`ChunkSectionId`]s.
+    #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Component)]
+    pub struct ChunkSectionId(Entity);
+    From;
+}
 
 
 /// A 16x16x16 region in a player's world.
