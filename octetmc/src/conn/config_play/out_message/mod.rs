@@ -98,6 +98,8 @@ impl ConnPeerOutMessage {
                 enforces_secure_chat : false
             }).await?;
 
+            _ = AsyncWorld.entity(*player_id).insert(dimension);
+
             comms.send_packet(&GameEventS2CPlayPacket::WaitForChunks).await?;
 
             Ok(())

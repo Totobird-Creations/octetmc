@@ -4,6 +4,7 @@ use super::comms::ConnPeerComms;
 use super::ConnInConfig;
 use crate::player::{ Player, PlayerId };
 use crate::player::login::PlayerLoggingInEvent;
+use crate::world::chunk::PlayerChunks;
 use crate::util::future::timeout;
 use crate::util::CratePrivateNew;
 use octetmc_protocol::value::profile::{ PlayerProfile, PlayerProfileSkin };
@@ -188,7 +189,8 @@ pub(super) async fn handle_login_process(
     let player = AsyncWorld.spawn_bundle((
         Player::new(conn_out_sender, conn_in_receiver, profile),
         CharacterPos::ZERO,
-        ConnInConfig
+        ConnInConfig,
+        PlayerChunks::default()
     ));
     _ = AsyncWorld.send_event(PlayerLoggingInEvent { player_id : PlayerId::from(player.id()) });
 

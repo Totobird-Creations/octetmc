@@ -29,6 +29,16 @@ impl ChunkPos {
     pub const ZERO : Self = Self { x : 0, z : 0 };
 }
 
+impl ChunkPos {
+
+    /// Returns the [`ChunkSectionPos`] of section `y` in this chunk.
+    #[inline(always)]
+    pub const fn section(&self, y : u8) -> ChunkSectionPos {
+        ChunkSectionPos { x : self.x, y, z : self.z }
+    }
+
+}
+
 impl From<BlockPos> for ChunkPos {
     fn from(value : BlockPos) -> Self { Self {
         x : value.x.div_euclid(16),

@@ -24,10 +24,27 @@ rustdoc-args = [
 all-features = true
 
 
+[profile.dev.package.octetmc-chunksection]
+opt-level        = 3
+debug-assertions = false
+overflow-checks  = false
+incremental      = false
+codegen-units    = 1
+
+[profile.release.package.octetmc-chunksection]
+opt-level        = 3
+debug-assertions = false
+overflow-checks  = false
+incremental      = false
+codegen-units    = 1
+
+
 [lints.rust]
 unused_parens = "allow"
 
 
+[dependencies.octetmc-chunksection]
+path     = "../octetmc-chunksection"
 [dependencies.octetmc-protocol]
 path     = "../octetmc-protocol"
 features = [ "bevy_ecs" ]
@@ -92,7 +109,3 @@ version = "1.0"
 version          = "1.17"
 default-features = false
 features         = [ "v3" ]
-
-# Chunk Section Compression
-[dependencies.bitptr]
-version = "0.1"

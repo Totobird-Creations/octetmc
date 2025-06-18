@@ -1,5 +1,7 @@
-use super::{ WorldGenerator, ChunkSectionBuf };
-use octetmc_protocol::value::chunk_pos::ChunkPos;
+use super::WorldGenerator;
+use crate::player::PlayerId;
+use crate::world::chunk::section::ChunkSectionEdit;
+use octetmc_protocol::value::chunk_section_pos::ChunkSectionPos;
 use octetmc_protocol::registry::block::air::Air;
 
 
@@ -9,8 +11,8 @@ pub struct VoidGenerator;
 impl WorldGenerator for VoidGenerator {
 
     #[inline]
-    fn fill_section(&self, _chunk : ChunkPos, _section : u8, buf : &mut ChunkSectionBuf) {
-        buf.fill(Air);
+    fn fill_section(&self, _player : PlayerId, _pos : ChunkSectionPos, mut edit : ChunkSectionEdit<'_>) {
+        edit.fill(Air);
     }
 
 }

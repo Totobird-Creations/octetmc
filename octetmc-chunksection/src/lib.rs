@@ -1,40 +1,54 @@
-//! 16x16x16 regions in player worlds.
-
-
-use crate::util::macros::deref_single;
-use octetmc_protocol::value::chunk_section_pos::ChunkSectionPos;
 use octetmc_protocol::value::block_state::BlockState;
 use octetmc_protocol::registry::block::air::Air;
 use core::mem::MaybeUninit;
-use std::collections::HashSet;
-use bevy_ecs::entity::Entity;
+use std::borrow::Cow;
 use bevy_ecs::component::Component;
 use bitptr::{ BitPtr, BitPtrMut };
 
 
+mod dirty;
+use dirty::ChunkSectionDirty;
+
 mod iter;
-pub use iter::*;
+pub use iter::ChunkSectionIterator;
 
 mod edit;
-pub use edit::*;
-
-
-deref_single!{
-    /// An [`Entity`] wrapper, intended for [`ChunkSectionId`]s.
-    #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Component)]
-    pub struct ChunkSectionId(Entity);
-    From;
-}
+pub use edit::ChunkSectionEdit;
 
 
 /// A 16x16x16 region in a player's world.
 #[derive(Component)]
-#[require(ChunkSectionPos)]
 pub struct ChunkSection {
-    palette  : Vec<BlockState>,
+    palette  : Cow<'static, [BlockState]>,
     run_bits : u8,
-    data     : MaybeUninit<Box<[u8]>>
+    data     : MaybeUninit<Box<[u8]>>,
+    dirty    : ChunkSectionDirty
 }
+
+
+impl ChunkSection {
+
+    /// A `ChunkSection` entirely filled with [`Air`].
+    pub const AIR : Self = Self {
+        palette  : Cow::Borrowed(&[Air.to_block_state()]),
+        run_bits : 0,
+        data     : MaybeUninit::uninit(),
+        dirty    : ChunkSectionDirty::NONE
+    };
+
+    /// Creates a new `ChunkSection` completely filled with `block`.
+    pub fn filled<B>(block : B) -> Self
+    where
+        B : Into<BlockState>
+    { Self {
+        palette  : Cow::Owned(vec![ block.into() ]),
+        run_bits : 0,
+        data     : MaybeUninit::uninit(),
+        dirty    : ChunkSectionDirty::NONE
+    } }
+
+}
+
 
 impl ChunkSection {
 
@@ -47,7 +61,18 @@ impl ChunkSection {
         arr
     }
 
+    #[inline]
+    pub fn dirty(&mut self, i : u16) {
+        self.dirty.add(i);
+    }
+
+    #[inline]
+    pub fn dirty_many(&mut self) {
+        self.dirty = ChunkSectionDirty::Many;
+    }
+
 }
+
 
 impl From<[BlockState; 4096]> for ChunkSection {
     fn from(blocks : [BlockState; 4096]) -> Self {
@@ -81,19 +106,22 @@ impl From<[BlockState; 4096]> for ChunkSection {
             let run = unsafe { runs.get_unchecked(0) };
             debug_assert_eq!(run.0, 4096);
             return Self {
-                palette  : vec![ run.1 ],
+                palette  : Cow::Owned(vec![ run.1 ]),
                 run_bits : 0,
-                data     : MaybeUninit::uninit()
+                data     : MaybeUninit::uninit(),
+                dirty    : ChunkSectionDirty::NONE
             };
         }
 
-        let max_run              = unsafe { runs.iter().map(|(len, _,)| *len).max().unwrap_unchecked() } as usize;
-        let run_bits             = min_bits(max_run);
+        let     max_run              = unsafe { runs.iter().map(|(len, _,)| *len).max().unwrap_unchecked() } as usize;
+        let     run_bits             = min_bits(max_run);
         debug_assert_ne!(run_bits, 0);
-        let run_ignored_bits     = (size_of::<RunLen>() * 8) - run_bits;
-        let palette              = runs.iter().map(|(_, block,)| *block).collect::<HashSet<_>>().into_iter().collect::<Vec<_>>();
-        let palette_bits         = min_bits(palette.len());
-        let palette_ignored_bits = (size_of::<usize>() * 8) - palette_bits;
+        let     run_ignored_bits     = (size_of::<RunLen>() * 8) - run_bits;
+        let mut palette              = runs.iter().map(|(_, block,)| *block).collect::<Vec<_>>();
+        palette.sort_by_key(|block| block.id());
+        palette.dedup_by_key(|block| block.id());
+        let     palette_bits         = min_bits(palette.len());
+        let     palette_ignored_bits = (size_of::<usize>() * 8) - palette_bits;
 
         // Pack into `data` vector.
         let mut data     = Box::<[u8]>::new_uninit_slice(((run_bits + palette_bits) * runs.len()).div_ceil(8));
@@ -110,12 +138,14 @@ impl From<[BlockState; 4096]> for ChunkSection {
         }
 
         Self {
-            palette,
+            palette  : Cow::Owned(palette),
             run_bits : run_bits as u8,
-            data     : MaybeUninit::new(unsafe { data.assume_init() })
+            data     : MaybeUninit::new(unsafe { data.assume_init() }),
+            dirty    : ChunkSectionDirty::NONE
         }
     }
 }
+
 
 impl Drop for ChunkSection {
     #[inline]

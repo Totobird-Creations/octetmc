@@ -1,8 +1,9 @@
 use octetmc::prelude::*;
 use octetmc::conn::OctetConnPlugin;
-use octetmc::world::generator::OctetAutoChunksPlugin;
-use octetmc::world::generator::SuperflatGenerator;
+use octetmc::world::OctetWorldPlugin;
+use octetmc::world::generator::{ OctetAutoChunksPlugin, SuperflatGenerator };
 use core::net::{ SocketAddr, SocketAddrV4, Ipv4Addr };
+use core::num::NonZeroU8;
 use bevy_app::{ App, PluginGroup, Update };
 use bevy_ecs::system::Query;
 use bevy_ecs::event::EventReader;
@@ -20,6 +21,9 @@ fn main() {
                 listen_addrs    : LISTEN_ADDRS.into(),
                 mojauth_enabled : true,
                 ..default()
+            })
+            .set(OctetWorldPlugin {
+                max_view_distance : NonZeroU8::new(32).unwrap()
             })
             .set(OctetAutoChunksPlugin::new(SuperflatGenerator::default()))
         )

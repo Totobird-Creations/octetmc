@@ -1,11 +1,13 @@
 use core::marker::PhantomData;
-use bevy_ecs::world::World;
+use bevy_ecs::world::{ World, DeferredWorld };
 use bevy_ecs::world::unsafe_world_cell::UnsafeWorldCell;
 use bevy_ecs::component::Tick;
+use bevy_ecs::archetype::Archetype;
 use bevy_ecs::system::{
     SystemParam,
     ReadOnlySystemParam,
     SystemMeta,
+    SystemParamValidationError,
     ParallelCommands,
     ResMut
 };
@@ -26,6 +28,32 @@ unsafe impl<'w, 's, E : Event> SystemParam for ParallelEventWriter<'w, 's, E> {
     #[inline(always)]
     fn init_state(world : &mut World, meta : &mut SystemMeta) -> Self::State {
         <ParallelCommands as SystemParam>::init_state(world, meta)
+    }
+
+    #[inline(always)]
+    unsafe fn new_archetype(
+        state : &mut Self::State,
+        arche : &Archetype,
+        meta  : &mut SystemMeta,
+    ) { unsafe { <ParallelCommands as SystemParam>::new_archetype(state, arche, meta) } }
+
+    #[inline(always)]
+    fn apply(state : &mut Self::State, meta : &SystemMeta, world : &mut World) {
+        <ParallelCommands as SystemParam>::apply(state, meta, world)
+    }
+
+    #[inline(always)]
+    fn queue(state : &mut Self::State, meta : &SystemMeta, world : DeferredWorld) {
+        <ParallelCommands as SystemParam>::queue(state, meta, world)
+    }
+
+    #[inline(always)]
+    unsafe fn validate_param(
+        state : &Self::State,
+        meta  : &SystemMeta,
+        world : UnsafeWorldCell
+    ) -> Result<(), SystemParamValidationError> {
+        unsafe { <ParallelCommands as SystemParam>::validate_param(state, meta, world) }
     }
 
     #[inline]
@@ -63,7 +91,7 @@ impl<'w, 's, E : Event> ParallelEventWriter<'w, 's, E> {
 
     /// Analogous to [`EventWriter::write_batch`](bevy_ecs::event::EventWriter::write_batch).
     #[track_caller]
-    pub fn write_batch(&self, event : impl IntoIterator<Item = E> + Send + 'static) {
+    pub fn write_batch(&self, event : impl IntoIterator<Item = E> + Clone + Send + 'static) {
         self.pcmds.command_scope(move |mut cmds| {
             cmds.queue(move |world : &mut World| {
                 let mut events = world.resource_mut::<Events<E>>();

@@ -14,7 +14,7 @@ pub struct ChunkSectionPos {
     /// Y coordinate.
     ///
     /// Positive is up, negative is down.
-    pub y : i32,
+    pub y : u8,
 
     /// Z coordinate.
     ///
