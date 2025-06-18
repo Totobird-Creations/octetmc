@@ -6,6 +6,7 @@ use crate::value::ident::Ident;
 use crate::value::nbt::Nbt;
 use crate::packet::{ Packet, StateConfig };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
+use crate::packet::prefix_check::prefix_check_config_s2c;
 use std::borrow::Cow;
 
 
@@ -59,7 +60,7 @@ impl RegistryDataS2CConfigPacket<'_> {
 impl PacketEncode for RegistryDataS2CConfigPacket<'_> {
     type State = StateConfig;
 
-    const PREFIX : u8 = 0x07;
+    const PREFIX : u8 = prefix_check_config_s2c!(registry_data, 0x07);
 
     fn predict_size(&self) -> usize {
         self.id.predict_size()

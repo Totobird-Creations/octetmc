@@ -4,6 +4,7 @@
 use crate::value::game_mode::GameMode;
 use crate::packet::{ Packet, StatePlay };
 use crate::packet::encode::{ PacketEncode, EncodeBuf };
+use crate::packet::prefix_check::prefix_check_play_s2c;
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Game_Event>
@@ -107,7 +108,7 @@ impl Packet for GameEventS2CPlayPacket { }
 impl PacketEncode for GameEventS2CPlayPacket {
     type State = StatePlay;
 
-    const PREFIX : u8 = 0x22;
+    const PREFIX : u8 = prefix_check_play_s2c!(game_event, 0x22);
 
     #[inline(always)]
     fn predict_size(&self) -> usize {

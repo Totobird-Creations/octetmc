@@ -4,7 +4,6 @@ use std::io::Write as _;
 use smol::stream::StreamExt;
 use smol::fs;
 use serde::Deserialize as Deser;
-use serde::de::IgnoredAny;
 use serde_json::from_reader as read_json;
 
 

@@ -4,6 +4,7 @@
 use crate::packet::{ Packet, StateLogin };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use crate::packet::decode::str::StringDecodeError;
+use crate::packet::prefix_check::prefix_check_login_c2s;
 use std::borrow::Cow;
 use uuid::Uuid;
 
@@ -53,7 +54,7 @@ impl HelloC2SLoginPacket<'_> {
 impl PacketDecode for HelloC2SLoginPacket<'_> {
     type State = StateLogin;
 
-    const PREFIX : u8 = 0x00;
+    const PREFIX : u8 = prefix_check_login_c2s!(hello, 0x00);
     type Output<'l> = HelloC2SLoginPacket<'l>;
     type Error<'l>  = StringDecodeError;
 

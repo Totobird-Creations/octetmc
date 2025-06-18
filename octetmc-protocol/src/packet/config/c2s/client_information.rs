@@ -4,6 +4,7 @@
 use crate::value::client_info::{ ClientInfo, ClientInfoDecodeError };
 use crate::packet::{ Packet, StateConfig };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
+use crate::packet::prefix_check::prefix_check_config_c2s;
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Client_Information_(configuration)>
@@ -44,7 +45,7 @@ impl Packet for ClientInformationC2SConfigPacket<'_> { }
 impl PacketDecode for ClientInformationC2SConfigPacket<'_> {
     type State = StateConfig;
 
-    const PREFIX : u8 = 0x00;
+    const PREFIX : u8 = prefix_check_config_c2s!(client_information, 0x00);
     type Output<'l> = ClientInformationC2SConfigPacket<'l>;
     type Error<'l>  = ClientInfoDecodeError;
 

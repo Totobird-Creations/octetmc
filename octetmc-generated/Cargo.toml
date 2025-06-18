@@ -19,6 +19,9 @@ rust-version = "1.87"
 unused_parens = "allow"
 
 
+[dependencies.semver]
+version = "1.0"
+
 [dependencies.smol]
 version = "2.0"
 

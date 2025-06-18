@@ -1,6 +1,6 @@
 [package]
 name         = "octetmc-protocol"
-version      = "0.1.0"
+version      = "0.1.0+1.21.6"
 authors      = ["Totobird <https://github.com/Totobird-Creations>"]
 description  = "Async Minecraft server protocol library"
 license      = "LGPL-3.0-only"
@@ -27,13 +27,6 @@ all-features = true
 [features]
 
 bevy_ecs = [ "dep:bevy_ecs" ]
-
-mc-1_21_5 = [
-    "__mc-1_21_5-or_later",
-    "__mc-1_21_5-or_earlier",
-]
-__mc-1_21_5-or_later   = [  ]
-__mc-1_21_5-or_earlier = [  ]
 
 
 [lints.rust]

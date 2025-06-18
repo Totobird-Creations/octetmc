@@ -14,6 +14,8 @@ pub mod config;
 
 pub mod play;
 
+mod prefix_check;
+
 
 pub mod decode;
 

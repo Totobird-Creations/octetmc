@@ -1,16 +1,5 @@
 impl WolfSoundVariant<'_> {
 
-    /// Vanilla `minecraft:puglin` wolf sound variant.
-    pub const PUGLIN : WolfSoundVariant<'static> = WolfSoundVariant {
-        id             : ident![puglin],
-        ambient_sound  : ident![minecraft:entity.wolf_puglin.ambient],
-        death_sound    : ident![minecraft:entity.wolf_puglin.death],
-        growl_sound    : ident![minecraft:entity.wolf_puglin.growl],
-        hurt_sound     : ident![minecraft:entity.wolf_puglin.hurt],
-        pant_sound     : ident![minecraft:entity.wolf_puglin.pant],
-        whine_sound    : ident![minecraft:entity.wolf_puglin.whine]
-    };
-
     /// Vanilla `minecraft:big` wolf sound variant.
     pub const BIG : WolfSoundVariant<'static> = WolfSoundVariant {
         id             : ident![big],
@@ -33,17 +22,6 @@ impl WolfSoundVariant<'_> {
         whine_sound    : ident![minecraft:entity.wolf_cute.whine]
     };
 
-    /// Vanilla `minecraft:classic` wolf sound variant.
-    pub const CLASSIC : WolfSoundVariant<'static> = WolfSoundVariant {
-        id             : ident![classic],
-        ambient_sound  : ident![minecraft:entity.wolf.ambient],
-        death_sound    : ident![minecraft:entity.wolf.death],
-        growl_sound    : ident![minecraft:entity.wolf.growl],
-        hurt_sound     : ident![minecraft:entity.wolf.hurt],
-        pant_sound     : ident![minecraft:entity.wolf.pant],
-        whine_sound    : ident![minecraft:entity.wolf.whine]
-    };
-
     /// Vanilla `minecraft:sad` wolf sound variant.
     pub const SAD : WolfSoundVariant<'static> = WolfSoundVariant {
         id             : ident![sad],
@@ -55,6 +33,17 @@ impl WolfSoundVariant<'_> {
         whine_sound    : ident![minecraft:entity.wolf_sad.whine]
     };
 
+    /// Vanilla `minecraft:puglin` wolf sound variant.
+    pub const PUGLIN : WolfSoundVariant<'static> = WolfSoundVariant {
+        id             : ident![puglin],
+        ambient_sound  : ident![minecraft:entity.wolf_puglin.ambient],
+        death_sound    : ident![minecraft:entity.wolf_puglin.death],
+        growl_sound    : ident![minecraft:entity.wolf_puglin.growl],
+        hurt_sound     : ident![minecraft:entity.wolf_puglin.hurt],
+        pant_sound     : ident![minecraft:entity.wolf_puglin.pant],
+        whine_sound    : ident![minecraft:entity.wolf_puglin.whine]
+    };
+
     /// Vanilla `minecraft:angry` wolf sound variant.
     pub const ANGRY : WolfSoundVariant<'static> = WolfSoundVariant {
         id             : ident![angry],
@@ -64,6 +53,17 @@ impl WolfSoundVariant<'_> {
         hurt_sound     : ident![minecraft:entity.wolf_angry.hurt],
         pant_sound     : ident![minecraft:entity.wolf_angry.pant],
         whine_sound    : ident![minecraft:entity.wolf_angry.whine]
+    };
+
+    /// Vanilla `minecraft:classic` wolf sound variant.
+    pub const CLASSIC : WolfSoundVariant<'static> = WolfSoundVariant {
+        id             : ident![classic],
+        ambient_sound  : ident![minecraft:entity.wolf.ambient],
+        death_sound    : ident![minecraft:entity.wolf.death],
+        growl_sound    : ident![minecraft:entity.wolf.growl],
+        hurt_sound     : ident![minecraft:entity.wolf.hurt],
+        pant_sound     : ident![minecraft:entity.wolf.pant],
+        whine_sound    : ident![minecraft:entity.wolf.whine]
     };
 
     /// Vanilla `minecraft:grumpy` wolf sound variant.
@@ -79,12 +79,12 @@ impl WolfSoundVariant<'_> {
 
     /// All vanilla wolf sound variants.
     pub const VANILLA_WOLF_SOUND_VARIANTS : &'static [WolfSoundVariant<'static>] = &[
-        Self::PUGLIN,
         Self::BIG,
         Self::CUTE,
-        Self::CLASSIC,
         Self::SAD,
+        Self::PUGLIN,
         Self::ANGRY,
+        Self::CLASSIC,
         Self::GRUMPY,
     ];
 

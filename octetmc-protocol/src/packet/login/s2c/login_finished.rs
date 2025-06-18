@@ -1,9 +1,10 @@
-//! `0x02` `login_success`
+//! `0x02` `login_finished`
 
 
 use crate::value::profile::PlayerProfile;
 use crate::packet::{ Packet, StateLogin};
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
+use crate::packet::prefix_check::prefix_check_login_s2c;
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Success>
@@ -46,7 +47,7 @@ impl LoginFinishedS2CLoginPacket<'_> {
 impl PacketEncode for LoginFinishedS2CLoginPacket<'_> {
     type State = StateLogin;
 
-    const PREFIX : u8 = 0x02;
+    const PREFIX : u8 = prefix_check_login_s2c!(login_finished, 0x02);
 
     #[inline]
     fn predict_size(&self) -> usize {

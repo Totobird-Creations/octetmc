@@ -4,6 +4,7 @@
 use crate::value::varint::VarInt;
 use crate::packet::{ Packet, StateLogin };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
+use crate::packet::prefix_check::prefix_check_login_s2c;
 use std::borrow::Cow;
 
 
@@ -66,7 +67,7 @@ impl HelloS2CLoginPacket<'_> {
 impl PacketEncode for HelloS2CLoginPacket<'_> {
     type State = StateLogin;
 
-    const PREFIX : u8 = 0x01;
+    const PREFIX : u8 = prefix_check_login_s2c!(hello, 0x01);
 
     fn predict_size(&self) -> usize {
         self.server_id.predict_size()

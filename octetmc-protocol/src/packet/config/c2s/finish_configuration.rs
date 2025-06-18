@@ -3,6 +3,7 @@
 
 use crate::packet::{ Packet, StateConfig };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
+use crate::packet::prefix_check::prefix_check_config_c2s;
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Acknowledge_Finish_Configuration>
@@ -18,7 +19,7 @@ impl Packet for FinishConfigurationC2SConfigPacket { }
 impl PacketDecode for FinishConfigurationC2SConfigPacket {
     type State = StateConfig;
 
-    const PREFIX : u8 = 0x03;
+    const PREFIX : u8 = prefix_check_config_c2s!(finish_configuration, 0x03);
     type Output<'l> = FinishConfigurationC2SConfigPacket;
     type Error<'l>  = IncompleteData;
 

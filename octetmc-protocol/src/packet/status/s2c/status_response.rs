@@ -4,6 +4,7 @@
 use crate::value::text::Text;
 use crate::packet::{ Packet, StateStatus };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
+use crate::packet::prefix_check::prefix_check_status_s2c;
 use std::borrow::Cow;
 use uuid::Uuid;
 use serde::{
@@ -226,7 +227,7 @@ impl Packet for StatusResponseS2CStatusPacket<'_, '_> { }
 impl PacketEncode for StatusResponseS2CStatusPacket<'_, '_> {
     type State = StateStatus;
 
-    const PREFIX : u8 = 0x00;
+    const PREFIX : u8 = prefix_check_status_s2c!(status_response, 0x00);
 
     fn predict_size(&self) -> usize { 0 }
 

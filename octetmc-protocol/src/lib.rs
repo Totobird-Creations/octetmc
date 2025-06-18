@@ -31,14 +31,16 @@ pub mod registry;
 
 /// Game versions that this library currently supports.
 pub const GAME_VERSIONS : &[Version] = &[
-    Version::new(1, 21, 5)
+    Version::new(1, 21, 6)
 ];
 
 /// The latest game version that this library currently supports.
-pub const LATEST_GAME_VERSION : &Version = &Version::new(1, 21, 5);
+pub const LATEST_GAME_VERSION : &Version = &Version::new(1, 21, 6);
+
+include!(".generated/version.rs");
 
 /// The protocol version that this library currently supports.
-pub const PROTOCOL_VERSION : u32 = 770;
+pub const PROTOCOL_VERSION : u32 = 771;
 
 
 trait Sealed { }

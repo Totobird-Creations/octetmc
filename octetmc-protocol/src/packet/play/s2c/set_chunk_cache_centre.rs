@@ -5,6 +5,7 @@ use crate::value::varint::VarInt;
 use crate::value::chunk_pos::ChunkPos;
 use crate::packet::{ Packet, StateConfig };
 use crate::packet::encode::{ EncodeBuf, PacketEncode };
+use crate::packet::prefix_check::prefix_check_play_s2c;
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Set_Center_Chunk>
@@ -25,7 +26,7 @@ impl Packet for SetChunkCacheCentreS2CPlayPacket { }
 impl PacketEncode for SetChunkCacheCentreS2CPlayPacket {
     type State = StateConfig;
 
-    const PREFIX : u8 = 0x57;
+    const PREFIX : u8 = prefix_check_play_s2c!(set_chunk_cache_center, 0x57);
 
     #[inline(always)]
     fn predict_size(&self) -> usize {

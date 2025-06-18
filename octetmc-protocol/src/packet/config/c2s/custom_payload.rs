@@ -1,10 +1,11 @@
-//! `0x03` `finish_configuration`
+//! `0x02` `custom_payload`
 
 
 use crate::value::ident::{ Ident, IdentDecodeError };
 use crate::value::channel_data::ChannelData;
 use crate::packet::{ Packet, StateConfig };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
+use crate::packet::prefix_check::prefix_check_config_c2s;
 use std::borrow::Cow;
 
 
@@ -46,7 +47,7 @@ impl Packet for CustomPayloadC2SConfigPacket<'_> { }
 impl PacketDecode for CustomPayloadC2SConfigPacket<'_> {
     type State = StateConfig;
 
-    const PREFIX : u8 = 0x02;
+    const PREFIX : u8 = prefix_check_config_c2s!(custom_payload, 0x02);
     type Output<'l> = CustomPayloadC2SConfigPacket<'l>;
     type Error<'l>  = IdentDecodeError;
 

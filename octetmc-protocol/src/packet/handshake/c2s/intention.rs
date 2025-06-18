@@ -5,6 +5,7 @@ use crate::value::varint::{ VarInt, VarIntDecodeError };
 use crate::packet::{ Packet, StateHandshake };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
 use crate::packet::decode::str::StringDecodeError;
+use crate::packet::prefix_check::prefix_check_handshake_c2s;
 use std::borrow::Cow;
 
 
@@ -67,7 +68,7 @@ impl<'l> IntentionC2SHandshakePacket<'l> {
 impl PacketDecode for IntentionC2SHandshakePacket<'_> {
     type State = StateHandshake;
 
-    const PREFIX : u8 = 0x00;
+    const PREFIX : u8 = prefix_check_handshake_c2s!(intention, 0x00);
     type Output<'l> = IntentionC2SHandshakePacket<'l>;
     type Error<'l>  = IntentionDecodeError;
 

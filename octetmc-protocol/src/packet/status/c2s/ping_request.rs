@@ -3,6 +3,7 @@
 
 use crate::packet::{ Packet, StateStatus };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
+use crate::packet::prefix_check::prefix_check_status_c2s;
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Ping_Request_(status)>
@@ -23,7 +24,7 @@ impl Packet for PingRequestC2SStatusPacket { }
 impl PacketDecode for PingRequestC2SStatusPacket {
     type State = StateStatus;
 
-    const PREFIX : u8 = 0x01;
+    const PREFIX : u8 = prefix_check_status_c2s!(ping_request, 0x01);
     type Output<'l> = PingRequestC2SStatusPacket;
     type Error<'l>  = IncompleteData;
 

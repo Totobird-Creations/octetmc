@@ -7,6 +7,7 @@ use crate::value::dim_block_pos::DimBlockPos;
 use crate::value::game_mode::GameMode;
 use crate::packet::{ Packet, StatePlay };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
+use crate::packet::prefix_check::prefix_check_play_s2c;
 use std::borrow::Cow;
 
 
@@ -163,7 +164,7 @@ impl LoginS2CPlayPacket<'_> {
 impl PacketEncode for LoginS2CPlayPacket<'_> {
     type State = StatePlay;
 
-    const PREFIX : u8 = 0x2B;
+    const PREFIX : u8 = prefix_check_play_s2c!(login, 0x2B);
 
     fn predict_size(&self) -> usize {
         self.entity_id.predict_size()

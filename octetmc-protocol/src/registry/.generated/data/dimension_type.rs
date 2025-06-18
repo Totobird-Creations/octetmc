@@ -1,19 +1,5 @@
 impl DimensionType<'_> {
 
-    /// Vanilla `minecraft:overworld_caves` dimension type.
-    pub const OVERWORLD_CAVES : DimensionType<'static> = DimensionType {
-        id              : ident![overworld_caves],
-        fixed_time      : None,
-        has_skylight    : true,
-        has_ceiling     : true,
-        compass_stable  : true,
-        min_section     : -4,
-        height_sections : unsafe { NonZeroU8::new_unchecked(24) },
-        effects         : DimensionEffects::Overworld,
-        ambient_light   : 0.0,
-        piglin_safe     : false
-    };
-
     /// Vanilla `minecraft:the_nether` dimension type.
     pub const THE_NETHER : DimensionType<'static> = DimensionType {
         id              : ident![the_nether],
@@ -26,6 +12,20 @@ impl DimensionType<'_> {
         effects         : DimensionEffects::Nether,
         ambient_light   : 0.1,
         piglin_safe     : true
+    };
+
+    /// Vanilla `minecraft:overworld_caves` dimension type.
+    pub const OVERWORLD_CAVES : DimensionType<'static> = DimensionType {
+        id              : ident![overworld_caves],
+        fixed_time      : None,
+        has_skylight    : true,
+        has_ceiling     : true,
+        compass_stable  : true,
+        min_section     : -4,
+        height_sections : unsafe { NonZeroU8::new_unchecked(24) },
+        effects         : DimensionEffects::Overworld,
+        ambient_light   : 0.0,
+        piglin_safe     : false
     };
 
     /// Vanilla `minecraft:overworld` dimension type.
@@ -58,8 +58,8 @@ impl DimensionType<'_> {
 
     /// All vanilla dimension types.
     pub const VANILLA_DIMENSION_TYPES : &'static [DimensionType<'static>] = &[
-        Self::OVERWORLD_CAVES,
         Self::THE_NETHER,
+        Self::OVERWORLD_CAVES,
         Self::OVERWORLD,
         Self::THE_END,
     ];

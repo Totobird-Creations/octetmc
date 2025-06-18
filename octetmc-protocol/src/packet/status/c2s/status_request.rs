@@ -3,6 +3,7 @@
 
 use crate::packet::{ Packet, StateStatus };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
+use crate::packet::prefix_check::prefix_check_status_c2s;
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Status_Request>
@@ -18,7 +19,7 @@ impl Packet for StatusRequestC2SStatusPacket { }
 impl PacketDecode for StatusRequestC2SStatusPacket {
     type State = StateStatus;
 
-    const PREFIX : u8 = 0x00;
+    const PREFIX : u8 = prefix_check_status_c2s!(status_request, 0x00);
     type Output<'l> = StatusRequestC2SStatusPacket;
     type Error<'l>  = IncompleteData;
 

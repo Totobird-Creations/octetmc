@@ -4,6 +4,7 @@
 use crate::value::varint::VarInt;
 use crate::packet::{ Packet, StateConfig };
 use crate::packet::encode::{ EncodeBuf, PacketEncode };
+use crate::packet::prefix_check::prefix_check_play_s2c;
 use core::num::NonZeroU8;
 
 
@@ -25,7 +26,7 @@ impl Packet for SetChunkCacheRadiusS2CPlayPacket { }
 impl PacketEncode for SetChunkCacheRadiusS2CPlayPacket {
     type State = StateConfig;
 
-    const PREFIX : u8 = 0x58;
+    const PREFIX : u8 = prefix_check_play_s2c!(set_chunk_cache_radius, 0x58);
 
     #[inline(always)]
     fn predict_size(&self) -> usize {

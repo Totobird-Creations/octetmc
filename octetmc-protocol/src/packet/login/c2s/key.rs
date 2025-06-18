@@ -5,6 +5,7 @@ use crate::value::varint::VarInt;
 use crate::packet::{ Packet, StateLogin };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use crate::packet::decode::str::StringDecodeError;
+use crate::packet::prefix_check::prefix_check_login_c2s;
 use std::borrow::Cow;
 
 
@@ -50,7 +51,7 @@ impl KeyC2SLoginPacket<'_> {
 impl PacketDecode for KeyC2SLoginPacket<'_> {
     type State = StateLogin;
 
-    const PREFIX : u8 = 0x01;
+    const PREFIX : u8 = prefix_check_login_c2s!(key, 0x01);
     type Output<'l> = KeyC2SLoginPacket<'l>;
     type Error<'l>  = StringDecodeError;
 

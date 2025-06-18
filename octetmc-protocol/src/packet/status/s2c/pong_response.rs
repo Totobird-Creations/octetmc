@@ -3,6 +3,7 @@
 
 use crate::packet::{ Packet, StateStatus };
 use crate::packet::encode::{ EncodeBuf, PacketEncode };
+use crate::packet::prefix_check::prefix_check_status_s2c;
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Pong_Response_(status)>
@@ -23,7 +24,7 @@ impl Packet for PongResponseS2CStatusPacket { }
 impl PacketEncode for PongResponseS2CStatusPacket {
     type State = StateStatus;
 
-    const PREFIX : u8 = 0x01;
+    const PREFIX : u8 = prefix_check_status_s2c!(pong_response, 0x01);
 
     #[inline(always)]
     fn predict_size(&self) -> usize {

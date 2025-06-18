@@ -1,12 +1,5 @@
 impl CowVariant<'_> {
 
-    /// Vanilla `minecraft:temperate` cow variant.
-    pub const TEMPERATE : CowVariant<'static> = CowVariant( SimpleVariant {
-        id       : ident![temperate],
-        model    : None,
-        asset_id : ident![minecraft:entity/cow/temperate_cow]
-    } );
-
     /// Vanilla `minecraft:cold` cow variant.
     pub const COLD : CowVariant<'static> = CowVariant( SimpleVariant {
         id       : ident![cold],
@@ -21,11 +14,18 @@ impl CowVariant<'_> {
         asset_id : ident![minecraft:entity/cow/warm_cow]
     } );
 
+    /// Vanilla `minecraft:temperate` cow variant.
+    pub const TEMPERATE : CowVariant<'static> = CowVariant( SimpleVariant {
+        id       : ident![temperate],
+        model    : None,
+        asset_id : ident![minecraft:entity/cow/temperate_cow]
+    } );
+
     /// All vanilla cow variants.
     pub const VANILLA_COW_VARIANTS : &'static [CowVariant<'static>] = &[
-        Self::TEMPERATE,
         Self::COLD,
         Self::WARM,
+        Self::TEMPERATE,
     ];
 
 }

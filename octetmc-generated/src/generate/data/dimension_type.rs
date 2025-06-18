@@ -28,6 +28,7 @@ pub async fn dimension_type(generated_dir : &Path, target_file : &Path) {
         let DimensionType {
             ambient_light,
             bed_works : _,
+            cloud_height,
             coordinate_scale : _,
             effects,
             fixed_time,
@@ -92,6 +93,7 @@ struct DimensionType {
     ambient_light                   : f32,
     #[expect(dead_code)]
     bed_works                       : IgnoredAny,
+    cloud_height                    : Option<i16>,
     #[expect(dead_code)]
     coordinate_scale                : IgnoredAny,
     effects                         : DimensionEffects,

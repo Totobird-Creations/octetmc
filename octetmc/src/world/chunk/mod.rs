@@ -142,14 +142,12 @@ pub(super) fn check_tracking_sections(
                             Ordering::Greater => {
                                 section.dirty_many();
                                 *tracking_section_id = ChunkSectionId::from(entity);
-                                println!("Track section {section_pos:?}");
                                 continue;
                             },
                         } },
                         None => {
                             section.dirty_many();
                             *tracking_section = Some(ChunkSectionId::from(entity));
-                            println!("Track section {section_pos:?}");
                             continue;
                         },
                     }
@@ -178,9 +176,16 @@ pub(super) fn check_untracking_sections(
                         }
                     }
                     *tracked_section = None;
-                    println!("Untrack section {expected_section_pos:?}");
                 }
             }
         }
     });
+}
+
+
+fn update_sections(
+    mut q_players  : Query<(Entity, &mut PlayerChunks,), (With<Player>, With<ConnInPlay>,)>,
+        q_sections : Query<(&ChunkSection,)>
+) {
+
 }
