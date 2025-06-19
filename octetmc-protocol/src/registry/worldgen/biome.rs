@@ -1,12 +1,24 @@
 //! `minecraft:worldgen/biome` registry.
 
 
+use crate::mapping_check;
 use crate::value::ident::{ Ident, ident };
 use crate::value::rgb::Rgb;
 use crate::value::particle::Particle;
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use crate::packet::config::s2c::registry_data::RegistryEntry;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.world.level.biome.Biome", "33ce18835a1be24d0e09f2e2990708395028f85073f35742ac7c8d2426403dc4");
+mapping_check!("net.minecraft.world.level.biome.Biome$ClimateSettings", "0e26d58177d9edff9e61b83bc70c4e0d68354a376edbef1f2671afd50f526ba0");
+mapping_check!("net.minecraft.world.level.biome.Biome$Precipitation", "eb1f9cd9abcecf829b1539221559fc85ab57f55010dbc5639ec8e52cad5ba0f6");
+mapping_check!("net.minecraft.world.level.biome.Biome$TemperatureModifier", "47ddfd065acc4315ffb684f3018de3819204aed714c302781ff09aa9625edda9");
+mapping_check!("net.minecraft.world.level.biome.BiomeSpecialEffects", "354c6dd648f5a9eaad401a7d5bb2bdc594f4a299305f6a630e771ca827975966");
+mapping_check!("net.minecraft.world.level.biome.BiomeSpecialEffects$GrassColorModifier", "1ce58bbf66989cec28267b2bc74b3d1eae05ca5c30f5651351d1e35e882da4e7");
+mapping_check!("net.minecraft.world.level.biome.AmbientParticleSettings", "23c2a9f7f143d8732d0d88c896c41ee5ce47e2366215e71fc83673bf7d20e02f");
+mapping_check!("net.minecraft.world.level.biome.AmbientMoodSettings", "1e29fb8c83c7e47dda8beecbb934ae5ba2347ef9f96517054a33794d533e17c6");
+mapping_check!("net.minecraft.world.level.biome.AmbientAdditionsSettings", "e2a56291e6964d474708a8112ecd0e002746ea6acfce9c9af364d79033968eef");
 
 
 /// Biomes types which can appear in a world.

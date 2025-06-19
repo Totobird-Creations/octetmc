@@ -39,6 +39,10 @@ pub mod registry_data;
 
 // TODO: server_links
 
+// TODO: clear_dialog
+
+// TODO: show_dialog
+
 
 packet_encode_group!{
     type State = StateConfig;

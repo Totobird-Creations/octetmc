@@ -1,9 +1,13 @@
 //! `0x03` `finish_configuration`
 
 
+use crate::mapping_check;
 use crate::packet::{ Packet, StateConfig };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
 use crate::packet::prefix_check::prefix_check_config_c2s;
+
+
+mapping_check!("net.minecraft.network.protocol.configuration.ServerboundFinishConfigurationPacket", "f21412a96bdd07224e0ebee32ec9f020ffd3eb4e75143a351941c9a7b577d78d");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Acknowledge_Finish_Configuration>

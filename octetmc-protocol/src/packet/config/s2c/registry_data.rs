@@ -1,6 +1,7 @@
 //! `0x07` `registry_data`
 
 
+use crate::mapping_check;
 use crate::value::varint::VarInt;
 use crate::value::ident::Ident;
 use crate::value::nbt::Nbt;
@@ -8,6 +9,9 @@ use crate::packet::{ Packet, StateConfig };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 use crate::packet::prefix_check::prefix_check_config_s2c;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.network.protocol.configuration.ClientboundRegistryDataPacket", "1b7dd497467005e7e79b5faed814001a5b5abeb416fe2cdef55d89948cafd9ed");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Registry_Data_2>

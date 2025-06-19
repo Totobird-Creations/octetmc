@@ -1,9 +1,25 @@
 //! Particles
 
 
+use crate::mapping_check;
 use crate::value::item_slot::ItemSlot;
 use crate::value::rgb::{ Rgb, Argb };
 use crate::value::block_state::BlockState;
+
+
+mapping_check!("net.minecraft.core.particles.BlockParticleOption", "1e00041411d0aa0e66b5f26a83522f5d063c6c4c3e4d8c8b6eff972e08e8b27e");
+mapping_check!("net.minecraft.core.particles.ColorParticleOption", "91a4778557d3707dedc080d84c68ec655adec68aea83868a73796e7c1c240365");
+mapping_check!("net.minecraft.core.particles.DustColorTransitionOptions", "34b7bac788b769968a41b8b154df97f943a019d3430242ca72bb086e0e621496");
+mapping_check!("net.minecraft.core.particles.DustParticleOptions", "71a13b0c60e1496dab3dfa71bee1b3b509ff053f358ffcdf0cd02d8bb3431252");
+mapping_check!("net.minecraft.core.particles.ItemParticleOption", "da92379e8b2394b1238d6a038bed88ed0af066ac60d8323cf450b0c106871c27");
+mapping_check!("net.minecraft.core.particles.ParticleOptions", "39b428843fecb3217ac0de048b8d93f53d257453c0a50dc5c70e9aba7c79d337");
+mapping_check!("net.minecraft.core.particles.ParticleType", "b8178dcdf80e2b1c1c3390edb48dc533f3ca2b8315b9ba95074b0b69f4558ef5");
+mapping_check!("net.minecraft.core.particles.ScalableParticleOptionsBase", "629993d8235d4721aac8fb4453fe38c2a47f5a8dbdb5f51fc2fc5f85bd81488e");
+mapping_check!("net.minecraft.core.particles.SculkChargeParticleOptions", "7b791907dcb25c9be2809150ff6635988bb4577873a2573e98907656dee77773");
+mapping_check!("net.minecraft.core.particles.ShriekParticleOption", "495906ecc4610cf1433d68644310df00f6b7babf61bb8d84ec350c5f822c6004");
+mapping_check!("net.minecraft.core.particles.SimpleParticleType", "da9b8f138d002d66144abbf2fb285bdaebecc249f4a05d50f101bdef97230c02");
+mapping_check!("net.minecraft.core.particles.TrailParticleOption", "2aade615d773b9fb85e6c23b818f792fb8876a4ddaf0f946299b91281eb6e9b8");
+mapping_check!("net.minecraft.core.particles.VibrationParticleOption", "75c5c948f75f16df86c06da75a14473240895d8302daa7a083eb6f6a94ab695d");
 
 
 /// Unimplemented partible.

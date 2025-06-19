@@ -1,12 +1,16 @@
 //! `0x00` `hello`
 
 
+use crate::mapping_check;
 use crate::packet::{ Packet, StateLogin };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use crate::packet::decode::str::StringDecodeError;
 use crate::packet::prefix_check::prefix_check_login_c2s;
 use std::borrow::Cow;
 use uuid::Uuid;
+
+
+mapping_check!("net.minecraft.network.protocol.login.ServerboundHelloPacket", "c5b2cb77c9e1289368fbe8deba87f3e9b0ea9ef7793c978d7755a4fa9b7afb50");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Start>

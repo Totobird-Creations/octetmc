@@ -266,6 +266,12 @@ pub mod set_chunk_cache_radius;
 
 // TODO: server_links
 
+// TODO: waypoint
+
+// TODO: clear_dialog
+
+// TODO: show_dialog
+
 
 packet_encode_group!{
     type State = StatePlay;

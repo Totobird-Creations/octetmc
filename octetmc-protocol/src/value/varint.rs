@@ -6,6 +6,7 @@ use crate::packet::encode::{ EncodeBuf, PacketPartEncode };
 use core::ops::{ Deref, DerefMut };
 use std::borrow::Cow;
 
+
 /// Variable bit-width integers.
 ///
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Type:VarInt>

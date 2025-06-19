@@ -1,10 +1,14 @@
 //! `0x02` `login_finished`
 
 
+use crate::mapping_check;
 use crate::value::profile::PlayerProfile;
 use crate::packet::{ Packet, StateLogin};
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 use crate::packet::prefix_check::prefix_check_login_s2c;
+
+
+mapping_check!("net.minecraft.network.protocol.login.ClientboundLoginFinishedPacket", "6dafe5ded47752e5b830ff574f6e751712a3cfebeb37e3778e55ad024d3a881c");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_Success>

@@ -13,6 +13,8 @@ use crate::packet::decode::{ IncompleteData, packet_decode_group };
 
 // TODO: change_difficulty
 
+// TODO: change_game_mode
+
 // TODO: chat_ack
 
 // TODO: chat_command
@@ -130,6 +132,8 @@ use crate::packet::decode::{ IncompleteData, packet_decode_group };
 // TODO: use_item_on
 
 // TODO: use_item
+
+// TODO: custom_click_action
 
 
 packet_decode_group!{

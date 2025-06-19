@@ -1,6 +1,7 @@
 //! `0x00` `status_response`
 
 
+use crate::mapping_check;
 use crate::value::text::Text;
 use crate::packet::{ Packet, StateStatus };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
@@ -12,6 +13,13 @@ use serde::{
     Serializer as Serer
 };
 use serde_json::to_string as to_json_string;
+
+
+mapping_check!("net.minecraft.network.protocol.status.ClientboundStatusResponsePacket", "2f22ebec17cc520ec4755254fee2e07d39b7b8084ac221c8954130fe2504de26");
+mapping_check!("net.minecraft.network.protocol.status.ServerStatus", "76405cc2aaa343f60b9ebc1bad387f1fe69b84640707c269f2331be4f45c2f37");
+mapping_check!("net.minecraft.network.protocol.status.ServerStatus$Favicon", "f4b731311ecee171dfaf3c214cd26c46ac853f0d41bafe9e14e2dc3e2d3c6e29");
+mapping_check!("net.minecraft.network.protocol.status.ServerStatus$Players", "dc636d8091930b3ed510d4e9ccff840312f261ea089f7753c95a0ee602bd016f");
+mapping_check!("net.minecraft.network.protocol.status.ServerStatus$Version", "8b609110e54927307355b2c3ab50adaedb90ee4508ed044e1d32d184a36dcd69");
 
 
 /// The maximum number of players that can be displayed in a `StatusResponseS2CStatusPacket`.

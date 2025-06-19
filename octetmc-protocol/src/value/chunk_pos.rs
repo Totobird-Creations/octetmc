@@ -1,10 +1,14 @@
 //! Positions of chunks in worlds.
 
 
+use crate::mapping_check;
 use super::block_pos::BlockPos;
 use super::chunk_section_pos::ChunkSectionPos;
 use super::character_pos::CharacterPos;
 use core::ops::Add;
+
+
+mapping_check!("net.minecraft.world.level.ChunkPos", "bf0c345b39a1ac3acf7831f567c2a773f3f1954570eac72a9a93b4e55cb38ca3");
 
 
 /// A chunk position in a world.

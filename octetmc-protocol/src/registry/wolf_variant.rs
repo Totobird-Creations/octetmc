@@ -1,10 +1,14 @@
 //! `minecraft:wolf_variant` registry.
 
 
+use crate::mapping_check;
 use crate::value::ident::{ Ident, ident };
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use crate::packet::config::s2c::registry_data::RegistryEntry;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.world.entity.animal.wolf.WolfVariant", "8881d86e11bed4843bd29184884f123c9467f8e1cafe18f1bc85739e5b5af693");
 
 
 /// A wolf variant registry entry.

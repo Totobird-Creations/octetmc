@@ -1,9 +1,13 @@
 //! Positions of blocks in worlds.
 
 
+use crate::mapping_check;
 use super::character_pos::CharacterPos;
 use crate::packet::encode::{ PacketPartEncode, EncodeBuf };
 use saturating_cast::SaturatingCast;
+
+
+mapping_check!("net.minecraft.core.BlockPos", "a7754c65812dcebd26e919ed70d81e85bf06c52b29c0df68d9718a808199b60e");
 
 
 /// A block position in a world.

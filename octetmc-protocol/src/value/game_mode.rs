@@ -1,6 +1,12 @@
 //! Game mode of players.
 
 
+use crate::mapping_check;
+
+
+mapping_check!("net.minecraft.world.level.GameType", "005b27e2684e950db0692d6c011f404103c92098ecf7f14824de949685aab867");
+
+
 /// A player's game mode.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[repr(u8)]

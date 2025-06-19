@@ -1,12 +1,16 @@
 //! `0x01` `key`
 
 
+use crate::mapping_check;
 use crate::value::varint::VarInt;
 use crate::packet::{ Packet, StateLogin };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use crate::packet::decode::str::StringDecodeError;
 use crate::packet::prefix_check::prefix_check_login_c2s;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.network.protocol.login.ServerboundKeyPacket", "ce70a0c9e325149eda9bdcf7906bea6db5f7688d7b7c378696a40217aec8555f");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Encryption_Response>

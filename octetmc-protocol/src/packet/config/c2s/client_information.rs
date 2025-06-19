@@ -1,10 +1,14 @@
 //! `0x00` `client_information`
 
 
+use crate::mapping_check;
 use crate::value::client_info::{ ClientInfo, ClientInfoDecodeError };
 use crate::packet::{ Packet, StateConfig };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use crate::packet::prefix_check::prefix_check_config_c2s;
+
+
+mapping_check!("net.minecraft.network.protocol.common.ServerboundClientInformationPacket", "4ba94ef99476245e6c0c187c60a920f8e12036fa640f08fc5473f0e8bf34ffc9");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Client_Information_(configuration)>

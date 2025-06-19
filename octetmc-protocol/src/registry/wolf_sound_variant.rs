@@ -1,10 +1,14 @@
 //! `minecraft:wolf_sound_variant` registry.
 
 
+use crate::mapping_check;
 use crate::value::ident::{ Ident, ident };
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use crate::packet::config::s2c::registry_data::RegistryEntry;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.world.entity.animal.wolf.WolfSoundVariant", "aaaf2bca5d5b3bb8ce4678a3843b6298d9c62cf4b8ddb7fcb3bc6e1dd34fe0da");
 
 
 /// A wolf sound variant registry entry.

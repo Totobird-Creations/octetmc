@@ -1,11 +1,15 @@
 //! `minecraft:painting_variant` registry.
 
 
+use crate::mapping_check;
 use crate::value::ident::{ Ident, ident };
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use crate::packet::config::s2c::registry_data::RegistryEntry;
 use core::num::NonZeroU8;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.world.entity.decoration.PaintingVariant", "649892830b87670f0a4a6b88e752863b5b0a2054d0c56a7834d72f3cc774c339");
 
 
 /// A painting variant registry entry.

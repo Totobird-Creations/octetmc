@@ -1,6 +1,7 @@
 //! `0x2B` `login`
 
 
+use crate::mapping_check;
 use crate::value::varint::VarInt;
 use crate::value::ident::Ident;
 use crate::value::dim_block_pos::DimBlockPos;
@@ -9,6 +10,9 @@ use crate::packet::{ Packet, StatePlay };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 use crate::packet::prefix_check::prefix_check_play_s2c;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.network.protocol.game.ClientboundLoginPacket", "6ddb0e240b7eb82986b73c49ccbbd27b96d8880422d7b9ad9e36e7b09750d1f0");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Login_(play)>

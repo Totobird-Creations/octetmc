@@ -1,10 +1,14 @@
 //! `minecraft:damage_type` registry.
 
 
+use crate::mapping_check;
 use crate::value::ident::{ Ident, ident };
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use crate::packet::config::s2c::registry_data::RegistryEntry;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.world.damagesource.DamageType", "be2d4624b5eebdc24c16880550f199aa60239eb078c923e8a6c5de242ac3a414");
 
 
 /// A painting variant registry entry.

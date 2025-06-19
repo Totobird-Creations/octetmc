@@ -26,6 +26,8 @@ pub mod finish_configuration;
 
 // TODO: select_known_packs
 
+// TODO: custom_click_action
+
 
 packet_decode_group!{
     type State     = StateConfig;

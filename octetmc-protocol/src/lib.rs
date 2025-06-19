@@ -28,6 +28,8 @@ pub mod packet;
 
 pub mod registry;
 
+include!(".generated/mappings.rs");
+
 
 /// Game versions that this library currently supports.
 pub const GAME_VERSIONS : &[Version] = &[

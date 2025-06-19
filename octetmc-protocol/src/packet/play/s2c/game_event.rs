@@ -1,10 +1,15 @@
 //! `0x22` `game_event`
 
 
+use crate::mapping_check;
 use crate::value::game_mode::GameMode;
 use crate::packet::{ Packet, StatePlay };
 use crate::packet::encode::{ PacketEncode, EncodeBuf };
 use crate::packet::prefix_check::prefix_check_play_s2c;
+
+
+mapping_check!("net.minecraft.network.protocol.game.ClientboundGameEventPacket", "885fb51bea327f9df0a11a1ad797d9cfb957c48a2162b1e7444ef76014fbc645");
+mapping_check!("net.minecraft.network.protocol.game.ClientboundGameEventPacket$Type", "87181ce0703194f202652578e96e0f74b00b0e1de399cc1e46f96060f8a33353");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Game_Event>

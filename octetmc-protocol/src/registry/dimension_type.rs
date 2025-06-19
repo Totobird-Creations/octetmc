@@ -1,11 +1,15 @@
 //! `minecraft:dimension_type` registry.
 
 
+use crate::mapping_check;
 use crate::packet::config::s2c::registry_data::RegistryEntry;
 use crate::value::ident::{ Ident, ident };
 use crate::value::nbt::{ Nbt, NbtCompound, NbtCompoundEntry, NbtElement };
 use core::num::NonZeroU8;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.world.level.dimension.DimensionType", "51fd2a9edbdd876aba13dd114b570491c28b4733e2bbab4e64526510a6d416be");
 
 
 /// The dimension type that a world can be.

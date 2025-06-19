@@ -1,11 +1,15 @@
 //! `0x01` `hello`
 
 
+use crate::mapping_check;
 use crate::value::varint::VarInt;
 use crate::packet::{ Packet, StateLogin };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 use crate::packet::prefix_check::prefix_check_login_s2c;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.network.protocol.login.ClientboundHelloPacket", "924e7106b619f5cf8a8e8475e88c2eec1925b97add0eddabf434f904756eef02");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Encryption_Request>

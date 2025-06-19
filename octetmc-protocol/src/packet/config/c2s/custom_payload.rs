@@ -1,12 +1,16 @@
 //! `0x02` `custom_payload`
 
 
+use crate::mapping_check;
 use crate::value::ident::{ Ident, IdentDecodeError };
 use crate::value::channel_data::ChannelData;
 use crate::packet::{ Packet, StateConfig };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode };
 use crate::packet::prefix_check::prefix_check_config_c2s;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket", "4ab924bbc9e06dab98926e8b6b6bf1bceb26100bfb00dfa79d3256bb27291a1e");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Serverbound_Plugin_Message_(configuration)>

@@ -1,12 +1,16 @@
 //! `0x00` `intention`
 
 
+use crate::mapping_check;
 use crate::value::varint::{ VarInt, VarIntDecodeError };
 use crate::packet::{ Packet, StateHandshake };
 use crate::packet::decode::{ DecodeBufHead, DecodeBuf, PacketDecode, IncompleteData };
 use crate::packet::decode::str::StringDecodeError;
 use crate::packet::prefix_check::prefix_check_handshake_c2s;
 use std::borrow::Cow;
+
+
+mapping_check!("net.minecraft.network.protocol.handshake.ClientIntentionPacket", "c2dff9fc2b1b080eeeae091c29767f8954002161b16d89f15003065e90be703c");
 
 
 /// <https://minecraft.wiki/w/Java_Edition_protocol/Packets#Handshake>

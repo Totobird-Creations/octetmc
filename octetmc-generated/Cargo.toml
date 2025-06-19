@@ -35,3 +35,12 @@ version = "1.0"
 
 [dependencies.convert_case]
 version = "0.8"
+
+[dependencies.proguard]
+version = "5.5"
+[dependencies.zip]
+version = "4.1"
+[dependencies.ristretto_classfile]
+version = "0.20"
+[dependencies.sha2]
+version = "0.10"
