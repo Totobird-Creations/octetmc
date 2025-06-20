@@ -97,8 +97,17 @@ impl ConnPeerOutMessage {
                 sea_level            : dimension.sea_level,
                 enforces_secure_chat : false
             }).await?;
-
             _ = AsyncWorld.entity(*player_id).insert(dimension);
+
+            // TODO: PlayerInfoUpdateS2CPlayPacket
+
+            // TODO: AddEntityS2CPlayPacket
+
+            // TODO: RespawnS2CPlayPacket
+
+            // TODO: PlayerPositionS2CPlayPacket
+
+            // TODO: wait for AcceptTeleportationC2SPlayPacket
 
             comms.send_packet(&GameEventS2CPlayPacket::WaitForChunks).await?;
 
