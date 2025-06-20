@@ -94,7 +94,7 @@ impl Plugin for OctetWorldPlugin {
 }
 
 
-fn update_view_distance( // TODO: Add send_view_distance and update_chunk_centre.
+fn update_view_distance(
         pcmds      : ParallelCommands,
         q_players  : Query<(Entity, &Player, Option<&ViewDistance>,)>,
         r_max_dist : Res<MaxViewDistance>,

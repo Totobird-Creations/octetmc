@@ -24,7 +24,7 @@ pub mod finish_configuration;
 
 // TODO: resource_pack
 
-// TODO: select_known_packs
+pub mod select_known_packs;
 
 // TODO: custom_click_action
 
@@ -39,7 +39,9 @@ packet_decode_group!{
         /// `CustomPayloadC2SConfigPacket`
         CustomPayload(custom_payload::CustomPayloadC2SConfigPacket<'l>),
         /// `FinishConfigurationC2SConfigPacket`
-        FinishConfiguration(finish_configuration::FinishConfigurationC2SConfigPacket)
+        FinishConfiguration(finish_configuration::FinishConfigurationC2SConfigPacket),
+        /// `SelectKnownPacksC2SConfigPacket`
+        SelectKnownPacks(select_known_packs::SelectKnownPacksC2SConfigPacket<'l>)
     }
 }
 
@@ -54,6 +56,7 @@ impl C2SConfigPackets<'_> {
         Self::ClientInformation   (v) => C2SConfigPackets::ClientInformation   (v.into_static_owned()),
         Self::CustomPayload       (v) => C2SConfigPackets::CustomPayload       (v.into_static_owned()),
         Self::FinishConfiguration (v) => C2SConfigPackets::FinishConfiguration (v),
+        Self::SelectKnownPacks    (v) => C2SConfigPackets::SelectKnownPacks    (v.into_static_owned())
     } }
 
     /// Convert the inner parts of this packet to their owned counterparts.
@@ -63,6 +66,7 @@ impl C2SConfigPackets<'_> {
         Self::ClientInformation   (v) => C2SConfigPackets::ClientInformation   (v.to_static_owned()),
         Self::CustomPayload       (v) => C2SConfigPackets::CustomPayload       (v.to_static_owned()),
         Self::FinishConfiguration (v) => C2SConfigPackets::FinishConfiguration (*v),
+        Self::SelectKnownPacks    (v) => C2SConfigPackets::SelectKnownPacks    (v.to_static_owned())
     } }
 
 }
@@ -123,6 +127,14 @@ impl From<C2SConfigPacketDecodeError> for Cow<'static, str> {
         C2SConfigPacketDecodeError::UnknownChatMode(v)       => C2SConfigPacketDecodeError::UnknownChatMode(v).into(),
         C2SConfigPacketDecodeError::UnknownMainHand(v)       => C2SConfigPacketDecodeError::UnknownMainHand(v).into(),
         C2SConfigPacketDecodeError::UnknownParticleStatus(v) => C2SConfigPacketDecodeError::UnknownParticleStatus(v).into()
+    } }
+}
+
+impl From<StringDecodeError> for C2SConfigPacketDecodeError {
+    fn from(value : StringDecodeError) -> Self { match (value) {
+        StringDecodeError::IncompleteData => Self::IncompleteData,
+        StringDecodeError::VarIntTooLong  => Self::VarIntTooLong,
+        StringDecodeError::InvalidUtf8    => Self::InvalidUtf8
     } }
 }
 

@@ -15,8 +15,9 @@ impl ConnPeerComms {
 
     pub(crate) async fn send_packet<P>(&mut self, packet : &P) -> ConnPeerResult
     where
-        P : PacketPrefixedEncode
+        P : PacketPrefixedEncode + core::fmt::Debug
     {
+        println!("Sent {:?}", format!("{packet:?}").split("{").next().unwrap().trim_end());
         const VARINT32_SIZE   : usize = VarInt::<u32>::MAX_BYTES;
         const VARINT32_SIZE_2 : usize = VARINT32_SIZE * 2;
 

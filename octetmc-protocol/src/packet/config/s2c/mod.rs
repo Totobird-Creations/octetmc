@@ -7,7 +7,7 @@ use crate::packet::encode::packet_encode_group;
 
 // TODO: cookie_request
 
-// TODO: custom_payload
+pub mod custom_payload;
 
 // TODO: disconnect
 
@@ -33,7 +33,7 @@ pub mod registry_data;
 
 // TODO: update_tags
 
-// TODO: select_known_packs
+pub mod select_known_packs;
 
 // TODO: custom_report_details
 
@@ -48,9 +48,13 @@ packet_encode_group!{
     type State = StateConfig;
     /// `S2CConfig`-type packets.
     pub enum S2CConfigPackets<'l> {
+        /// `CustomPayloadS2CConfigPacket`
+        CustomPayload(custom_payload::CustomPayloadS2CConfigPacket<'l>),
         /// `FinishConfigurationS2CConfigPacket`
         FinishConfiguration(finish_configuration::FinishConfigurationS2CConfigPacket),
         /// `RegistryDataS2CConfigPacket`
-        RegistryData(registry_data::RegistryDataS2CConfigPacket<'l>)
+        RegistryData(registry_data::RegistryDataS2CConfigPacket<'l>),
+        /// `SelectKnownPacksS2CConfigPacket`
+        SelectKnownPacks(select_known_packs::SelectKnownPacksS2CConfigPacket<'l>)
     }
 }

@@ -64,8 +64,8 @@ fn main() { smol::block_on(async {
 
     let generated_dir = working_dir.join("generated");
     println!("Skipping data generator.");
-    // println!("Running data generator...");
-    // run_datagen(&working_dir, &generated_dir, &server_jar_path).await;
+    println!("Running data generator...");
+    run_datagen(&working_dir, &generated_dir, &server_jar_path).await;
 
     println!("Building Rust code...");
     let root_dir = working_dir.parent().unwrap().parent().unwrap();
@@ -85,9 +85,9 @@ fn main() { smol::block_on(async {
         writeln!(f, "        pre   : semver::Prerelease::EMPTY,").unwrap();
         writeln!(f, "        build : semver::BuildMetadata::EMPTY").unwrap();
         writeln!(f, "    }};").unwrap();
-        writeln!(f, "    if (LATEST_GAME_VERSION.major != GENERATED.major").unwrap();
-        writeln!(f, "        || LATEST_GAME_VERSION.minor != GENERATED.minor").unwrap();
-        writeln!(f, "        || LATEST_GAME_VERSION.patch != GENERATED.patch").unwrap();
+        writeln!(f, "    if (GAME_VERSION.major != GENERATED.major").unwrap();
+        writeln!(f, "        || GAME_VERSION.minor != GENERATED.minor").unwrap();
+        writeln!(f, "        || GAME_VERSION.patch != GENERATED.patch").unwrap();
         writeln!(f, "    ) {{ panic!(\"mismatched generated output version\"); }}").unwrap();
         writeln!(f, "}};").unwrap();
     }

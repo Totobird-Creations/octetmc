@@ -1,9 +1,11 @@
 use octetmc::prelude::*;
+use octetmc::server::ServerBrand;
 use octetmc::conn::OctetConnPlugin;
 use octetmc::world::OctetWorldPlugin;
 use octetmc::world::generator::{ OctetAutoChunksPlugin, SuperflatGenerator };
 use core::net::{ SocketAddr, SocketAddrV4, Ipv4Addr };
 use core::num::NonZeroU8;
+use std::borrow::Cow;
 use bevy_app::{ App, PluginGroup, Update };
 use bevy_ecs::system::Query;
 use bevy_ecs::event::EventReader;
@@ -27,6 +29,7 @@ fn main() {
             })
             .set(OctetAutoChunksPlugin::new(SuperflatGenerator::default()))
         )
+        .insert_resource(ServerBrand::from(Cow::Borrowed("OctetMC Example: Superflat")))
         .add_systems(Update, log_joins)
         .run();
 }

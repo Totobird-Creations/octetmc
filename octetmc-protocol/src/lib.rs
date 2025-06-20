@@ -31,18 +31,14 @@ pub mod registry;
 include!(".generated/mappings.rs");
 
 
-/// Game versions that this library currently supports.
-pub const GAME_VERSIONS : &[Version] = &[
-    Version::new(1, 21, 6)
-];
-
-/// The latest game version that this library currently supports.
-pub const LATEST_GAME_VERSION : &Version = &Version::new(1, 21, 6);
-
-include!(".generated/version.rs");
-
+/// The game version that this library currently supports.
+pub const GAME_VERSION : &Version = &Version::new(1, 21, 6);
+/// The game version that this library currently supports (as a string).
+pub const GAME_VERSION_STR : &str = "1.21.6";
 /// The protocol version that this library currently supports.
 pub const PROTOCOL_VERSION : u32 = 771;
+
+include!(".generated/version.rs");
 
 
 trait Sealed { }

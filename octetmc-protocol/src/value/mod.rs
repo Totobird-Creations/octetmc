@@ -38,3 +38,5 @@ pub mod game_mode;
 pub mod client_info;
 
 pub mod channel_data;
+
+pub mod known_pack;

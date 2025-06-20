@@ -1,20 +1,28 @@
 use super::error::{ ConnPeerResult, ConnPeerError };
 use super::state::{ ConnPeerState, ConfigPlay };
 use super::comms::ConnPeerComms;
+use super::status::CACHE_SERVER_BRAND;
 use super::ConnInConfig;
+use crate::server::ServerBrand;
 use crate::player::{ Player, PlayerId };
 use crate::player::login::PlayerLoggingInEvent;
 use crate::world::chunk::PlayerChunks;
 use crate::util::future::timeout;
 use crate::util::CratePrivateNew;
+use crate::util::dirty::Dirtyable;
+use octetmc_protocol::GAME_VERSION_STR;
 use octetmc_protocol::value::profile::{ PlayerProfile, PlayerProfileSkin };
 use octetmc_protocol::value::character_pos::CharacterPos;
+use octetmc_protocol::value::channel_data::ChannelData;
+use octetmc_protocol::value::known_pack::KnownPack;
 use octetmc_protocol::packet::login::c2s::hello::HelloC2SLoginPacket;
 use octetmc_protocol::packet::login::c2s::key::KeyC2SLoginPacket;
 use octetmc_protocol::packet::login::c2s::login_acknowledged::LoginAcknowledgedC2SLoginPacket;
 use octetmc_protocol::packet::login::s2c::hello::HelloS2CLoginPacket;
 use octetmc_protocol::packet::login::s2c::login_finished::LoginFinishedS2CLoginPacket;
 use octetmc_protocol::packet::login::s2c::login_compression::LoginCompressionS2CLoginPacket;
+use octetmc_protocol::packet::config::s2c::custom_payload::CustomPayloadS2CConfigPacket;
+use octetmc_protocol::packet::config::s2c::select_known_packs::SelectKnownPacksS2CConfigPacket;
 use core::time::Duration;
 use core::ptr;
 use std::borrow::Cow;
@@ -28,7 +36,7 @@ use ethnum::i256;
 use surf::StatusCode;
 use serde::Deserialize as Deser;
 use uuid::Uuid;
-use bevy_defer::AsyncWorld;
+use bevy_defer::{AsyncAccess, AsyncWorld};
 
 
 const LOGIN_TIMEOUT   : Duration = Duration::from_millis(250);
@@ -182,6 +190,25 @@ pub(super) async fn handle_login_process(
     }).await?;
     let _ = comms.read_packet_timeout::<LoginAcknowledgedC2SLoginPacket>(LOGIN_TIMEOUT).await?;
     comms.set_state(ConnPeerState::ConfigPlay(ConfigPlay::Config { active_ticks : 0 }));
+
+    // Send server brand.
+    let mut cache_brand = CACHE_SERVER_BRAND.lock().await;
+    _ = AsyncWorld.resource::<ServerBrand>().get_mut(|r| {
+        if (cache_brand.is_none() || r.take_dirty()) { _ = cache_brand.insert(r.to_string()); }
+    });
+    let brand = cache_brand.as_ref().map_or(GAME_VERSION_STR, |s| s.as_str());
+    comms.send_packet(&CustomPayloadS2CConfigPacket {
+        data : ChannelData::Brand { brand : Cow::Borrowed(brand) }
+    }).await?;
+
+    // Send known packs.
+    comms.send_packet(&SelectKnownPacksS2CConfigPacket { known_packs : Cow::Borrowed(&[
+        KnownPack {
+            namespace : Cow::Borrowed("minecraft"),
+            id        : Cow::Borrowed("core"),
+            version   : Cow::Borrowed(GAME_VERSION_STR),
+        }
+    ]) }).await?;
 
     // SAFETY: take_conn_sender_unchecked has not been called before.
     let (conn_out_sender, conn_in_receiver,) = unsafe { comms.take_mainloop_conn_channels_unchecked() };

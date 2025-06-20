@@ -1,12 +1,5 @@
 impl PigVariant<'_> {
 
-    /// Vanilla `minecraft:temperate` pig variant.
-    pub const TEMPERATE : PigVariant<'static> = PigVariant( SimpleVariant {
-        id       : ident![temperate],
-        model    : None,
-        asset_id : ident![minecraft:entity/pig/temperate_pig]
-    } );
-
     /// Vanilla `minecraft:cold` pig variant.
     pub const COLD : PigVariant<'static> = PigVariant( SimpleVariant {
         id       : ident![cold],
@@ -21,11 +14,18 @@ impl PigVariant<'_> {
         asset_id : ident![minecraft:entity/pig/warm_pig]
     } );
 
+    /// Vanilla `minecraft:temperate` pig variant.
+    pub const TEMPERATE : PigVariant<'static> = PigVariant( SimpleVariant {
+        id       : ident![temperate],
+        model    : None,
+        asset_id : ident![minecraft:entity/pig/temperate_pig]
+    } );
+
     /// All vanilla pig variants.
     pub const VANILLA_PIG_VARIANTS : &'static [PigVariant<'static>] = &[
-        Self::TEMPERATE,
         Self::COLD,
         Self::WARM,
+        Self::TEMPERATE,
     ];
 
 }

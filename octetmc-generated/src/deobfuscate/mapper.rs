@@ -8,6 +8,7 @@ pub struct ProguardMapper<'l> {
 
 pub struct ProguardMapperClass<'l> {
     pub original   : &'l str,
+    #[expect(dead_code)]
     pub obfuscated : &'l str,
     pub fields     : HashMap<&'l str, ProguardMapperField<'l>>,
     pub methods    : HashMap<&'l str, ProguardMapperMethod<'l>>
@@ -15,14 +16,19 @@ pub struct ProguardMapperClass<'l> {
 
 pub struct ProguardMapperField<'l> {
     pub original   : &'l str,
+    #[expect(dead_code)]
     pub obfuscated : &'l str,
+    #[expect(dead_code)]
     pub ty         : &'l str
 }
 
 pub struct ProguardMapperMethod<'l> {
     pub original   : &'l str,
+    #[expect(dead_code)]
     pub obfuscated : &'l str,
+    #[expect(dead_code)]
     pub ty         : &'l str,
+    #[expect(dead_code)]
     pub args       : &'l str
 }
 

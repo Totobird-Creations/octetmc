@@ -6,8 +6,8 @@ const _ : () = {
         pre   : semver::Prerelease::EMPTY,
         build : semver::BuildMetadata::EMPTY
     };
-    if (LATEST_GAME_VERSION.major != GENERATED.major
-        || LATEST_GAME_VERSION.minor != GENERATED.minor
-        || LATEST_GAME_VERSION.patch != GENERATED.patch
+    if (GAME_VERSION.major != GENERATED.major
+        || GAME_VERSION.minor != GENERATED.minor
+        || GAME_VERSION.patch != GENERATED.patch
     ) { panic!("mismatched generated output version"); }
 };

@@ -48,7 +48,9 @@ pub(super) async fn handle_config_packet(_player_id : PlayerId, packet : C2SConf
             Ok(ConnPeerAction::SendInMessage(ConnPeerInMessage::RecieveChannelData(data.into_static_owned())))
         }
 
-        C2SConfigPackets::FinishConfiguration(_) => Ok(ConnPeerAction::SetState(ConfigPlay::Play))
+        C2SConfigPackets::FinishConfiguration(_) => Ok(ConnPeerAction::SetState(ConfigPlay::Play)),
+
+        C2SConfigPackets::SelectKnownPacks(_) => Ok(ConnPeerAction::None)
 
     }
 }

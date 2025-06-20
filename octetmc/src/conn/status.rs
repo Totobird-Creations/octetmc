@@ -4,7 +4,7 @@ use super::comms::ConnPeerComms;
 use crate::server::{ ServerBrand, ServerMotd, ServerFavicon };
 use crate::player::{ PlayerCount, MaxPlayerCount };
 use crate::util::dirty::Dirtyable;
-use octetmc_protocol::{ LATEST_GAME_VERSION, PROTOCOL_VERSION };
+use octetmc_protocol::{ GAME_VERSION_STR, PROTOCOL_VERSION };
 use octetmc_protocol::value::rgb::Rgb;
 use octetmc_protocol::value::text::{ Text, TextComponent, TextContent, TextStyle, TextInteract, TextColour };
 use octetmc_protocol::packet::status::c2s::C2SStatusPackets;
@@ -13,7 +13,6 @@ use octetmc_protocol::packet::status::s2c::status_response::{ StatusResponseS2CS
 use octetmc_protocol::packet::status::s2c::pong_response::PongResponseS2CStatusPacket;
 use core::time::Duration;
 use std::borrow::Cow;
-use std::sync::LazyLock;
 use bevy_defer::{ AsyncWorld, AsyncAccess };
 use smol::lock::Mutex;
 
@@ -47,12 +46,11 @@ const DEFAULT_MOTD    : Text     = Text { components : Cow::Borrowed(&[
 const DEFAULT_FAVICON : &str     = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAA8UExURUdwTP748/////////////////////////+/Af8BAVMTaQgADDsPSSQFL/jSvtajp/9NTf/GTIV+iXJXgEo/9IwAAAAHdFJOUwD80BaaZz7Q6pnNAAAC0klEQVRYw91X2XKDMAysANscvoD//9dKvm1IGtOXTtWG6TTserWSbPj6+uMxYvwGPoEQMD3HD8LF8FQE4s15aiEeamCIXzGMEOxRAiD06kI/S2IScHqC45EEFGDWNUl44kAUsEqUwB+UQK9rltBdiFGkDCQVAsb+DNL6cj2h28acgaTf7hxSBtJ9JObwOANHcfbWYaoywIDOHIZYg4CXnb2EFhzJQEfQWchkQRTQa0K0IOHJBPbIghRdJmQLIlyprk7gQpwlXimpcCLfuMgmdudhhquLCRUEV6y+9YNQwOlTjwNumEVZJtq7Lx5WcKl0c0u5WQ8Cqj5BBeeaxPtL7SJueFAQIqDqE6SHI8JdbKp2EZPWNUE1LHSkaVXHhi6WSYOpCXTd61gHGZaOP6ooA50ZDcFe1QFPRVCbg+UoCJDfNgRzaSNVxWwxgoIiBRKwtAR7URYkM2orojERHbAXghld4InAJOQWmTKAk4ClrAIyzvMO6QxFB2S1Pkbe1MggSwRT6flMEiInLy0IFHlLQrxZlqWcDQTsnmFK9xwVw3ak79BhTGCxZeuRq0iAlQh3jS3DkfIL+MU0zU85kA1iGoNPYJIPuKUG/Eh4SwT1bDGfg9Pg7+Q0D+ZADnmY9F967PJ4W28AMQfnA7AxrIUBAHR1ukYGQT8JqLd5LOQeGGg5R86n+Jjn02JOlMfb9qTKEpwRSOElcwz/F8GD/BsBztwgwYugdVm4Z2Reiw7L3wjwW8w8ZwqI6mMekOF3Alwh9DzfcDgntbFLib87poaGAd3YKRnElmDXQ7enFHVfw+D6Qi9NGHjx5Eo26J8JLLw86fmV4UqA68PLg55D68OFgDqVv3/FgP01gdU/vX64lxS93xNYDR+8vtDAQKIoCBwcPnhMcW9akSMSWKPTUH5KQf3nG0n74fgUHmYvN7Lv5oF1Pq+PHGdwoGHCC+O/ef389/ENv2s5bHHprKEAAAAASUVORK5CYII=";
 
 
-static CACHE_LATEST_GAME_VERSION_STRING : LazyLock<String>      = LazyLock::new(|| LATEST_GAME_VERSION.to_string());
-static CACHE_SERVER_BRAND               : Mutex<Option<String>> = Mutex::new(None);
+pub(super) static CACHE_SERVER_BRAND : Mutex<Option<String>> = Mutex::new(None);
 
-static CACHE_SERVER_MOTD                : Mutex<Option<Text>>   = Mutex::new(None);
+static CACHE_SERVER_MOTD : Mutex<Option<Text>>   = Mutex::new(None);
 
-static CACHE_SERVER_FAVICON             : Mutex<Option<String>> = Mutex::new(None);
+static CACHE_SERVER_FAVICON : Mutex<Option<String>> = Mutex::new(None);
 
 
 pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResult {
@@ -69,17 +67,17 @@ pub(super) async fn handle_requests(comms : &mut ConnPeerComms) -> ConnPeerResul
             );
 
             _ = AsyncWorld.resource::<ServerBrand>().get_mut(|r| {
-                if (r.take_dirty()) { _ = cache_brand.insert(r.to_string()); }
+                if (cache_brand.is_none() || r.take_dirty()) { _ = cache_brand.insert(r.to_string()); }
             });
-            let brand = cache_brand.as_ref().unwrap_or(&*CACHE_LATEST_GAME_VERSION_STRING);
+            let brand = cache_brand.as_ref().map_or(GAME_VERSION_STR, |s| s.as_str());
 
             _ = AsyncWorld.resource::<ServerMotd>().get_mut(|r| {
-                if (r.take_dirty()) { _ = cache_motd.insert((**r).clone()); }
+                if (cache_motd.is_none() || r.take_dirty()) { _ = cache_motd.insert((**r).clone()); }
             });
             let motd = Text { components : Cow::Borrowed(&cache_motd.as_ref().unwrap_or(&DEFAULT_MOTD).components) };
 
             _ = AsyncWorld.resource::<ServerFavicon>().get_mut(|r| {
-                if (r.take_dirty()) { _ = cache_favicon.insert(format!("{FAVICON_PREFIX}{}", r.as_b64_png())); }
+                if (cache_favicon.is_none() || r.take_dirty()) { _ = cache_favicon.insert(format!("{FAVICON_PREFIX}{}", r.as_b64_png())); }
             });
             let favicon = cache_favicon.as_ref().map_or(DEFAULT_FAVICON, |s| s);
 
