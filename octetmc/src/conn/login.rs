@@ -13,6 +13,7 @@ use crate::util::dirty::Dirtyable;
 use octetmc_protocol::GAME_VERSION_STR;
 use octetmc_protocol::value::profile::{ PlayerProfile, PlayerProfileSkin };
 use octetmc_protocol::value::character_pos::CharacterPos;
+use octetmc_protocol::value::character_vel::CharacterVel;
 use octetmc_protocol::value::channel_data::ChannelData;
 use octetmc_protocol::value::known_pack::KnownPack;
 use octetmc_protocol::packet::login::c2s::hello::HelloC2SLoginPacket;
@@ -216,6 +217,7 @@ pub(super) async fn handle_login_process(
     let player = AsyncWorld.spawn_bundle((
         Player::new(conn_out_sender, conn_in_receiver, profile),
         CharacterPos::ZERO,
+        CharacterVel::ZERO,
         ConnInConfig,
         PlayerChunks::default()
     ));

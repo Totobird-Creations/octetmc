@@ -1,14 +1,17 @@
 use super::{ ConfigPlay, ConnPeerComms, ConnPeerResult, config, play };
-use crate::player::PlayerId;
+use crate::player::{ PlayerId, Player };
 use crate::world::{ MaxViewDistance, DEFAULT_VIEW_DISTANCE };
 use crate::world::dimension::Dimension;
 use octetmc_protocol::value::ident::Ident;
 use octetmc_protocol::value::game_mode::GameMode;
+use octetmc_protocol::value::character_pos::CharacterPos;
+use octetmc_protocol::value::character_vel::CharacterVel;
 use octetmc_protocol::packet::config::s2c::registry_data::{ RegistryDataS2CConfigPacket, RegistryEntry };
 use octetmc_protocol::packet::play::s2c::S2CPlayPackets;
 use octetmc_protocol::packet::play::s2c::game_event::GameEventS2CPlayPacket;
 use octetmc_protocol::packet::play::s2c::login::LoginS2CPlayPacket;
 use std::borrow::Cow;
+use bevy_ecs::query::With;
 use bevy_defer::{ AsyncAccess, AsyncWorld };
 
 
@@ -69,9 +72,13 @@ impl ConnPeerOutMessage {
             respawn_screens,
             game_mode
         } => {
-            if (comms.is_logged_in()) { panic!("Player double-logged in.") }
+            if (comms.is_logged_in()) { panic!("player {} double-logged in", *player_id) }
 
             let view_distance = AsyncWorld.resource::<MaxViewDistance>().get(|r| **r).unwrap_or(DEFAULT_VIEW_DISTANCE).get();
+
+            let Ok((pos, vel,)) = AsyncWorld.query_filtered::<(&CharacterPos, &CharacterVel,), (With<Player>,)>()
+                .entity(*player_id).get(|(pos, vel,)| (*pos, *vel,))
+                else { panic!("player {} does not have a spawn `CharacterPos` and `CharacterVel`", *player_id) };
 
             unsafe { config::switch_to_play(player_id, comms) }.await?;
 

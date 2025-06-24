@@ -2,6 +2,7 @@
 
 
 use core::mem;
+use core::ops::{ Deref, DerefMut };
 
 
 /// A value which can be flagged as 'dirty', or edited.
@@ -31,4 +32,32 @@ pub trait Dirtyable {
     #[inline]
     fn take_dirty(&mut self) -> bool { mem::replace(self.dirty_mut(), false) }
 
+}
+
+
+/// A wrapper around a value which can be flagged as 'dirty', or edited.
+///
+/// `Dirty`s are marked as dirty on `DerefMut`, even if not changed.
+pub struct Dirty<T> {
+    inner : T,
+    dirty : bool
+}
+
+impl<T> Dirtyable for Dirty<T> {
+    #[inline]
+    fn is_dirty(&self) -> bool { self.dirty }
+    #[inline]
+    fn dirty_mut(&mut self) -> &mut bool { &mut self.dirty }
+}
+
+impl<T> Deref for Dirty<T> {
+    type Target = T;
+    fn deref(&self) -> &Self::Target { &self.inner }
+}
+
+impl<T> DerefMut for Dirty<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.mark_dirty();
+        &mut self.inner
+    }
 }
