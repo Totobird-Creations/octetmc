@@ -1,5 +1,5 @@
 use octetmc_protocol::value::block_state::BlockState;
-use octetmc_protocol::registry::block::air::Air;
+use octetmc_protocol::value::block::air::Air;
 use core::mem::MaybeUninit;
 use std::borrow::Cow;
 use bevy_ecs::component::Component;
@@ -169,10 +169,10 @@ const fn min_bits(x : usize) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use octetmc_protocol::registry::block::stone::Stone;
-    use octetmc_protocol::registry::block::blue_carpet::BlueCarpet;
-    use octetmc_protocol::registry::block::clay::Clay;
-    use octetmc_protocol::registry::block::lapis_ore::LapisOre;
+    use octetmc_protocol::value::block::stone::Stone;
+    use octetmc_protocol::value::block::blue_carpet::BlueCarpet;
+    use octetmc_protocol::value::block::clay::Clay;
+    use octetmc_protocol::value::block::lapis_ore::LapisOre;
     use core::array;
 
 

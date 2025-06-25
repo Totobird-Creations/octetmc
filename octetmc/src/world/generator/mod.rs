@@ -5,7 +5,7 @@ use crate::player::PlayerId;
 use crate::world::chunk::ChunkTrackedEvent;
 use crate::world::chunk::section::{ ChunkSectionBundle, ChunkSection, ChunkSectionEdit };
 use octetmc_protocol::value::chunk_section_pos::ChunkSectionPos;
-use octetmc_protocol::registry::block::air::Air;
+use octetmc_protocol::value::block::air::Air;
 use std::sync::{ Arc, Mutex };
 use bevy_app::{ App, Plugin, Update };
 use bevy_ecs::system::{ ParallelCommands, Res };

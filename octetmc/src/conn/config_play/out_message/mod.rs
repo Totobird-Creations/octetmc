@@ -4,14 +4,16 @@ use crate::world::{ MaxViewDistance, DEFAULT_VIEW_DISTANCE };
 use crate::world::dimension::Dimension;
 use octetmc_protocol::value::ident::Ident;
 use octetmc_protocol::value::game_mode::GameMode;
+use octetmc_protocol::value::character_id::CharacterId;
 use octetmc_protocol::value::character_pos::CharacterPos;
 use octetmc_protocol::value::character_vel::CharacterVel;
+use octetmc_protocol::value::entity_type::EntityType;
 use octetmc_protocol::packet::config::s2c::registry_data::{ RegistryDataS2CConfigPacket, RegistryEntry };
 use octetmc_protocol::packet::play::s2c::S2CPlayPackets;
+use octetmc_protocol::packet::play::s2c::add_entity::AddEntityS2CPlayPacket;
 use octetmc_protocol::packet::play::s2c::game_event::GameEventS2CPlayPacket;
 use octetmc_protocol::packet::play::s2c::login::LoginS2CPlayPacket;
 use std::borrow::Cow;
-use bevy_ecs::query::With;
 use bevy_defer::{ AsyncAccess, AsyncWorld };
 
 
@@ -76,8 +78,8 @@ impl ConnPeerOutMessage {
 
             let view_distance = AsyncWorld.resource::<MaxViewDistance>().get(|r| **r).unwrap_or(DEFAULT_VIEW_DISTANCE).get();
 
-            let Ok((pos, vel,)) = AsyncWorld.query_filtered::<(&CharacterPos, &CharacterVel,), (With<Player>,)>()
-                .entity(*player_id).get(|(pos, vel,)| (*pos, *vel,))
+            let Ok((uuid, pos, vel,)) = AsyncWorld.query::<(&Player, &CharacterPos, &CharacterVel,)>()
+                .entity(*player_id).get(|(player, pos, vel,)| (player.profile().uuid, *pos, *vel,))
                 else { panic!("player {} does not have a spawn `CharacterPos` and `CharacterVel`", *player_id) };
 
             unsafe { config::switch_to_play(player_id, comms) }.await?;
@@ -108,7 +110,15 @@ impl ConnPeerOutMessage {
 
             // TODO: PlayerInfoUpdateS2CPlayPacket
 
-            // TODO: AddEntityS2CPlayPacket
+            comms.send_packet(&AddEntityS2CPlayPacket {
+                eid      : CharacterId(0),
+                uuid,
+                kind     : EntityType::PLAYER,
+                pos,
+                vel,
+                body_yaw : pos.yaw,
+                data     : 0
+            }).await?;
 
             // TODO: RespawnS2CPlayPacket
 

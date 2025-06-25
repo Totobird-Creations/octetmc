@@ -16,6 +16,7 @@ pub mod block_pos;
 pub mod dim_block_pos;
 pub mod chunk_pos;
 pub mod chunk_section_pos;
+pub mod character_id;
 pub mod character_pos;
 pub mod character_vel;
 
@@ -41,3 +42,8 @@ pub mod client_info;
 pub mod channel_data;
 
 pub mod known_pack;
+
+
+pub mod block;
+
+pub mod entity_type;

@@ -4,10 +4,10 @@ use crate::world::chunk::section::ChunkSectionEdit;
 use std::borrow::Cow;
 use octetmc_protocol::value::chunk_section_pos::ChunkSectionPos;
 use octetmc_protocol::value::block_state::BlockState;
-use octetmc_protocol::registry::block::air::Air;
-use octetmc_protocol::registry::block::bedrock::Bedrock;
-use octetmc_protocol::registry::block::dirt::Dirt;
-use octetmc_protocol::registry::block::grass_block::GrassBlock;
+use octetmc_protocol::value::block::air::Air;
+use octetmc_protocol::value::block::bedrock::Bedrock;
+use octetmc_protocol::value::block::dirt::Dirt;
+use octetmc_protocol::value::block::grass_block::GrassBlock;
 
 
 /// A [`WorldGenerator`] which places layers of blocks.

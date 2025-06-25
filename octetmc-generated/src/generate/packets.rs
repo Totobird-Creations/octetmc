@@ -36,12 +36,14 @@ pub async fn packets(generated_dir : &Path, target_dir : &Path) {
 type Packets = HashMap<State, HashMap<Bound, HashMap<String, Packet>>>;
 
 #[derive(Deser)]
+#[serde(deny_unknown_fields)]
 pub struct Packet {
     #[serde(rename = "protocol_id")]
     prefix : u8
 }
 
 #[derive(Deser, PartialEq, Eq, Hash, Debug)]
+#[serde(deny_unknown_fields)]
 pub enum State {
     #[serde(rename = "handshake")]
     Handshake,
@@ -56,6 +58,7 @@ pub enum State {
 }
 
 #[derive(Deser, PartialEq, Eq, Hash, Debug)]
+#[serde(deny_unknown_fields)]
 pub enum Bound {
     #[serde(rename = "serverbound")]
     C2S,

@@ -6,7 +6,7 @@ use crate::packet::encode::packet_encode_group;
 
 // TODO: bundle_delimiter
 
-// TODO: add_entity
+pub mod add_entity;
 
 // TODO: animate
 
@@ -277,6 +277,8 @@ packet_encode_group!{
     type State = StatePlay;
     /// `S2CPlay`-type packets.
     pub enum S2CPlayPackets<'l> {
+        /// `AddEntityS2CPlayPacket`
+        AddEntity(add_entity::AddEntityS2CPlayPacket),
         /// `GameEventS2CPlayPacket`
         GameEvent(game_event::GameEventS2CPlayPacket),
         /// `LoginS2CPlayPacket`
@@ -296,6 +298,7 @@ impl S2CPlayPackets<'_> {
     ///  `S2CPlayPackets<'static>`.
     #[inline]
     pub fn into_static_owned(self) -> S2CPlayPackets<'static> { match (self) {
+        Self::AddEntity           (v) => S2CPlayPackets::AddEntity(v),
         Self::GameEvent           (v) => S2CPlayPackets::GameEvent(v),
         Self::Login               (v) => S2CPlayPackets::Login (v.into_static_owned()),
         Self::SetChunkCacheCentre (v) => S2CPlayPackets::SetChunkCacheCentre(v),
@@ -306,6 +309,7 @@ impl S2CPlayPackets<'_> {
     ///  Returns the newly created `S2CPlayPackets<'static>`.
     #[inline]
     pub fn to_static_owned(&self) -> S2CPlayPackets<'static> { match (self) {
+        Self::AddEntity           (v) => S2CPlayPackets::AddEntity(*v),
         Self::GameEvent           (v) => S2CPlayPackets::GameEvent(*v),
         Self::Login               (v) => S2CPlayPackets::Login (v.to_static_owned()),
         Self::SetChunkCacheCentre (v) => S2CPlayPackets::SetChunkCacheCentre(*v),

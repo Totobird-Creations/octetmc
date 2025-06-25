@@ -26,9 +26,6 @@ pub mod wolf_variant;
 pub mod worldgen;
 
 
-pub mod block;
-
-
 /// A registry type.
 #[expect(private_bounds)]
 pub trait RegistryType : crate::Sealed { }

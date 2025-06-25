@@ -34,38 +34,38 @@ fn main() { smol::block_on(async {
         err @ Err(_) => { err.unwrap() }
     }
 
-    println!("Getting version info...");
-    let version_info = get_version_info(&game_version_string).await;
+    // println!("Getting version info...");
+    // let version_info = get_version_info(&game_version_string).await;
 
-    let server_jar_path            = working_dir.join(format!("mc-{game_version}-server.jar"));
-    let should_download_server_jar = ! server_jar_path.is_file();
-    if (should_download_server_jar) {
-        println!("Downloading server jar...");
-        let server_jar_pending_path = server_jar_path.with_extension("jar.pending");
-        _ = download_server_jar(&server_jar_pending_path, &version_info.downloads.server.url).await;
-        fs::rename(server_jar_pending_path, &server_jar_path).await.unwrap();
-    } else {
-        println!("Server jar already downloaded.");
-    }
+    // let server_jar_path            = working_dir.join(format!("mc-{game_version}-server.jar"));
+    // let should_download_server_jar = ! server_jar_path.is_file();
+    // if (should_download_server_jar) {
+    //     println!("Downloading server jar...");
+    //     let server_jar_pending_path = server_jar_path.with_extension("jar.pending");
+    //     _ = download_server_jar(&server_jar_pending_path, &version_info.downloads.server.url).await;
+    //     fs::rename(server_jar_pending_path, &server_jar_path).await.unwrap();
+    // } else {
+    //     println!("Server jar already downloaded.");
+    // }
 
     let server_mappings_path            = working_dir.join(format!("mc-{game_version}-mappings.txt"));
-    let should_download_server_mappings = should_download_server_jar || ! server_mappings_path.is_file();
-    if (should_download_server_mappings) {
-        println!("Downloading server deobfuscation mappings...");
-        let server_mappings_pending_path = server_mappings_path.with_extension("jar.pending");
-        _ = download_server_jar(&server_mappings_pending_path, &version_info.downloads.server_mappings.url).await;
-        fs::rename(server_mappings_pending_path, &server_mappings_path).await.unwrap();
-    } else {
-        println!("Server deobfuscation mappings already downloaded.");
-    }
+    // let should_download_server_mappings = should_download_server_jar || ! server_mappings_path.is_file();
+    // if (should_download_server_mappings) {
+    //     println!("Downloading server deobfuscation mappings...");
+    //     let server_mappings_pending_path = server_mappings_path.with_extension("jar.pending");
+    //     _ = download_server_jar(&server_mappings_pending_path, &version_info.downloads.server_mappings.url).await;
+    //     fs::rename(server_mappings_pending_path, &server_mappings_path).await.unwrap();
+    // } else {
+    //     println!("Server deobfuscation mappings already downloaded.");
+    // }
     let server_mappings = fs::read(server_mappings_path).await.unwrap();
     let server_mappings = ProguardMapping::new(&server_mappings);
     let server_mapper   = deobfuscate::ProguardMapper::from(&server_mappings);
 
     let generated_dir = working_dir.join("generated");
     println!("Skipping data generator.");
-    println!("Running data generator...");
-    run_datagen(&working_dir, &generated_dir, &server_jar_path).await;
+    // println!("Running data generator...");
+    // run_datagen(&working_dir, &generated_dir, &server_jar_path).await;
 
     println!("Building Rust code...");
     let root_dir = working_dir.parent().unwrap().parent().unwrap();
@@ -139,6 +139,11 @@ fn main() { smol::block_on(async {
     generate::data::wolf_sound_variant(&generated_dir, &registry_target_dir.join("data").join("wolf_sound_variant.rs")).await;
     generate::data::wolf_variant(&generated_dir, &registry_target_dir.join("data").join("wolf_variant.rs")).await;
     generate::data::worldgen::biome(&generated_dir, &registry_target_dir.join("data").join("worldgen").join("biome.rs")).await;
-    generate::blocks::blocks(&generated_dir, &registry_target_dir.join("blocks.rs")).await;
+
+
+    let value_target_dir = working_dir.parent().unwrap().parent().unwrap().join("octetmc-protocol/src/value/.generated");
+
+    generate::blocks::blocks(&generated_dir, &value_target_dir.join("blocks.rs")).await;
+    generate::registries::registries(&generated_dir, &value_target_dir).await;
 
 }) }
