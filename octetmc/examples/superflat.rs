@@ -21,7 +21,7 @@ fn main() {
         .add_plugins(OctetDefaultPlugins.build()
             .set(OctetConnPlugin {
                 listen_addrs    : LISTEN_ADDRS.into(),
-                mojauth_enabled : true,
+                mojauth_enabled : false,
                 ..default()
             })
             .set(OctetWorldPlugin {

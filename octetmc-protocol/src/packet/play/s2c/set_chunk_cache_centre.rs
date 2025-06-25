@@ -4,7 +4,7 @@
 use crate::mapping_check;
 use crate::value::varint::VarInt;
 use crate::value::chunk_pos::ChunkPos;
-use crate::packet::{ Packet, StateConfig };
+use crate::packet::{ Packet, StatePlay };
 use crate::packet::encode::{ EncodeBuf, PacketEncode };
 use crate::packet::prefix_check::prefix_check_play_s2c;
 
@@ -28,7 +28,7 @@ impl Packet for SetChunkCacheCentreS2CPlayPacket { }
 
 
 impl PacketEncode for SetChunkCacheCentreS2CPlayPacket {
-    type State = StateConfig;
+    type State = StatePlay;
 
     const PREFIX : u8 = prefix_check_play_s2c!(set_chunk_cache_center, 0x57);
 

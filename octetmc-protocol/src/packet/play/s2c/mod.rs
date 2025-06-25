@@ -4,7 +4,7 @@
 use crate::packet::StatePlay;
 use crate::packet::encode::packet_encode_group;
 
-// TODO: bundle_delimiter
+pub mod bundle_delimiter;
 
 pub mod add_entity;
 
@@ -277,9 +277,11 @@ packet_encode_group!{
     type State = StatePlay;
     /// `S2CPlay`-type packets.
     pub enum S2CPlayPackets<'l> {
-        /// `AddEntityS2CPlayPacket`
+        /// `BundleDelimiter`
+        BundleDelimiter(bundle_delimiter::BundleDelimiterS2CPlayPacket),
+        /// `AddEntity`
         AddEntity(add_entity::AddEntityS2CPlayPacket),
-        /// `GameEventS2CPlayPacket`
+        /// `GameEvent`
         GameEvent(game_event::GameEventS2CPlayPacket),
         /// `LoginS2CPlayPacket`
         Login(login::LoginS2CPlayPacket<'l>),
@@ -298,6 +300,7 @@ impl S2CPlayPackets<'_> {
     ///  `S2CPlayPackets<'static>`.
     #[inline]
     pub fn into_static_owned(self) -> S2CPlayPackets<'static> { match (self) {
+        Self::BundleDelimiter     (v) => S2CPlayPackets::BundleDelimiter(v),
         Self::AddEntity           (v) => S2CPlayPackets::AddEntity(v),
         Self::GameEvent           (v) => S2CPlayPackets::GameEvent(v),
         Self::Login               (v) => S2CPlayPackets::Login (v.into_static_owned()),
@@ -309,6 +312,7 @@ impl S2CPlayPackets<'_> {
     ///  Returns the newly created `S2CPlayPackets<'static>`.
     #[inline]
     pub fn to_static_owned(&self) -> S2CPlayPackets<'static> { match (self) {
+        Self::BundleDelimiter     (v) => S2CPlayPackets::BundleDelimiter(*v),
         Self::AddEntity           (v) => S2CPlayPackets::AddEntity(*v),
         Self::GameEvent           (v) => S2CPlayPackets::GameEvent(*v),
         Self::Login               (v) => S2CPlayPackets::Login (v.to_static_owned()),

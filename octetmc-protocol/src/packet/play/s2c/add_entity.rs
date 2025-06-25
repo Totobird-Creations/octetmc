@@ -7,7 +7,7 @@ use crate::value::character_id::CharacterId;
 use crate::value::character_pos::CharacterPos;
 use crate::value::character_vel::CharacterVel;
 use crate::value::entity_type::EntityType;
-use crate::packet::{ Packet, StateConfig };
+use crate::packet::{ Packet, StatePlay };
 use crate::packet::encode::{ EncodeBuf, PacketEncode, PacketPartEncode };
 use crate::packet::prefix_check::prefix_check_play_s2c;
 use core::f64::consts::TAU;
@@ -60,7 +60,7 @@ impl Packet for AddEntityS2CPlayPacket { }
 
 
 impl PacketEncode for AddEntityS2CPlayPacket {
-    type State = StateConfig;
+    type State = StatePlay;
 
     const PREFIX : u8 = prefix_check_play_s2c!(add_entity, 0x01);
 

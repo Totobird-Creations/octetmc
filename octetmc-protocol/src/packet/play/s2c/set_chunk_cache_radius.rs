@@ -3,7 +3,7 @@
 
 use crate::mapping_check;
 use crate::value::varint::VarInt;
-use crate::packet::{ Packet, StateConfig };
+use crate::packet::{ Packet, StatePlay };
 use crate::packet::encode::{ EncodeBuf, PacketEncode };
 use crate::packet::prefix_check::prefix_check_play_s2c;
 use core::num::NonZeroU8;
@@ -28,7 +28,7 @@ impl Packet for SetChunkCacheRadiusS2CPlayPacket { }
 
 
 impl PacketEncode for SetChunkCacheRadiusS2CPlayPacket {
-    type State = StateConfig;
+    type State = StatePlay;
 
     const PREFIX : u8 = prefix_check_play_s2c!(set_chunk_cache_radius, 0x58);
 
