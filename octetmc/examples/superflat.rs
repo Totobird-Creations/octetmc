@@ -17,6 +17,7 @@ const LISTEN_ADDRS : &[SocketAddr] = &[
 
 
 fn main() {
+    println!("starting");
     App::new()
         .add_plugins(OctetDefaultPlugins.build()
             .set(OctetConnPlugin {

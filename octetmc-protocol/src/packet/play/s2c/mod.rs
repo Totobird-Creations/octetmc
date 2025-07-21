@@ -154,7 +154,7 @@ pub mod login;
 
 // TODO: resource_pack_push
 
-// TODO: respawn
+pub mod respawn;
 
 // TODO: rotate_head
 
@@ -285,6 +285,8 @@ packet_encode_group!{
         GameEvent(game_event::GameEventS2CPlayPacket),
         /// `LoginS2CPlayPacket`
         Login(login::LoginS2CPlayPacket<'l>),
+        /// `Respawn`
+        Respawn(respawn::RespawnS2CPlayPacket<'l>),
         /// `SetChunkCacheCentre`
         SetChunkCacheCentre(set_chunk_cache_centre::SetChunkCacheCentreS2CPlayPacket),
         /// `SetChunkCacheRadius`
@@ -304,6 +306,7 @@ impl S2CPlayPackets<'_> {
         Self::AddEntity           (v) => S2CPlayPackets::AddEntity(v),
         Self::GameEvent           (v) => S2CPlayPackets::GameEvent(v),
         Self::Login               (v) => S2CPlayPackets::Login (v.into_static_owned()),
+        Self::Respawn             (v) => S2CPlayPackets::Respawn (v.into_static_owned()),
         Self::SetChunkCacheCentre (v) => S2CPlayPackets::SetChunkCacheCentre(v),
         Self::SetChunkCacheRadius (v) => S2CPlayPackets::SetChunkCacheRadius(v)
     } }
@@ -316,6 +319,7 @@ impl S2CPlayPackets<'_> {
         Self::AddEntity           (v) => S2CPlayPackets::AddEntity(*v),
         Self::GameEvent           (v) => S2CPlayPackets::GameEvent(*v),
         Self::Login               (v) => S2CPlayPackets::Login (v.to_static_owned()),
+        Self::Respawn             (v) => S2CPlayPackets::Respawn (v.to_static_owned()),
         Self::SetChunkCacheCentre (v) => S2CPlayPackets::SetChunkCacheCentre(*v),
         Self::SetChunkCacheRadius (v) => S2CPlayPackets::SetChunkCacheRadius(*v)
     } }

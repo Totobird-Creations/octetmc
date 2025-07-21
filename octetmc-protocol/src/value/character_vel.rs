@@ -2,6 +2,8 @@
 
 
 /// A character position in a world.
+///
+/// Velocity is in blocks per second.
 #[derive(Clone, Copy, PartialEq, PartialOrd, Debug, Default)]
 #[cfg_attr(feature = "bevy_ecs", derive(bevy_ecs::component::Component))]
 pub struct CharacterVel {

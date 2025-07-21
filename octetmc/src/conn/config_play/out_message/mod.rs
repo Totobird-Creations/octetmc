@@ -13,6 +13,7 @@ use octetmc_protocol::packet::play::s2c::S2CPlayPackets;
 use octetmc_protocol::packet::play::s2c::add_entity::AddEntityS2CPlayPacket;
 use octetmc_protocol::packet::play::s2c::game_event::GameEventS2CPlayPacket;
 use octetmc_protocol::packet::play::s2c::login::LoginS2CPlayPacket;
+use octetmc_protocol::packet::play::s2c::respawn::RespawnS2CPlayPacket;
 use std::borrow::Cow;
 use bevy_defer::{ AsyncAccess, AsyncWorld };
 
@@ -120,7 +121,20 @@ impl ConnPeerOutMessage {
                 data     : 0
             }).await?;
 
-            // TODO: RespawnS2CPlayPacket
+            comms.send_packet(&RespawnS2CPlayPacket {
+                dimension_type     : todo!(),
+                dimension          : todo!(),
+                hashed_seed        : todo!(),
+                game_mode,
+                previous_game_mode : todo!(),
+                is_debug: todo!(),
+                is_superflat: todo!(),
+                death_location: todo!(),
+                portal_cooldown: todo!(),
+                sea_level: todo!(),
+                keep_attributes: todo!(),
+                keep_metadata: todo!(),
+            }).await?;
 
             // TODO: PlayerPositionS2CPlayPacket
 

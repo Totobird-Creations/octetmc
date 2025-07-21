@@ -89,6 +89,8 @@ impl PacketEncode for AddEntityS2CPlayPacket {
         buf.encode_write((&self.body_yaw.rem_euclid(TAU) * (256.0 / TAU)) as u8);
         buf.encode_write((&self.pos.yaw.rem_euclid(TAU) * (256.0 / TAU)) as u8);
         buf.encode_write(VarInt::<u32>::from(self.data));
-        todo!("encode velocity as i16");
+        buf.encode_write((self.vel.x * 400.0) as i16);
+        buf.encode_write((self.vel.y * 400.0) as i16);
+        buf.encode_write((self.vel.z * 400.0) as i16);
     }
 }
