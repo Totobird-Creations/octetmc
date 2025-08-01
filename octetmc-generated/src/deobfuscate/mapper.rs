@@ -42,6 +42,8 @@ impl<'l> From<&'l proguard::ProguardMapping<'l>> for ProguardMapper<'l> {
 
             ProguardRecord::Header { .. } => { },
 
+            ProguardRecord::R8Header(_) => { },
+
             ProguardRecord::Class { original, obfuscated } => {
                 latest_class = Some(classes.entry(obfuscated).or_insert(ProguardMapperClass {
                     original,

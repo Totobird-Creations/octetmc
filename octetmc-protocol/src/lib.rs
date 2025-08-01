@@ -32,11 +32,11 @@ include!(".generated/mappings.rs");
 
 
 /// The game version that this library currently supports.
-pub const GAME_VERSION : &Version = &Version::new(1, 21, 6);
+pub const GAME_VERSION : &Version = &Version::new(1, 21, 8);
 /// The game version that this library currently supports (as a string).
-pub const GAME_VERSION_STR : &str = "1.21.6";
+pub const GAME_VERSION_STR : &str = "1.21.8";
 /// The protocol version that this library currently supports.
-pub const PROTOCOL_VERSION : u32 = 771;
+pub const PROTOCOL_VERSION : u32 = 772;
 
 include!(".generated/version.rs");
 

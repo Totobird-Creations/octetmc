@@ -1,12 +1,5 @@
 impl ChickenVariant<'_> {
 
-    /// Vanilla `minecraft:cold` chicken variant.
-    pub const COLD : ChickenVariant<'static> = ChickenVariant( SimpleVariant {
-        id       : ident![cold],
-        model    : Some(Cow::Borrowed("cold")),
-        asset_id : ident![minecraft:entity/chicken/cold_chicken]
-    } );
-
     /// Vanilla `minecraft:temperate` chicken variant.
     pub const TEMPERATE : ChickenVariant<'static> = ChickenVariant( SimpleVariant {
         id       : ident![temperate],
@@ -21,11 +14,18 @@ impl ChickenVariant<'_> {
         asset_id : ident![minecraft:entity/chicken/warm_chicken]
     } );
 
+    /// Vanilla `minecraft:cold` chicken variant.
+    pub const COLD : ChickenVariant<'static> = ChickenVariant( SimpleVariant {
+        id       : ident![cold],
+        model    : Some(Cow::Borrowed("cold")),
+        asset_id : ident![minecraft:entity/chicken/cold_chicken]
+    } );
+
     /// All vanilla chicken variants.
     pub const VANILLA_CHICKEN_VARIANTS : &'static [ChickenVariant<'static>] = &[
-        Self::COLD,
         Self::TEMPERATE,
         Self::WARM,
+        Self::COLD,
     ];
 
 }

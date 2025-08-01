@@ -107,7 +107,6 @@ impl ConnPeerOutMessage {
                 sea_level            : dimension.sea_level,
                 enforces_secure_chat : false
             }).await?;
-            _ = AsyncWorld.entity(*player_id).insert(dimension);
 
             // TODO: PlayerInfoUpdateS2CPlayPacket
 
@@ -122,19 +121,21 @@ impl ConnPeerOutMessage {
             }).await?;
 
             comms.send_packet(&RespawnS2CPlayPacket {
-                dimension_type     : todo!(),
-                dimension          : todo!(),
-                hashed_seed        : todo!(),
+                dimension_type     : 0,
+                dimension          : dimension.kind.id.as_ref(),
+                hashed_seed        : 0,
                 game_mode,
-                previous_game_mode : todo!(),
-                is_debug: todo!(),
-                is_superflat: todo!(),
-                death_location: todo!(),
-                portal_cooldown: todo!(),
-                sea_level: todo!(),
-                keep_attributes: todo!(),
-                keep_metadata: todo!(),
+                previous_game_mode : None,
+                is_debug           : false,
+                is_superflat       : dimension.is_superflat,
+                death_location     : None,
+                portal_cooldown    : 0,
+                sea_level          : dimension.sea_level,
+                keep_attributes    : false,
+                keep_metadata      : false
             }).await?;
+
+            _ = AsyncWorld.entity(*player_id).insert(dimension);
 
             // TODO: PlayerPositionS2CPlayPacket
 
